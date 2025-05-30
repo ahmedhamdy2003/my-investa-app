@@ -1,92 +1,213 @@
+import 'package:first_page/community_screen.dart';
+import 'package:first_page/dashboard_screen.dart';
+import 'package:first_page/home_screen.dart';
+import 'package:first_page/interests_screen.dart';
+import 'package:first_page/profile_screen.dart';
+import 'package:first_page/reels_screen.dart';
+import 'package:first_page/save_screen.dart';
+import 'package:first_page/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+// --- Imports from the first project's main.dart ---
+// تأكد أن هذا المسار صحيح لشاشة التسجيل
+import 'package:first_page/Registration_screen.dart';
+
+// --- Imports from the second project's main.dart ---
+// Assuming these paths are correct relative to your lib folder
+
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  static const String _title = 'Flutter Stateful Clicker Counter';
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: _title,
+      debugShowCheckedModeBanner: false,
+      title: 'Investa', // Taking title from the second project's main
       theme: ThemeData(
-        // useMaterial3: false,
-        primarySwatch: Colors.blue,
+        // Taking theme from the second project's main
+        scaffoldBackgroundColor: const Color(0xFFF9F9F9),
+        fontFamily: 'Arial',
       ),
-      home: const MyHomePage(),
+      // Set SetupScreen as the initial screen as requested
+      home: SetupScreen(),
+
+      // Combine routes from both projects.
+      // Note: SetupScreen's internal navigation is handled directly via Navigator.push
+      // The routes defined here are for global navigation if needed.
+      routes: {
+        // Routes from the second project (investor app)
+        // Ensure these paths are consistent with your file structure (e.g., 'lib/community_screen.dart')
+        // Using distinct names to avoid clashes if any
+        '/investor_interests': (ctx) => InterestsScreen(),
+        '/investor_home': (ctx) => HomeScreen(),
+        '/investor_saved': (ctx) => SaveScreen(
+            savedItems: const []), // Make sure savedItems is handled correctly if it's required
+        '/investor_community': (ctx) => CommunityScreen(),
+        '/investor_reels': (ctx) => ReelsScreen(),
+        '/investor_dashboard': (ctx) => DashboardScreen(),
+        '/investor_profile': (ctx) => ProfileScreen(),
+        '/welcome_screen': (ctx) =>
+            const WelcomeScreen(), // Added explicitly if you might navigate back to WelcomeScreen via routes
+        // You might also want to add a route for RegistrationScreen here if you want to navigate to it via named routes from other parts of the app,
+        // but SetupScreen's internal navigation already handles it directly.
+        // '/registration_screen': (ctx) => RegistrationScreen(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-  // This class is the configuration for the state.
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+// الكود الخاص بـ SetupScreen زي ما هو بالظبط مع التعديل المطلوب
+// For better project structure, consider moving this to a separate file like `lib/setup_screen.dart`
+class SetupScreen extends StatelessWidget {
+  // It's good practice to make the constructor const if the widget is stateless and its properties are final
+  const SetupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('Flutter Demo Click Counter'),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Spacer(
+              flex: 2,
             ),
-            Text(
-              '$_counter',
-              style: const TextStyle(fontSize: 25),
+            const Text(
+              "Great, Let's Setup your account",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff001F3F),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                "To complete your registration process, you will need to fill",
+                style: TextStyle(color: Color(0xff001F3F)),
+              ),
+            ),
+            const Spacer(),
+            const SizedBox(height: 30),
+            _buildStep("1", "Financial Assessment",
+                "Help us to know you more so you can invest easily.", true),
+            _buildStep("2", "Account Verification",
+                "Complete the steps to be verified.", true),
+            _buildStep("3", "Start to Explore & Invest", "", false),
+            const Spacer(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff001F3F),
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () {
+                // **هنا تم التعديل**: الانتقال لشاشة RegistrationScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                );
+              },
+              child: const Text(
+                "Continue",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Center(
+              child: Text(
+                "Enter as a Guest",
+                style: TextStyle(color: Color(0xff001F3F)),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+
+  Widget _buildStep(
+      String number, String title, String subtitle, bool hasDivider) {
+    bool isFirstStep = number == "1"; // Check if it's the first step
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // First step gets a circular border
+                if (isFirstStep)
+                  Container(
+                    width: 48, // Slightly larger than avatar
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border:
+                          Border.all(color: const Color(0xffAEB7C1), width: 4),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: const Color(0xff7A899A),
+                    radius: 20, // Ensures all circles have the same radius
+                    child: Text(
+                      number,
+                      style: const TextStyle(
+                        color: Color(0xff001F3F),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (hasDivider)
+              Container(
+                width: 1.5,
+                height: 70, // Adjust the height for perfect spacing
+                color: const Color(0xffC1C1C1),
+              ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff001F3F),
+                ),
+              ),
+              if (subtitle.isNotEmpty)
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Color(0xff001F3F),
+                    fontSize: 12,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

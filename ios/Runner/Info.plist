@@ -2,6 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+  <string>We need access to your camera to take pictures.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>We need access to save photos.</string>
+	<key>NSCameraUsageDescription</key>
+  <string>We need camera access to capture photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>We need access to your photo library to save photos.</string>
+	<key>NSCameraUsageDescription</key>
+  <string>We need access to your camera to take photos.</string>
+	
+ 
+
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -47,5 +61,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+<string>نحتاج الوصول إلى Face ID لتأمين حسابك.</string>
 </dict>
 </plist>
