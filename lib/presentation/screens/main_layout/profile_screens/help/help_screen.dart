@@ -65,7 +65,7 @@ class HelpScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatPage() ),
+                        MaterialPageRoute(builder: (context) => ChatPage()),
                       );
                     },
                   ),
@@ -78,16 +78,17 @@ class HelpScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PhoneCallRequest()),
-                      );                     },
+                        MaterialPageRoute(
+                          builder: (context) => PhoneCallRequest(),
+                        ),
+                      );
+                    },
                   ),
                   // خط فاصل
                   const Divider(),
-
                 ],
               ),
             ),
-
           ],
         ),
       ),

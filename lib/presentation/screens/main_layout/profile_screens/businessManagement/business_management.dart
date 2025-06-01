@@ -208,7 +208,10 @@ class _BusinessManagementState extends State<BusinessManagement> {
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('Business Management', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Business Management',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -223,7 +226,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const BusinessDetailsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const BusinessDetailsScreen(),
+                  ),
                 );
               },
             ),
@@ -234,7 +239,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AnalyticsDashboardScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AnalyticsDashboardScreen(),
+                  ),
                 );
               },
             ),
@@ -245,7 +252,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditBusinessDetailsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const EditBusinessDetailsScreen(),
+                  ),
                 );
               },
             ),
@@ -256,7 +265,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const DocumentsUploadScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const DocumentsUploadScreen(),
+                  ),
                 );
               },
             ),
@@ -267,7 +278,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProductDescriptionScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const ProductDescriptionScreen(),
+                  ),
                 );
               },
             ),
@@ -278,7 +291,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const BusinessGoalsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const BusinessGoalsScreen(),
+                  ),
                 );
               },
             ),
@@ -289,7 +304,9 @@ class _BusinessManagementState extends State<BusinessManagement> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FundingProgressScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const FundingProgressScreen(),
+                  ),
                 );
               },
             ),
@@ -305,13 +322,8 @@ class _BusinessManagementState extends State<BusinessManagement> {
               },
             ),
             const Divider(height: 24, thickness: 0.5, color: Colors.grey),
-
           ],
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        selectedIndex: selectedIndex,
-        onTap: _onTabSelected,
       ),
     );
   }
@@ -337,11 +349,7 @@ class _BusinessManagementState extends State<BusinessManagement> {
                 ),
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
       ),

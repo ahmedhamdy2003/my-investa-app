@@ -123,7 +123,10 @@ class _BusinessGoalsScreenState extends State<BusinessGoalsScreen> {
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('Business Goals &\n Milestones Tracker', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Business Goals &\n Milestones Tracker',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -163,10 +166,10 @@ class _BusinessGoalsScreenState extends State<BusinessGoalsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(
-        selectedIndex: _selectedIndex,
-        onTap: _onNavTapped,
-      ),
+      // bottomNavigationBar: CustomBottomNavBar(
+      //  selectedIndex: _selectedIndex,
+      //onTap: _onNavTapped,
+      //),
     );
   }
 }
