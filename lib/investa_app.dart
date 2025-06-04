@@ -19,7 +19,7 @@ class InvestaApp extends StatelessWidget {
         )
       ),
       debugShowCheckedModeBanner: false,
-      routes:AppRoutes.routes ,
+      routes: AppRoutes.routes,
       initialRoute: AppRoutes.splash,
     );
   }
