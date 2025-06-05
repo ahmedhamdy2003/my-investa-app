@@ -145,7 +145,8 @@ class UserMethods {
 
   static UserModel? getSignedUser() {
     try {
-      if (HiveManager.userBox.isEmpty) {
+      if (HiveManager.userBox.isEmpty ||
+          HiveManager.userBox.values.every((user) => user.signedUp == false)) {
         return null; // No users signed up
       }
       return HiveManager.userBox.values.firstWhere(
