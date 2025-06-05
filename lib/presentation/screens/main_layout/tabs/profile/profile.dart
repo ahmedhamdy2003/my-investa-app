@@ -537,6 +537,9 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:investa4/core/assets_managers.dart';
+import 'package:investa4/core/model/user.dart';
+import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/featurs/start_screen/presentation/start_screen.dart';
 import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 import 'package:investa4/presentation/screens/main_layout/profile_screens/businessManagement/business_management.dart';
 import 'package:investa4/presentation/screens/main_layout/profile_screens/setting_screen/setting.dart';
@@ -552,7 +555,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // final screenHeight = MediaQuery.of(context).size.height;
     final isTablet = screenWidth > 600;
 
     return Scaffold(
@@ -596,17 +599,23 @@ class Profile extends StatelessWidget {
                     backgroundColor: Colors.grey, // الخلفية بلون رمادي
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),  // تحديد الزوايا المستديرة
+                        borderRadius: BorderRadius.circular(
+                          20,
+                        ), // تحديد الزوايا المستديرة
                         border: Border.all(
-                          color: Colors.white,  // لون الحدود (اختياري)
-                          width: 4,  // سمك الحدود (اختياري)
+                          color: Colors.white, // لون الحدود (اختياري)
+                          width: 4, // سمك الحدود (اختياري)
                         ),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),  // نفس قيمة corner radius
+                        borderRadius: BorderRadius.circular(
+                          20,
+                        ), // نفس قيمة corner radius
                         child: Image.asset(
                           AssetsManagers.fakhr,
-                          fit: BoxFit.cover,  // تأكد من أن الصورة تملأ المساحة بالكامل
+                          fit:
+                              BoxFit
+                                  .cover, // تأكد من أن الصورة تملأ المساحة بالكامل
                         ),
                       ),
                     ),
@@ -644,42 +653,50 @@ class Profile extends StatelessWidget {
                 children: [
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.settingIcon,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers.settingIcon, // استبدال الأيقونة بصورة
                     title: "Settings",
                     destination: const Setting(),
                   ),
                   const Divider(height: 1),
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.securityIcon2,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers.securityIcon2, // استبدال الأيقونة بصورة
                     title: "Security",
                     destination: const SecurityScreen(),
                   ),
                   const Divider(height: 1),
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.businessManagementIcon,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers
+                            .businessManagementIcon, // استبدال الأيقونة بصورة
                     title: "Business Management ",
                     destination: const BusinessManagement(),
                   ),
                   const Divider(height: 1),
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.historyIcon,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers.historyIcon, // استبدال الأيقونة بصورة
                     title: "History",
                     destination: const PaymentHistoryScreen(),
                   ),
                   const Divider(height: 1),
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.notificationIcon,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers
+                            .notificationIcon, // استبدال الأيقونة بصورة
                     title: "Notification",
                     destination: const NotificationScreen(),
                   ),
                   const Divider(height: 1),
                   _buildListTile(
                     context,
-                    imageAsset: AssetsManagers.helpIcon,  // استبدال الأيقونة بصورة
+                    imageAsset:
+                        AssetsManagers.helpIcon, // استبدال الأيقونة بصورة
                     title: "Help",
                     destination: const HelpScreen(),
                   ),
@@ -702,16 +719,14 @@ class Profile extends StatelessWidget {
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      AssetsManagers.logout,  // استخدام الصورة بدلاً من الأيقونة
+                      AssetsManagers.logout, // استخدام الصورة بدلاً من الأيقونة
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 label: Text(
                   "Logout",
-                  style: TextStyle(
-                    fontSize: isTablet ? 18 : 16,
-                  ),
+                  style: TextStyle(fontSize: isTablet ? 18 : 16),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -729,75 +744,76 @@ class Profile extends StatelessWidget {
   }
 
   Widget _buildListTile(
-      BuildContext context, {
-        required String imageAsset,  // استبدال Icon بـ imageAsset
-        required String title,
-        required Widget destination,
-      }) {
+    BuildContext context, {
+    required String imageAsset, // استبدال Icon بـ imageAsset
+    required String title,
+    required Widget destination,
+  }) {
     final isTablet = MediaQuery.of(context).size.width > 600;
 
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: isTablet ? 16 : 8),
       leading: Image.asset(
-        imageAsset,  // هنا نستخدم الصورة من الأصول
+        imageAsset, // هنا نستخدم الصورة من الأصول
         width: isTablet ? 28 : 24,
         height: isTablet ? 28 : 24,
-        fit: BoxFit.cover,  // لجعل الصورة تتناسب مع المساحة
+        fit: BoxFit.cover, // لجعل الصورة تتناسب مع المساحة
       ),
-      title: Text(
-        title,
-        style: TextStyle(fontSize: isTablet ? 20 : 16),
-      ),
+      title: Text(title, style: TextStyle(fontSize: isTablet ? 20 : 16)),
       trailing: Icon(Icons.chevron_right, size: isTablet ? 28 : 24),
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => destination),
-      ),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => destination),
+          ),
     );
   }
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        backgroundColor: Colors.grey[200],
-        title: const Center(
-          child: Text(
-            "Log Out",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
-          ),
-        ),
-        content: const Text(
-          "Are you sure you want to log out?",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14),
-        ),
-        actionsAlignment: MainAxisAlignment.spaceEvenly,
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(color: Colors.blue, fontSize: 16),
+            backgroundColor: Colors.grey[200],
+            title: const Center(
+              child: Text(
+                "Log Out",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Handle logout logic here
-            },
-            child: const Text(
-              "Log Out",
-              style: TextStyle(color: Colors.red, fontSize: 16),
+            content: const Text(
+              "Are you sure you want to log out?",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14),
             ),
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.blue, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  UserMethods.removeSignedUser(ManageCurrentUser.currentUser);
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => StartScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Text(
+                  "Log Out",
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }
-
-

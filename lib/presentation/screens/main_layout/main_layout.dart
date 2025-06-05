@@ -124,8 +124,6 @@
 //   }
 // }
 
-
-
 // import 'package:flutter/material.dart';
 // import 'package:investa4/core/assets_managers.dart';
 // import 'package:investa4/presentation/screens/main_layout/tabs/community/community.dart';
@@ -328,7 +326,6 @@
 //   }
 // }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:investa4/core/assets_managers.dart';
 // import 'package:investa4/core/routes_manager/colors_managers.dart';
@@ -435,11 +432,11 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
+import 'package:investa4/featurs/reel_screen/presentation/reel_screen.dart';
 import 'package:investa4/presentation/screens/main_layout/tabs/community/community.dart';
-import 'package:investa4/presentation/screens/main_layout/tabs/dashBoard/dashBoard.dart';
 import 'package:investa4/presentation/screens/main_layout/tabs/home/home.dart';
 import 'package:investa4/presentation/screens/main_layout/tabs/profile/profile.dart';
-import 'package:investa4/presentation/screens/main_layout/tabs/reels/reels.dart';
 
 import '../../../config/theme/custom_butt_nav_bar.dart';
 import '../../../core/assets_managers.dart';
@@ -460,7 +457,7 @@ class _MainLayoutState extends State<MainLayout> {
   final List<Widget> tabs = [
     Home(),
     Community(),
-    Reels(),
+    ReelScreen(),
     Dashboard(),
     Profile(),
   ];
@@ -476,13 +473,7 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: SafeArea(
-        child: IndexedStack(
-          index: selectedIndex,
-          children: tabs,
-        ),
-      ),
+      body: SafeArea(child: IndexedStack(index: selectedIndex, children: tabs)),
       floatingActionButton: SizedBox(
         height: 62,
         width: 62,
@@ -496,10 +487,7 @@ class _MainLayoutState extends State<MainLayout> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Image.asset(
-              AssetsManagers.reelsIcon,
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(AssetsManagers.reelsIcon, fit: BoxFit.contain),
           ),
         ),
       ),

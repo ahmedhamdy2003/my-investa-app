@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:investa4/core/utils/app_styles.dart';
 import 'package:investa4/core/utils/constant.dart';
-import 'package:investa4/featurs/reel_screen/manager/manage_comment_screen.dart';
+import 'package:investa4/featurs/reel_screen/manager/manage_reels_screen.dart';
 import 'package:investa4/featurs/reel_screen/presentation/widgets/comment_section/presentation/widgets/comment_list_view.dart';
 import 'package:investa4/featurs/reel_screen/presentation/widgets/comment_section/presentation/widgets/comment_text_field.dart';
 
 class CommentScreen extends StatefulWidget {
   const CommentScreen({super.key, required this.manageCommentAnimation});
-  final ManageCommentAnimation manageCommentAnimation;
+  final ManageReelsScreen manageCommentAnimation;
   @override
   State<CommentScreen> createState() => _CommentScreenState();
 }

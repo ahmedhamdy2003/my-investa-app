@@ -212,3 +212,69 @@ class UserMethods {
         .toList();
   }
 }
+
+
+// overView dashboard section
+// https://bcb8-102-190-139-157.ngrok-free.app/dashboard/overview/4iVtZAbBbVXDdOdzhSniVDPJK5a2/
+
+// result:
+// {
+//     "total_investment": 4700.0,
+//     "total_current_net_profit": 0.0,
+//     "investment_types": [
+//         "short"
+//     ],
+//     "businesses_invested_in": [
+//         {
+//             "name": "Zero Sugar",
+//             "amount": 4700.0
+//         }
+//     ]
+// }
+
+
+//=====================================
+
+// next
+// https://bcb8-102-190-139-157.ngrok-free.app/dashboard/invested-projects/4iVtZAbBbVXDdOdzhSniVDPJK5a2/
+
+// [
+//     {
+//         "project_id": "2e16e81e-9942-44bd-b24f-95e4431d2428",
+//         "project_name": "Zero Sugar",
+//         "total_roi": 650.0,
+//         "next_roi": -100.0
+//     }
+// ]
+
+
+// categories chart
+// https://bcb8-102-190-139-157.ngrok-free.app/get-category-percentages/
+// {
+//     "Health 7 Fitness": 7.6923076923076925,
+//     "Food": 15.384615384615385,
+//     "Fashion": 61.53846153846154,
+//     "تقنية\t": 7.6923076923076925,
+//     "Fitness": 7.6923076923076925
+// }
+
+
+
+// reels
+// https://bcb8-102-190-139-157.ngrok-free.app/get-reels/
+
+// {
+//     "reels": [
+//         {
+//             "reel_id": "3SB8WbQqi9Xeq6ztKbv6ZWPGhM33",
+//             "-OS-v69-vtBG8Ucc9JHz": {
+//                 "timestamp": "2025-06-05T19:28:46.144756",
+//                 "video_url": "https://drive.google.com/uc?id=1Dedpltk9PrGyzZ6qrtvKyfrRXeQzhoOE"
+//             },
+//             "-OS-vFLIhJ9GZxI9zEqI": {
+//                 "timestamp": "2025-06-05T19:29:24.371709",
+//                 "video_url": "https://drive.google.com/uc?id=15mRDyscdYT6u3VwNbSxPPCS9D-Ac1vwI"
+//             }
+//         }
+//     ]
+// }

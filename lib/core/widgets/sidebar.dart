@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:investa4/core/model/user.dart';
 import 'package:investa4/core/utils/app_styles.dart';
 import 'package:investa4/core/utils/constant.dart';
-import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/featurs/analysis/presentation/analysis.dart';
 import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 import 'package:investa4/featurs/investment/presentation/investment.dart';
-import 'package:investa4/featurs/start_screen/presentation/start_screen.dart';
 import 'package:investa4/featurs/transactions/presentation/transactions.dart';
 
 class SideBar extends StatelessWidget {
@@ -34,21 +31,21 @@ class SideBar extends StatelessWidget {
                     Text('INVESTA', style: AppStyles.invistaTopSectionStyle),
                   ],
                 ),
-                Flexible(
-                  child: IconButton(
-                    icon: const Icon(Icons.logout),
-                    color: mainTextColor,
-                    onPressed: () {
-                      UserMethods.removeSignedUser(
-                        ManageCurrentUser.currentUser,
-                      );
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => StartScreen()),
-                        (Route<dynamic> route) => false,
-                      );
-                    },
-                  ),
-                ),
+                // Flexible(
+                //   child: IconButton(
+                //     icon: const Icon(Icons.logout),
+                //     color: mainTextColor,
+                //     onPressed: () {
+                //       UserMethods.removeSignedUser(
+                //         ManageCurrentUser.currentUser,
+                //       );
+                //       Navigator.of(context).pushAndRemoveUntil(
+                //         MaterialPageRoute(builder: (context) => StartScreen()),
+                //         (Route<dynamic> route) => false,
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
             SizedBox(height: 30),

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:investa4/featurs/reel_screen/manager/manage_comment_screen.dart';
+import 'package:investa4/featurs/reel_screen/manager/manage_reels_screen.dart';
 import 'package:investa4/featurs/reel_screen/presentation/widgets/reel_button.dart';
 
 class SideBottonsBar extends StatelessWidget {
   const SideBottonsBar({super.key, required this.manageCommentAnimation});
-  final ManageCommentAnimation manageCommentAnimation;
+  final ManageReelsScreen manageCommentAnimation;
   @override
   Widget build(BuildContext context) {
     return Positioned(
       right: 16,
-      bottom: 80,
+      bottom: 40,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

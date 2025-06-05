@@ -1,11 +1,17 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:investa4/core/apis/get_reels.dart';
 
-class ManageCommentAnimation {
+class ManageReelsScreen {
   late AnimationController animationController;
   late Animation<Offset> animation;
+  List<Reel> reels = [];
+
+  Future<void> init() async {
+    // await Future.delayed(const Duration(milliseconds: 6000));
+    reels = await getReels() ?? [];
+  }
 
   void openDrawer() {
     log('ManageCommentAnimation openDrawer');

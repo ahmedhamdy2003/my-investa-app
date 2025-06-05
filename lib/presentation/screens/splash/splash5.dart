@@ -19,11 +19,12 @@ class _Splash5State extends State<Splash5> {
   @override
   initState() {
     super.initState();
-    UserModel? signedUser = UserMethods.getSignedUser();
-    if (signedUser != null) {
-      ManageCurrentUser.currentUser = signedUser;
-    }
+
     Future.delayed(const Duration(seconds: 2), () {
+      UserModel? signedUser = UserMethods.getSignedUser();
+      if (signedUser != null) {
+        ManageCurrentUser.currentUser = signedUser;
+      }
       if (signedUser != null) {
         Navigator.pushReplacement(
           context,
