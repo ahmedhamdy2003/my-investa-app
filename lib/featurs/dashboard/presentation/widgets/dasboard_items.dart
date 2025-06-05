@@ -8,11 +8,15 @@ class DasboardItems extends StatelessWidget {
     required this.subTitle,
     this.trailingText,
     this.trailGreen = false,
+    this.iconPath,
+    this.normalTrailingText = false,
   });
   final String title;
   final String subTitle;
   final String? trailingText;
   final bool trailGreen;
+  final String? iconPath;
+  final bool normalTrailingText;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +26,13 @@ class DasboardItems extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(radius: 20, child: Icon(Icons.person)),
+              CircleAvatar(
+                radius: 20,
+                child:
+                    iconPath != null
+                        ? Image.asset(iconPath!)
+                        : Icon(Icons.person),
+              ),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +47,9 @@ class DasboardItems extends StatelessWidget {
             Text(
               trailingText!,
               style:
-                  trailGreen
+                  normalTrailingText
+                      ? AppStyles.dashItemNormalTraining
+                      : trailGreen
                       ? AppStyles.dashItemgreenTraining
                       : AppStyles.dashItemRedTraining,
             ),

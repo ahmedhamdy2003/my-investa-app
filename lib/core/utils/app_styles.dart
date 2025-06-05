@@ -111,6 +111,11 @@ class AppStyles {
     fontSize: 14,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle dashItemNormalTraining = const TextStyle(
+    color: sectionsColor,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle investmentItemTitle = const TextStyle(
     color: dashboardItemsTitleColor,
     fontSize: 14,

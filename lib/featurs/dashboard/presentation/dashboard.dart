@@ -51,7 +51,9 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           OverViewSection(manageDashboard: manageDashboard),
-                          BusinessPerformanceSection(),
+                          BusinessPerformanceSection(
+                            manageDashboard: manageDashboard,
+                          ),
                           ChartsSection(manageDashboard: manageDashboard),
                         ],
                       ),
