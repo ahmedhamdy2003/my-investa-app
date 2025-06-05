@@ -3,7 +3,7 @@ import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/core/widgets/show_snackbar.dart';
 
 Future<List?> getReels({required String email, required String otp}) async {
-  String url = '$baseUrl/get_reels/';
+  String url = '$baseUrl/get-reels/';
   // final header = <String, dynamic>{'Content-Type': 'application/json'};
 
   // FormData body = FormData();
