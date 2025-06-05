@@ -30,6 +30,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    // manageDashboard.init();
     var topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       key: _scaffoldKey,
@@ -49,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          OverViewSection(),
+                          OverViewSection(manageDashboard: manageDashboard),
                           BusinessPerformanceSection(),
                           ChartsSection(manageDashboard: manageDashboard),
                         ],
