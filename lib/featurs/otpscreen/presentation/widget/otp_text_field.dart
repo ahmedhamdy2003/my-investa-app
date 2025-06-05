@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:investa4/core/utils/text_field_style.dart';
 
@@ -10,10 +8,7 @@ class OTPTextField extends StatefulWidget {
   /// Callback triggered when the OTP entry is completed.
   final void Function(String) onCompleted;
 
-  /// Width for each OTP field.
-  // final double fieldWidth;
-
-  /// Text style for each OTP field.
+  /// Optional base TextStyle (its fontSize will be replaced by computedFontSize).
   final TextStyle? textStyle;
 
   /// Decoration for each OTP field.
@@ -23,7 +18,6 @@ class OTPTextField extends StatefulWidget {
     super.key,
     this.length = 4,
     required this.onCompleted,
-    // this.fieldWidth = 50,
     this.textStyle,
     this.inputDecoration,
   });
@@ -39,11 +33,8 @@ class _OTPTextFieldState extends State<OTPTextField> {
   @override
   void initState() {
     super.initState();
-    _focusNodes = List.generate(widget.length, (index) => FocusNode());
-    _controllers = List.generate(
-      widget.length,
-      (index) => TextEditingController(),
-    );
+    _focusNodes = List.generate(widget.length, (_) => FocusNode());
+    _controllers = List.generate(widget.length, (_) => TextEditingController());
   }
 
   @override
@@ -59,49 +50,47 @@ class _OTPTextFieldState extends State<OTPTextField> {
 
   void _onChanged(String value, int index) {
     if (value.isNotEmpty) {
-      // Automatically move focus to the next field if available.
       if (index + 1 < widget.length) {
         FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
       } else {
-        // If last field, unfocus and combine OTP.
         _focusNodes[index].unfocus();
       }
     }
 
-    // Combine all OTP digits.
-    final otp = _controllers.map((controller) => controller.text).join();
-
-    // Trigger the callback if all fields are filled.
-    log('otp.contains("") ${otp.contains("")}');
-    if (otp.length == widget.length &&
-        (otp.trim().split('').length == widget.length)) {
+    final otp = _controllers.map((c) => c.text).join();
+    if (otp.length == widget.length && !otp.contains('')) {
       widget.onCompleted(otp);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // 1) Total width for all OTP boxes (60% of screen width)
+    final totalOtpWidth = MediaQuery.of(context).size.width * 0.6;
+    // 2) Width of a single box
+    final fieldWidth = totalOtpWidth / widget.length;
+    // 3) Compute fontSize as a fraction of that box width
+    final computedFontSize = fieldWidth * 0.4;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: List.generate(widget.length, (index) {
         return SizedBox(
-          width: (MediaQuery.of(context).size.width * 0.6) / widget.length,
-          height:
-              ((MediaQuery.of(context).size.width * 0.6) / widget.length) + 5,
+          width: fieldWidth,
+          height: fieldWidth + 15,
           child: TextFormField(
-            validator:
-                (value) => value!.isEmpty ? 'required verification code' : null,
+            validator: (value) =>
+                (value == null || value.isEmpty) ? 'Required' : null,
             controller: _controllers[index],
             focusNode: _focusNodes[index],
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.black,
+            style: (widget.textStyle ?? const TextStyle()).copyWith(
+              fontSize: computedFontSize,
               fontWeight: FontWeight.bold,
             ),
             decoration: widget.inputDecoration ?? textFieldDecoration(null),
-            // Limit input to one character.
             maxLength: 1,
             onChanged: (value) => _onChanged(value, index),
           ),
