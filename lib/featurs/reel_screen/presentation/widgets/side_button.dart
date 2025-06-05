@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:investa4/featurs/reel_screen/manager/manage_comment_screen.dart';
+import 'package:investa4/featurs/reel_screen/presentation/widgets/reel_button.dart';
+
+class SideBottonsBar extends StatelessWidget {
+  const SideBottonsBar({super.key, required this.manageCommentAnimation});
+  final ManageCommentAnimation manageCommentAnimation;
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: 16,
+      bottom: 80,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ReelButton(
+            iconChild: Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(Icons.person, color: Colors.green, size: 24),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ReelButton(
+            iconChild: Image.asset('assets/icon/HeartIcon.png'),
+            desc: '100',
+          ),
+          const SizedBox(height: 16),
+
+          // Comment
+          ReelButton(
+            onTap: () {
+              manageCommentAnimation.openDrawer();
+            },
+            iconChild: Image.asset('assets/icon/MessageIcon.png'),
+            desc: '100',
+          ),
+          const SizedBox(height: 16),
+          ReelButton(
+            iconChild: Image.asset('assets/icon/ShareIcon.png'),
+            desc: 'share',
+          ),
+          const SizedBox(height: 16),
+          ReelButton(
+            iconChild: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Image.asset('assets/icon/BookmarkIcon.png'),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ReelButton(iconChild: Icon(Icons.more_horiz, color: Colors.white)),
+        ],
+      ),
+    );
+  }
+}
