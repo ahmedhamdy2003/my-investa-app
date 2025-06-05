@@ -8,12 +8,12 @@ import 'package:investa4/core/utils/app_styles.dart';
 import 'package:investa4/core/utils/constant.dart';
 import 'package:investa4/core/widgets/custom_buttons.dart';
 import 'package:investa4/core/widgets/custom_text_field.dart';
-import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 import 'package:investa4/featurs/otpscreen/presentation/otp_screen.dart';
 import 'package:investa4/featurs/sign_up_screen/manager/manage_signup.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/date_picker_text_field.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/password_valid_item.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/terms_section.dart';
+import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -241,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               ).pushAndRemoveUntil(
                                                 MaterialPageRoute(
                                                   builder:
-                                                      (context) => Dashboard(),
+                                                      (context) => MainLayout(),
                                                 ),
                                                 (Route<dynamic> route) => false,
                                               );

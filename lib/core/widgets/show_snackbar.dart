@@ -8,7 +8,12 @@ void showSnackBar(String message, BuildContext? context, {TextStyle? style}) {
     behavior: SnackBarBehavior.floating,
     shape: const StadiumBorder(),
     elevation: 30,
-    content: Center(child: Text(message, style: style)),
+    content: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 400),
+        child: SingleChildScrollView(child: Text(message, style: style)),
+      ),
+    ),
   );
   try {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

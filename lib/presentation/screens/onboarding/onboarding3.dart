@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:investa4/core/assets_managers.dart';
-
-import '../main_layout/main_layout.dart';
+import 'package:investa4/featurs/start_screen/presentation/start_screen.dart';
 
 class Onboarding3 extends StatelessWidget {
   const Onboarding3({super.key});
@@ -45,7 +46,7 @@ class Onboarding3 extends StatelessWidget {
 
           // النصوص في أعلى يسار الشاشة فوق الصورة المتحركة
           Positioned(
-            top:180,
+            top: 180,
             left: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,11 +60,7 @@ class Onboarding3 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Container(
-                  width: 253,
-                  height: 2,
-                  color: Color(0xFF001F3F),
-                ),
+                Container(width: 253, height: 2, color: Color(0xFF001F3F)),
                 const SizedBox(height: 10),
                 const Text(
                   "Your investment starts Here !",
@@ -129,10 +126,16 @@ class Onboarding3 extends StatelessWidget {
                 // زر السهم الدائري
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute (builder: (context) => const MainLayout()),
-                    );
+                    try {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const StartScreen(),
+                        ),
+                      );
+                    } catch (e) {
+                      log('Error navigating to StartScreen: $e');
+                    }
                   },
                   child: Container(
                     width: 60,
