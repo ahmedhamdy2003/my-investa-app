@@ -7,8 +7,7 @@ class phaseThree_screen extends StatefulWidget {
   // 1. إضافة projectId كـ parameter مطلوب في constructor
   final String projectId;
 
-  const phaseThree_screen({Key? key, required this.projectId})
-      : super(key: key);
+  const phaseThree_screen({super.key, required this.projectId});
 
   @override
   State<phaseThree_screen> createState() => _PhaseThreeScreenState();
@@ -35,8 +34,8 @@ class _PhaseThreeScreenState extends State<phaseThree_screen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      _PageOne(), // لا حاجة لتمرير onPickFile أو selectedFile
-      _PageTwo(), // لا حاجة لتمرير onPickFile أو selectedFile
+      const _PageOne(), // لا حاجة لتمرير onPickFile أو selectedFile
+      const _PageTwo(), // لا حاجة لتمرير onPickFile أو selectedFile
       _PageThree(
         onGotIt: _navigateToFounderHome, // استدعاء دالة الانتقال مباشرة
         isUploading: false, // دائمًا false بما أنه لا يوجد رفع ملفات
@@ -55,7 +54,7 @@ class _PhaseThreeScreenState extends State<phaseThree_screen> {
 }
 
 class BackgroundHeader extends StatelessWidget {
-  const BackgroundHeader({Key? key}) : super(key: key);
+  const BackgroundHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,16 +96,16 @@ class _PageOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const BackgroundHeader(),
+        BackgroundHeader(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 270, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 270, 20, 20),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (physical store):',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -115,8 +114,8 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10),
+                Text(
                   '1. Commercial registration: To prove that the project is officially registered with the state.\n\n'
                   '2. Even home-based projects can now register themselves as "small or micro projects".\n\n'
                   '3. Tax card: To verify that the project pays taxes and is recognized by the tax authority.\n\n'
@@ -131,7 +130,7 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 // تمت إزالة ElevatedButton لـ "drag the file"
                 // والنص الخاص بالملف المحدد
               ],
@@ -149,16 +148,16 @@ class _PageTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const BackgroundHeader(),
+        BackgroundHeader(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 270, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 270, 20, 20),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (home-based projects):',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -167,8 +166,8 @@ class _PageTwo extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10),
+                Text(
                   '1. A declaration from the owner that they are conducting the activity from a specific location, along with photos of that place.\n\n'
                   '2. Invoices for raw material purchases or product sales in the last 3 months.\n\n'
                   '3. Active social media links + the number of orders/customers over the past months.\n\n'
@@ -180,7 +179,7 @@ class _PageTwo extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 // تمت إزالة ElevatedButton لـ "drag the file"
                 // والنص الخاص بالملف المحدد
               ],

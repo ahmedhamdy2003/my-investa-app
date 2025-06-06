@@ -155,7 +155,7 @@ class _FingerOrFaceScreenState extends State<FingerOrFaceScreen> {
               ),
             ),
             const SizedBox(height: 60),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FaIcon(
@@ -163,7 +163,7 @@ class _FingerOrFaceScreenState extends State<FingerOrFaceScreen> {
                   size: 100,
                   color: Colors.black87,
                 ),
-                const SizedBox(width: 50),
+                SizedBox(width: 50),
                 FaIcon(
                   FontAwesomeIcons
                       .faceGrin, // أو FontAwesomeIcons.faceRecognition

@@ -109,7 +109,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
       // لو حصل أي خطأ في الحفظ المحلي
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Color(0xffF44336), // أحمر للخطأ
+          backgroundColor: const Color(0xffF44336), // أحمر للخطأ
           content: Text(
               "An error occurred while saving the password: ${e.toString()}"),
         ),

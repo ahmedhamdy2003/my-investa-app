@@ -86,7 +86,7 @@ class WelcomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                InterestsScreen(), // استخدام InterestsScreen
+                                const InterestsScreen(), // استخدام InterestsScreen
                           ),
                         );
                       },
@@ -111,7 +111,7 @@ class WelcomeScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WelcomeScreenB(),
+                            builder: (context) => const WelcomeScreenB(),
                           ),
                         );
                       },

@@ -5,9 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../welcome_screen.dart'; // تأكد من المسار الصحيح لشاشة الترحيب
-import 'home_screen.dart'; // تأكد من المسار الصحيح لشاشة الـ Home
+// تأكد من المسار الصحيح لشاشة الـ Home
 
 class InterestsScreen extends StatefulWidget {
+  const InterestsScreen({super.key});
+
   @override
   _InterestsScreenState createState() => _InterestsScreenState();
 }
@@ -137,15 +139,15 @@ class _InterestsScreenState extends State<InterestsScreen> {
             children: [
               const Spacer(),
               const SizedBox(height: 100),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 25),
+                    padding: EdgeInsets.only(left: 25),
                     child: Text(
                       "What’s your interest?",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Color(0xff001F3F),

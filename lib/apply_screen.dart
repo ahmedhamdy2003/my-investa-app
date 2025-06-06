@@ -83,7 +83,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
       builder: (context, child) {
         return Theme(
           data: ThemeData(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Color(0xFF082347),
               onPrimary: Colors.white,
               surface: Colors.white,
@@ -91,7 +91,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Color(0xFF082347),
+                foregroundColor: const Color(0xFF082347),
               ),
             ),
           ),
@@ -213,7 +213,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
       return;
     }
 
-    final String assignUrl =
+    const String assignUrl =
         'https://2859-41-44-137-9.ngrok-free.app/insert-project/';
 
     // لاحظ هنا: كيفية إرسال الملف المختار إلى Django
@@ -451,17 +451,18 @@ class _ApplyScreenState extends State<ApplyScreen> {
                       _isPickingFile ? null : _showFileTypeSelectionSheet,
                   style: OutlinedButton.styleFrom(
                     foregroundColor:
-                        _isFilePicked ? Color(0xFF082347) : Colors.grey,
+                        _isFilePicked ? const Color(0xFF082347) : Colors.grey,
                     side: BorderSide(
-                        color:
-                            _isFilePicked ? Color(0xFF082347) : Colors.black26),
+                        color: _isFilePicked
+                            ? const Color(0xFF082347)
+                            : Colors.black26),
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   icon: _isPickingFile
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
@@ -473,8 +474,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                           _isFilePicked
                               ? Icons.check_circle
                               : Icons.attach_file,
-                          color:
-                              _isFilePicked ? Colors.green : Color(0xFF082347),
+                          color: _isFilePicked
+                              ? Colors.green
+                              : const Color(0xFF082347),
                           size: 20,
                         ),
                   label: Text(
@@ -484,7 +486,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
                             ? 'Picked!'
                             : 'Choose the file',
                     style: TextStyle(
-                      color: _isFilePicked ? Color(0xFF082347) : Colors.grey,
+                      color:
+                          _isFilePicked ? const Color(0xFF082347) : Colors.grey,
                     ),
                   ),
                 ),
@@ -494,7 +497,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     'File selected: $_pickedFileName',
-                    style: TextStyle(color: Colors.green, fontSize: 12),
+                    style: const TextStyle(color: Colors.green, fontSize: 12),
                   ),
                 ),
               const SizedBox(height: 24),

@@ -17,13 +17,15 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       bool isAccepted = true; // 👈 غيرها على مزاجك (true or false)
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              isAccepted ? const AcceptScreen() : const RejectScreen(),
-        ),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                isAccepted ? const AcceptScreen() : const RejectScreen(),
+          ),
+        );
+      });
     });
   }
 
@@ -59,12 +61,12 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
                 width: 240,
               ),
             ),
-            Center(
+            const Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     SizedBox(height: 160),
                     Text(
                       "Here we’re there , After Assigning\nYour data and your Request , we’re\ngoing to send the response.",
@@ -90,7 +92,7 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
                 ),
               ),
             ),
-            Positioned(
+            const Positioned(
               bottom: 80,
               left: 0,
               right: 0,
@@ -105,7 +107,7 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
                 ),
               ),
             ),
-            Positioned(
+            const Positioned(
               bottom: 30,
               left: 0,
               right: 0,

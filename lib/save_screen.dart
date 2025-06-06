@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SaveScreen extends StatefulWidget {
-  const SaveScreen({Key? key}) : super(key: key);
+  const SaveScreen({super.key});
 
   @override
   State<SaveScreen> createState() => _SaveScreenState();

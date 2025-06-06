@@ -62,7 +62,7 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
                 .toLowerCase(); // تطبيق البحث على المشاريع المحلية في القائمة المعروضة
           });
         },
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: "Search for a Business or Founder name",
           hintStyle: TextStyle(color: kSearchBarHintTextColor, fontSize: 14),
           prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
@@ -264,12 +264,12 @@ class HealthFitnessPage extends StatefulWidget {
       onToggleBookmarkInHome; // تستقبل دالة لتحديث الحفظ في Home
 
   const HealthFitnessPage({
-    Key? key,
+    super.key,
     required this.categoryName,
     required this.allProjects,
     required this.savedProjectsFromHome, // <--- هام جداً: هذا هو الـ parameter المطلوب
     required this.onToggleBookmarkInHome, // <--- هام جداً: هذا هو الـ parameter المطلوب
-  }) : super(key: key);
+  });
 
   @override
   _HealthFitnessPageState createState() => _HealthFitnessPageState();
@@ -377,12 +377,11 @@ class FoodTruckPage extends StatefulWidget {
       onToggleBookmarkInHome; // <--- هام جداً
 
   const FoodTruckPage(
-      {Key? key,
+      {super.key,
       required this.categoryName,
       required this.allProjects,
       required this.savedProjectsFromHome,
-      required this.onToggleBookmarkInHome})
-      : super(key: key);
+      required this.onToggleBookmarkInHome});
 
   @override
   _FoodTruckPageState createState() => _FoodTruckPageState();
@@ -479,12 +478,11 @@ class FashionPage extends StatefulWidget {
       onToggleBookmarkInHome; // <--- هام جداً
 
   const FashionPage(
-      {Key? key,
+      {super.key,
       required this.categoryName,
       required this.allProjects,
       required this.savedProjectsFromHome,
-      required this.onToggleBookmarkInHome})
-      : super(key: key);
+      required this.onToggleBookmarkInHome});
 
   @override
   _FashionPageState createState() => _FashionPageState();
@@ -581,12 +579,11 @@ class BeautyPage extends StatefulWidget {
       onToggleBookmarkInHome; // <--- هام جداً
 
   const BeautyPage(
-      {Key? key,
+      {super.key,
       required this.categoryName,
       required this.allProjects,
       required this.savedProjectsFromHome,
-      required this.onToggleBookmarkInHome})
-      : super(key: key);
+      required this.onToggleBookmarkInHome});
 
   @override
   _BeautyPageState createState() => _BeautyPageState();
@@ -683,12 +680,11 @@ class FoodAndBeveragePage extends StatefulWidget {
       onToggleBookmarkInHome; // <--- هام جداً
 
   const FoodAndBeveragePage(
-      {Key? key,
+      {super.key,
       required this.categoryName,
       required this.allProjects,
       required this.savedProjectsFromHome,
-      required this.onToggleBookmarkInHome})
-      : super(key: key);
+      required this.onToggleBookmarkInHome});
 
   @override
   _FoodAndBeveragePageState createState() => _FoodAndBeveragePageState();
@@ -728,7 +724,7 @@ class _FoodAndBeveragePageState extends State<FoodAndBeveragePage>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaveScreen(),
+                  builder: (context) => const SaveScreen(),
                 ),
               );
             },

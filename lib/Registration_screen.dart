@@ -48,6 +48,8 @@ const List<String> governorates = [
 ];
 
 class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -101,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _pickLocation() async {
     final String? result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => MapPickerScreen()),
+      MaterialPageRoute(builder: (_) => const MapPickerScreen()),
     );
     if (result != null) {
       setState(() {
@@ -114,7 +116,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       // Show loading screen
       Navigator.push(
-          context, MaterialPageRoute(builder: (_) => LoadingScreen()));
+          context, MaterialPageRoute(builder: (_) => const LoadingScreen()));
 
       // Prepare data for API
       final Map<String, dynamic> registrationData = {
@@ -154,7 +156,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           );
           // Navigate to the next screen
           Navigator.push(context,
-              MaterialPageRoute(builder: (_) => SecurityCheckScreen()));
+              MaterialPageRoute(builder: (_) => const SecurityCheckScreen()));
         } else {
           // Registration failed
           final Map<String, dynamic> errorData = json.decode(response.body);
@@ -162,7 +164,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               errorData['message'] ?? 'Registration failed. Please try again.';
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Color(0xffF44336), // Red for error
+              backgroundColor: const Color(0xffF44336), // Red for error
               content: Text("Error: $errorMessage"),
             ),
           );
@@ -175,7 +177,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           Navigator.pop(context);
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Color(0xffF44336), // Red for error
             content: Text("Network error: Could not connect to the server."),
           ),
@@ -420,6 +422,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
 /// شاشة اختيار الموقع
 class MapPickerScreen extends StatefulWidget {
+  const MapPickerScreen({super.key});
+
   @override
   _MapPickerScreenState createState() => _MapPickerScreenState();
 }

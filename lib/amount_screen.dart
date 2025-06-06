@@ -112,7 +112,7 @@ class _AmountScreenState extends State<AmountScreen> {
             'Failed to submit details. Please try again.';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Color(0xffF44336), // أحمر للخطأ
+            backgroundColor: const Color(0xffF44336), // أحمر للخطأ
             content: Text("Error: $errorMessage"),
           ),
         );
@@ -122,7 +122,7 @@ class _AmountScreenState extends State<AmountScreen> {
     } catch (e) {
       // خطأ في الشبكة
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Color(0xffF44336), // أحمر للخطأ
           content: Text("Network error: Could not connect to the server."),
         ),
@@ -189,7 +189,7 @@ class _AmountScreenState extends State<AmountScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'I make around \ £ ${_formatCurrency(_monthlyIncome).replaceAll(' LE', '')} monthly.', // هنا بنستخدم القيمة الفعلية
+              'I make around  £ ${_formatCurrency(_monthlyIncome).replaceAll(' LE', '')} monthly.', // هنا بنستخدم القيمة الفعلية
               style: const TextStyle(
                 fontSize: 14,
                 color: Colors.grey,

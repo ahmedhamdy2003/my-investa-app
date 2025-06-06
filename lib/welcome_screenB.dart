@@ -42,14 +42,14 @@ class WelcomeScreenB extends StatelessWidget {
           ),
 
           // المحتوى في منتصف الشاشة رأسيًا
-          Center(
+          const Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment:
                     CrossAxisAlignment.start, // الكلام يبدأ من الشمال
-                children: const [
+                children: [
                   Text(
                     "🚀 Welcome to Investa, a platform\nsupporting local entrepreneurs in Egypt!",
                     style: TextStyle(
@@ -83,7 +83,7 @@ class WelcomeScreenB extends StatelessWidget {
           ),
 
           // جملة أسفل الشاشة
-          Positioned(
+          const Positioned(
             bottom: 160,
             left: 0,
             right: 0,

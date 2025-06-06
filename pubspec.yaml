@@ -42,7 +42,6 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.4.9
   provider: ^6.0.5
-  cupertino_icons: ^1.0.6  
   flutter_lints: ^4.0.0
   font_awesome_flutter: ^10.6.0
   percent_indicator: ^4.2.3

@@ -498,8 +498,8 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, color: textColor)),
                         const SizedBox(height: 10),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Icon(FontAwesomeIcons.xTwitter,
                                 size: 20, color: Color(0xFF082347)),
                             SizedBox(width: 15),

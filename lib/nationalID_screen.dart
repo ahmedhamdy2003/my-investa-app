@@ -6,6 +6,8 @@ import 'dart:typed_data';
 import 'package:first_page/nationalIDB_screen.dart';
 
 class NationalIDScreen extends StatefulWidget {
+  const NationalIDScreen({super.key});
+
   @override
   _NationalIDScreenState createState() => _NationalIDScreenState();
 }

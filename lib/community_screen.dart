@@ -1,6 +1,5 @@
 // community_screen.dart
 import 'package:flutter/material.dart';
-import 'package:helloworld/investment_card.dart';
 import 'community2_screen.dart'; // تأكد من المسار الصحيح
 
 /// ————————————————————————————
@@ -28,14 +27,14 @@ const Color kSearchBarIconColor = Color(0xFF7E9ACF);
 /// ————————————————————————————
 class CommunityScreen extends StatefulWidget {
   // تحويلها لـ StatefulWidget لإضافة البحث
-  const CommunityScreen({Key? key}) : super(key: key);
+  const CommunityScreen({super.key});
 
   @override
   State<CommunityScreen> createState() => _CommunityScreenState();
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  final List<InvestmentCar> items = [];
+  final List<InvestmentCardB> items = [];
 
   final List<Map<String, String>> investorPosts = [
     {
@@ -162,14 +161,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   _searchQuery = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search Trending Brands',
                 hintStyle:
                     TextStyle(color: kSearchBarHintTextColor, fontSize: 14),
                 filled: true,
                 fillColor: kSearchBarFillColor,
                 prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
-                border: const OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                   borderSide: BorderSide.none,
                 ),
@@ -199,7 +198,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     if (it.title == 'FAKHR') {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => Community2Screen()),
+                        MaterialPageRoute(
+                            builder: (_) => const Community2Screen()),
                       );
                     }
                   },
@@ -227,8 +227,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: investorPosts.length,
-            separatorBuilder: (_, __) =>
-                Divider(color: dividerColor, thickness: kCardDividerThickness),
+            separatorBuilder: (_, __) => const Divider(
+                color: dividerColor, thickness: kCardDividerThickness),
             itemBuilder: (c, i) {
               final p = investorPosts[i];
               return Padding(
@@ -290,8 +290,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: discussionReplies.length,
-            separatorBuilder: (_, __) =>
-                Divider(color: dividerColor, thickness: kCardDividerThickness),
+            separatorBuilder: (_, __) => const Divider(
+                color: dividerColor, thickness: kCardDividerThickness),
             itemBuilder: (c, i) {
               final p = discussionReplies[i];
               final isOmar = p['name'] == 'Omar Saad';
@@ -398,7 +398,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => Community2Screen()),
+                    MaterialPageRoute(builder: (_) => const Community2Screen()),
                   );
                 },
                 child: const Text('See more',

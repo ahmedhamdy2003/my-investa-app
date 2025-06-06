@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class RejectScreen extends StatelessWidget {
-  const RejectScreen({Key? key}) : super(key: key);
+  const RejectScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Stack(
         children: [
-          const BackgroundHeader(),
+          BackgroundHeader(),
           Padding(
-            padding:
-                const EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+            padding: EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
@@ -25,7 +24,7 @@ class RejectScreen extends StatelessWidget {
                       color: Color(0xFF082347),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Text(
                     'Dear [Founder’s Name],\n\nThank you for your interest and for submitting your project, [Project Name], to our platform.\n\nAfter a careful review of your data and an analysis of success prospects, we regret to inform you that your project was not accepted at this stage.\n\n🔁 You can reapply after 3 months with updated and improved data.\n\nIf you need assistance in developing your project, we are here to support you.\n\nBest wishes,\nThe Platform Team',
                     textAlign: TextAlign.start,
@@ -47,7 +46,7 @@ class RejectScreen extends StatelessWidget {
 }
 
 class BackgroundHeader extends StatelessWidget {
-  const BackgroundHeader({Key? key}) : super(key: key);
+  const BackgroundHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

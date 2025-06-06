@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http; // استيراد مكتبة http
 import 'nationalID_screen.dart'; // تأكد أن nationalID_screen.dart في نفس المجلد
 
 class SecurityCheckScreen extends StatefulWidget {
+  const SecurityCheckScreen({super.key});
+
   @override
   _SecurityCheckScreenState createState() => _SecurityCheckScreenState();
 }
@@ -104,7 +106,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
         // الانتقال للصفحة التالية بعد الرفع الناجح
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => NationalIDScreen()),
+          MaterialPageRoute(builder: (context) => const NationalIDScreen()),
         );
       } else {
         // حدث خطأ أثناء الرفع
@@ -112,7 +114,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
         print('Image upload failed: ${response.statusCode} - $responseBody');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Color(0xffF44336),
+            backgroundColor: const Color(0xffF44336),
             content: Text("Failed to upload image: ${response.statusCode}"),
           ),
         );
@@ -120,7 +122,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
     } catch (e) {
       print('Error uploading image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Color(0xffF44336),
           content: Text("Network error: Could not upload image."),
         ),

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Arial',
       ),
       // Set SetupScreen as the initial screen as requested
-      home: SetupScreen(),
+      home: const SetupScreen(),
 
       // Combine routes from both projects.
       // Note: SetupScreen's internal navigation is handled directly via Navigator.push
@@ -42,14 +42,14 @@ class MyApp extends StatelessWidget {
         // Routes from the second project (investor app)
         // Ensure these paths are consistent with your file structure (e.g., 'lib/community_screen.dart')
         // Using distinct names to avoid clashes if any
-        '/investor_interests': (ctx) => InterestsScreen(),
-        '/investor_home': (ctx) => HomeScreen(),
+        '/investor_interests': (ctx) => const InterestsScreen(),
+        '/investor_home': (ctx) => const HomeScreen(),
         '/investor_saved': (ctx) =>
-            SaveScreen(), // Make sure savedItems is handled correctly if it's required
-        '/investor_community': (ctx) => CommunityScreen(),
-        '/investor_reels': (ctx) => ReelsScreen(),
-        '/investor_dashboard': (ctx) => DashboardScreen(),
-        '/investor_profile': (ctx) => ProfileScreen(),
+            const SaveScreen(), // Make sure savedItems is handled correctly if it's required
+        '/investor_community': (ctx) => const CommunityScreen(),
+        '/investor_reels': (ctx) => const ReelsScreen(),
+        '/investor_dashboard': (ctx) => const DashboardScreen(),
+        '/investor_profile': (ctx) => const ProfileScreen(),
         '/welcome_screen': (ctx) =>
             const WelcomeScreen(), // Added explicitly if you might navigate back to WelcomeScreen via routes
         // You might also want to add a route for RegistrationScreen here if you want to navigate to it via named routes from other parts of the app,
@@ -114,7 +114,8 @@ class SetupScreen extends StatelessWidget {
                 // **هنا تم التعديل**: الانتقال لشاشة RegistrationScreen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const RegistrationScreen()),
                 );
               },
               child: const Text(

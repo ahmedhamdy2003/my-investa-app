@@ -17,7 +17,7 @@ class InvestmentCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const InvestmentCard({
-    Key? key,
+    super.key,
     required this.assetImage,
     required this.title,
     required this.description,
@@ -26,7 +26,7 @@ class InvestmentCard extends StatelessWidget {
     required this.onBookmarkPressed,
     required this.isSaved,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +103,8 @@ class InvestmentCard extends StatelessWidget {
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold)),
-                                Text('invested',
-                                    style: const TextStyle(
+                                const Text('invested',
+                                    style: TextStyle(
                                         fontSize: 12, color: kMetricTextColor)),
                               ]),
                           Column(
@@ -114,8 +114,8 @@ class InvestmentCard extends StatelessWidget {
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold)),
-                                Text('investors',
-                                    style: const TextStyle(
+                                const Text('investors',
+                                    style: TextStyle(
                                         fontSize: 12, color: kMetricTextColor)),
                               ]),
                         ],

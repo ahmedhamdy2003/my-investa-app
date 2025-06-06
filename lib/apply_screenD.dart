@@ -42,7 +42,7 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
 
   // --- دالة إرسال كل البيانات المجمعة (Send) ---
   Future<void> _sendAllCollectedData() async {
-    final String sendUrl =
+    const String sendUrl =
         'https://2859-41-44-137-9.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
 
     // جمع البيانات من الصفحة الحالية
@@ -336,7 +336,8 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
                 borderSide:
                     const BorderSide(color: Color(0xFF082347), width: 2),
               ),
-              suffixIcon: Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
+              suffixIcon:
+                  const Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
             ),
           ),
         ),

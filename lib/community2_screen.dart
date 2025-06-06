@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 // Removed: Duplicate InvestmentItem definition from here
 // Make sure InvestmentItem is defined ONLY in 'package:helloworld/investment_item.dart'
 
-import 'package:http/http.dart'
-    as http; // Still needed if you intend to use API in the future
-import 'dart:convert'; // Still needed if you intend to use JSON conversion in the future
+// Still needed if you intend to use API in the future
+// Still needed if you intend to use JSON conversion in the future
 
 /// ————————————————————————————
 ///  Fixed values for easy modification ↓
@@ -34,7 +33,7 @@ class InvestmentCardB extends StatelessWidget {
   final bool isSaved;
 
   const InvestmentCardB({
-    Key? key,
+    super.key,
     required this.assetImage,
     required this.title,
     required this.description,
@@ -43,7 +42,7 @@ class InvestmentCardB extends StatelessWidget {
     required this.onTap,
     required this.onBookmarkPressed,
     required this.isSaved,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +167,8 @@ class InvestmentCardB extends StatelessWidget {
 
 /// Community2Screen with FAKHR details
 class Community2Screen extends StatefulWidget {
+  const Community2Screen({super.key});
+
   @override
   State<Community2Screen> createState() => _Community2ScreenState();
 }
@@ -358,8 +359,8 @@ class _Community2ScreenState extends State<Community2Screen> {
         appBar: AppBar(
           backgroundColor: kScreenBackgroundColor,
           elevation: 0,
-          leading: BackButton(color: primaryBlue),
-          title: Text(
+          leading: const BackButton(color: primaryBlue),
+          title: const Text(
             'Community ',
             style: TextStyle(
               color: primaryBlue,
@@ -383,11 +384,12 @@ class _Community2ScreenState extends State<Community2Screen> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Search Trending Brands',
-                    hintStyle:
-                        TextStyle(color: kSearchBarHintTextColor, fontSize: 14),
+                    hintStyle: const TextStyle(
+                        color: kSearchBarHintTextColor, fontSize: 14),
                     filled: true,
                     fillColor: kSearchBarFillColor,
-                    prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
+                    prefixIcon:
+                        const Icon(Icons.search, color: kSearchBarIconColor),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
@@ -400,7 +402,7 @@ class _Community2ScreenState extends State<Community2Screen> {
               ListView.builder(
                 itemCount: filteredItems.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (c, i) {
                   final it = filteredItems[i];
                   return Padding(
@@ -443,14 +445,14 @@ class _Community2ScreenState extends State<Community2Screen> {
                     // This button doesn't have a specific function in the current UI
                     print('Invest button pressed on Community List');
                   },
-                  child: const Text('Invest'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kInvestBtnColor,
                     foregroundColor: kInvestBtnTextColor,
-                    fixedSize: Size(kInvestBtnWidth, kInvestBtnHeight),
+                    fixedSize: const Size(kInvestBtnWidth, kInvestBtnHeight),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
+                  child: const Text('Invest'),
                 ),
               ),
               const SizedBox(height: 24),
@@ -471,7 +473,7 @@ class _Community2ScreenState extends State<Community2Screen> {
           onPressed: () =>
               setState(() => selected = null), // Go back to community list
         ),
-        title: Text(
+        title: const Text(
           'FAKHR', // Hardcoded title for FAKHR details page
           style: TextStyle(
             color: primaryBlue,
@@ -493,7 +495,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                   height: 180,
                   fit: BoxFit.cover,
                 ),
-                Positioned.fill(
+                const Positioned.fill(
                   child: Center(
                     child: Text(
                       'FAKHR', // Hardcoded overlay text
@@ -510,8 +512,8 @@ class _Community2ScreenState extends State<Community2Screen> {
             ),
 
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Details',
                 style: TextStyle(
@@ -559,8 +561,8 @@ class _Community2ScreenState extends State<Community2Screen> {
 
             const SizedBox(height: 24),
             // Top investors
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 'Top investors in FAKHR',
                 style: TextStyle(
@@ -573,7 +575,7 @@ class _Community2ScreenState extends State<Community2Screen> {
             ListView.separated(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: topInvestors.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (c, i) {
@@ -593,7 +595,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                           children: [
                             Text(
                               p['name']!,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: primaryBlue,
@@ -602,7 +604,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                             const SizedBox(height: 4),
                             Text(
                               p['subtitle']!,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: primaryBlue,
                               ),
@@ -618,8 +620,8 @@ class _Community2ScreenState extends State<Community2Screen> {
 
             const SizedBox(height: 24),
             // Discussion: no dividers, with indentation for doctor names
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 'Discussion',
                 style: TextStyle(
@@ -632,7 +634,7 @@ class _Community2ScreenState extends State<Community2Screen> {
             ListView.builder(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: discussion.length,
               itemBuilder: (c, i) {
                 final p = discussion[i];
@@ -656,7 +658,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                               children: [
                                 Text(
                                   p['name']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -665,7 +667,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   p['subtitle']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -686,8 +688,8 @@ class _Community2ScreenState extends State<Community2Screen> {
 
             const SizedBox(height: 24),
             // Investors Posts
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 'Investors Posts',
                 style: TextStyle(
@@ -700,7 +702,7 @@ class _Community2ScreenState extends State<Community2Screen> {
             ListView.separated(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: investorPosts.length,
               separatorBuilder: (_, __) => const Divider(
                   color: dividerColor, thickness: kCardDividerThickness),
@@ -724,7 +726,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                               children: [
                                 Text(
                                   p['name']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -733,7 +735,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   p['subtitle']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -754,8 +756,8 @@ class _Community2ScreenState extends State<Community2Screen> {
 
             const SizedBox(height: 24),
             // Latest Discussions
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 'Latest Discussions',
                 style: TextStyle(
@@ -768,7 +770,7 @@ class _Community2ScreenState extends State<Community2Screen> {
             ListView.separated(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: latestDiscussions.length,
               separatorBuilder: (_, __) => const Divider(
                   color: dividerColor, thickness: kCardDividerThickness),
@@ -792,7 +794,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                               children: [
                                 Text(
                                   p['name']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -801,7 +803,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   p['subtitle']!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: primaryBlue,
@@ -826,14 +828,14 @@ class _Community2ScreenState extends State<Community2Screen> {
                 onPressed: () {
                   print('Invest button pressed on FAKHR details page');
                 },
-                child: const Text('Invest'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kInvestBtnColor,
                   foregroundColor: kInvestBtnTextColor,
-                  fixedSize: Size(kInvestBtnWidth, kInvestBtnHeight),
+                  fixedSize: const Size(kInvestBtnWidth, kInvestBtnHeight),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
+                child: const Text('Invest'),
               ),
             ),
 

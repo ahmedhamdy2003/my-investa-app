@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<InvestmentItem> _savedItems = [];
   List<InvestmentItem> searchResults = [];
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
   static const String _baseUrl = 'https://aed7-102-190-139-157.ngrok-free.app/';
@@ -234,13 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
         body = const CommunityScreen();
         break;
       case 2:
-        body = ReelsScreen();
+        body = const ReelsScreen();
         break;
       case 3:
-        body = DashboardScreen();
+        body = const DashboardScreen();
         break;
       case 4:
-        body = ProfileScreen();
+        body = const ProfileScreen();
         break;
       default:
         body = _buildHomeContent();
@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return CircleAvatar(
                   radius: 28,
                   backgroundColor: Colors.grey[200],
-                  child: Icon(Icons.error, color: Colors.red),
+                  child: const Icon(Icons.error, color: Colors.red),
                 );
               } else {
                 return _buildProfileHeader();
@@ -747,7 +747,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // Custom icon for Reels tab in the Bottom Navigation Bar
 class _ReelsIcon extends StatelessWidget {
-  const _ReelsIcon({Key? key}) : super(key: key);
+  const _ReelsIcon();
 
   @override
   Widget build(BuildContext context) {

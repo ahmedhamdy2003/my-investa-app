@@ -319,7 +319,7 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
                 borderSide:
                     const BorderSide(color: Color(0xFF082347), width: 2),
               ),
-              suffixIcon: Icon(Icons.arrow_drop_down,
+              suffixIcon: const Icon(Icons.arrow_drop_down,
                   color: Color(0xFF082347)), // إضافة سهم لأسفل
             ),
           ),

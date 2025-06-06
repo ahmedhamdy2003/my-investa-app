@@ -2,13 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: PermissionScreen(),
     );
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
 }
 
 class PermissionScreen extends StatelessWidget {
+  const PermissionScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +53,12 @@ class PermissionScreen extends StatelessWidget {
 
   Widget _buildPermissionDialog(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         '"Diary" Would Like to Access to the Camera',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
-      content: Text(
+      content: const Text(
         'To take pictures and detect your face',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 16),
@@ -62,11 +66,12 @@ class PermissionScreen extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {},
-          child: Text('Don\'t Allow', style: TextStyle(color: Colors.blue)),
+          child:
+              const Text('Don\'t Allow', style: TextStyle(color: Colors.blue)),
         ),
         TextButton(
           onPressed: () {},
-          child: Text('OK', style: TextStyle(color: Colors.blue)),
+          child: const Text('OK', style: TextStyle(color: Colors.blue)),
         ),
       ],
     );

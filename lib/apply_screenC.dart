@@ -272,7 +272,8 @@ class _ApplyScreenCState extends State<ApplyScreenC> {
                 borderSide:
                     const BorderSide(color: Color(0xFF082347), width: 2),
               ),
-              suffixIcon: Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
+              suffixIcon:
+                  const Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
             ),
           ),
         ),

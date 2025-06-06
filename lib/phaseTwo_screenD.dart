@@ -70,7 +70,7 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
         _uploadedFileNames.clear(); // Clear previous selections
         _pickedMediaFiles.clear(); // Clear previous PlatformFile objects
         for (var platformFile in result.files) {
-          _uploadedFileNames.add(platformFile.name!);
+          _uploadedFileNames.add(platformFile.name);
           _pickedMediaFiles.add(platformFile); // Store the actual file object
         }
         _mediaController.text =

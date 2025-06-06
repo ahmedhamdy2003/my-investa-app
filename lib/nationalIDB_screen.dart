@@ -9,9 +9,9 @@ class NationalIDBScreen extends StatefulWidget {
   final Uint8List nationalIDFrontImageBytes;
 
   const NationalIDBScreen({
-    Key? key,
+    super.key,
     required this.nationalIDFrontImageBytes,
-  }) : super(key: key);
+  });
 
   @override
   _NationalIDBScreenState createState() => _NationalIDBScreenState();
@@ -122,7 +122,7 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
         // Navigate to the next screen after successful upload
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => FingerOrFaceScreen()),
+          MaterialPageRoute(builder: (context) => const FingerOrFaceScreen()),
         );
       } else {
         // Handle upload failure
@@ -131,7 +131,7 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
             'ID images upload failed: ${response.statusCode} - $responseBody');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Color(0xffF44336),
+            backgroundColor: const Color(0xffF44336),
             content: Text(
                 "Failed to upload ID images: ${response.statusCode} - $responseBody"),
           ),
@@ -140,7 +140,7 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
     } catch (e) {
       print('Error uploading ID images: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Color(0xffF44336),
           content: Text("Network error: Could not upload ID images."),
         ),

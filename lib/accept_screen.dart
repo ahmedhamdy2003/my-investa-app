@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'phaseTwo_screen.dart'; // متأكد إن الملف موجود عندك
 
 class AcceptScreen extends StatelessWidget {
-  const AcceptScreen({Key? key}) : super(key: key);
+  const AcceptScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class AcceptScreen extends StatelessWidget {
 }
 
 class BackgroundHeader extends StatelessWidget {
-  const BackgroundHeader({Key? key}) : super(key: key);
+  const BackgroundHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +63,11 @@ class BackgroundHeader extends StatelessWidget {
 class _PageOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const BackgroundHeader(),
+        BackgroundHeader(),
         Padding(
-          padding:
-              const EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+          padding: EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
@@ -82,7 +81,7 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
                   'Dear Norhan Salah,\n\nThank you for submitting your project, zerosugar by ketonista, through our platform.\n\nAfter reviewing and evaluating your data using our AI and analysis team, we are pleased to inform you that your project has been accepted.\n\n✅ Next steps:\nPlease log into your account to confirm your acceptance and begin setting up your page for investors within 3 days.\n\nIf you do not confirm within this period, your application will be automatically suspended.\n\nBest wishes,\nInvesta Team',
                   textAlign: TextAlign.start,
@@ -105,12 +104,11 @@ class _PageOne extends StatelessWidget {
 class _PageTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const BackgroundHeader(),
+        BackgroundHeader(),
         Padding(
-          padding:
-              const EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+          padding: EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
@@ -124,7 +122,7 @@ class _PageTwo extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
                   'We know you’ve worked hard and put in a lot of effort to build your project from the ground up. That’s why this platform exists—to open doors to opportunities and connect you with interested investors who want to support you.\n\nBut before we reach this stage, we need you to go through 3 key phases. Each phase is designed to help you clarify the full picture of your project—not only to convince investors but also to protect yourself, safeguard the platform, and start strong with transparency.\n\n✍️ The information you provide isn’t just numbers—it’s about building trust and qualifying you for real funding opportunities.\n\n💕 Take your time, prepare your answers.',
                   textAlign: TextAlign.start,
@@ -156,7 +154,7 @@ class _PageThree extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
               children: [
-                Text(
+                const Text(
                   'Phase 1:\nSubmitting in the platform and getting your Acceptance.\n(you already done it)',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -166,7 +164,7 @@ class _PageThree extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                const Text(
                   'Phase 2:\nAssigning your data so that the team could help you to put the best model and plan so that the investor be more aware',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -177,7 +175,7 @@ class _PageThree extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                const Text(
                   'Phase 3:\nThe most important and critical phase and Assigning the Legal Requirements to make the investor and platform be more clarified and feel more safe.',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -202,7 +200,7 @@ class _PageThree extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF082347),
+                        backgroundColor: const Color(0xFF082347),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
