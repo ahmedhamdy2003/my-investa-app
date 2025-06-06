@@ -70,7 +70,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
     } else {
       setState(() {
         _showError = true;
-        _errorMessage = 'الأرقام مش مطابقة. جرب تاني يا صاحبي.';
+        _errorMessage = 'The numbers dont match. Try again,';
         _showConfirmButton = false; // إخفاء الزر عند عدم التطابق
       });
       _pinController.clear(); // مسح حقل الإدخال ليعيد المستخدم المحاولة
@@ -82,7 +82,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
     // <--- تم تغيير اسم الدالة هنا
     // ممكن هنا تضيف مؤشر تحميل (Loading indicator) لو حبيت
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("جاري حفظ الرقم السري على الجهاز...")),
+      const SnackBar(content: Text("Saving the password to the device...")),
     );
 
     try {
@@ -96,7 +96,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xff4CAF50), // أخضر للنجاح
-          content: Text("تم حفظ الرقم السري بنجاح على الجهاز!"),
+          content: Text("Password successfully saved on the device"),
         ),
       );
 
@@ -110,7 +110,8 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Color(0xffF44336), // أحمر للخطأ
-          content: Text("حصل خطأ في حفظ الرقم السري: ${e.toString()}"),
+          content: Text(
+              "An error occurred while saving the password: ${e.toString()}"),
         ),
       );
       print('Error saving PIN locally: $e');
@@ -169,7 +170,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'أكد الـ ',
+                          text: 'Confirm the ',
                         ),
                         TextSpan(
                           text: 'PIN',
@@ -284,7 +285,7 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
                         ),
                       ),
                       child: const Text(
-                        'تأكيد',
+                        'Confirm',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,

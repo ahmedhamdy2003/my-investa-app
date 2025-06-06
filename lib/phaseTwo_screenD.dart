@@ -1,12 +1,18 @@
+// phaseTwo_screenD.dart
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+// Removed http import
 
-import 'phaseTwo_screenE.dart'; // Navigation to the next screen
+import 'package:first_page/phaseTwo_screenE.dart'; // Navigation to the next screen
 
 class PhaseTwoScreenD extends StatefulWidget {
+  // 1. إضافة projectId كـ parameter مطلوب في constructor
+  final String projectId;
   final Map<String, dynamic> allCollectedData; // Data from previous screens
 
-  const PhaseTwoScreenD({super.key, required this.allCollectedData});
+  // 2. تحديث الـ constructor ليطلب projectId
+  const PhaseTwoScreenD(
+      {super.key, required this.allCollectedData, required this.projectId});
 
   @override
   State<PhaseTwoScreenD> createState() => _PhaseTwoScreenDState();
@@ -19,11 +25,9 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
   final TextEditingController _awardsController = TextEditingController();
 
   final List<String> _uploadedFileNames =
-      []; // To store names of uploaded files (not actual file data)
-
-  // New: To store actual PlatformFile objects if you want to pass them
-  // to the next screen or send them later
-  final List<PlatformFile> _pickedMediaFiles = [];
+      []; // To store names of uploaded files
+  final List<PlatformFile> _pickedMediaFiles =
+      []; // To store actual PlatformFile objects
 
   @override
   void initState() {
@@ -37,14 +41,20 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
     _awardsController.text =
         widget.allCollectedData['awardsCertifications'] ?? '';
 
-    // Initialize _uploadedFileNames if coming back from PhaseTwoScreenE
-    if (widget.allCollectedData['uploadedMediaFileNames'] != null) {
+    // If there were previously picked media files (PlatformFile objects) passed, re-add them.
+    // This is a simplification; for robust solution, consider a more complex state management
+    // or local caching for large files across screens.
+    if (widget.allCollectedData['pickedMediaFiles'] is List<PlatformFile>) {
+      _pickedMediaFiles.addAll(
+          List<PlatformFile>.from(widget.allCollectedData['pickedMediaFiles']));
+      _uploadedFileNames.addAll(_pickedMediaFiles.map((f) => f.name).toList());
+      _mediaController.text = _uploadedFileNames.join(', ');
+    } else if (widget.allCollectedData['uploadedMediaFileNames'] != null) {
+      // Fallback if only names were passed (less ideal for actual file objects)
       _uploadedFileNames.addAll(
           List<String>.from(widget.allCollectedData['uploadedMediaFileNames']));
+      _mediaController.text = _uploadedFileNames.join(', ');
     }
-    // Initialize _pickedMediaFiles if coming back (more complex, might require re-picking or temporary storage solutions)
-    // For simplicity, we are only storing names for now. If you need the actual files,
-    // you'd need a more robust state management or file caching mechanism.
   }
 
   // Function to handle file picking
@@ -52,6 +62,7 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true, // Allow picking multiple files
       type: FileType.media, // Specify media files (images, videos)
+      withData: true, // Crucial for getting bytes on web
     );
 
     if (result != null) {
@@ -67,6 +78,7 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
       });
     } else {
       // User canceled the picker
+      print('User cancelled media file picking.');
     }
   }
 
@@ -77,13 +89,8 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
       'customerTestimonials': _testimonialsController.text.trim(),
       'projectWebsiteLinks': _websiteLinksController.text.trim(),
       'awardsCertifications': _awardsController.text.trim(),
-      'uploadedMediaFileNames': _uploadedFileNames, // Include picked file names
-      // IMPORTANT: Passing actual file data (bytes) directly in a Map
-      // between screens might lead to performance issues or memory leaks
-      // for large files. For simplicity, we are passing names.
-      // If you need to send actual files, you should handle them as
-      // multipart form data at the final submission stage in PhaseTwoScreenE.
-      // 'pickedMediaFiles': _pickedMediaFiles, // You could pass this, but handle carefully
+      'pickedMediaFiles':
+          _pickedMediaFiles, // Pass the list of PlatformFile objects
     };
     return {...widget.allCollectedData, ...currentScreenData}; // Merge maps
   }
@@ -155,13 +162,13 @@ class _PhaseTwoScreenDState extends State<PhaseTwoScreenD> {
                         Map<String, dynamic> mergedData =
                             _collectAndMergeData();
 
-                        // Navigate to the next screen, passing all collected data
-                        // NO BACKEND SUBMISSION YET
+                        // 3. تمرير الـ projectId المستلم إلى الشاشة التالية
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                PhaseTwoScreenE(allCollectedData: mergedData),
+                            builder: (context) => PhaseTwoScreenE(
+                                allCollectedData: mergedData,
+                                projectId: widget.projectId), // تمرير projectId
                           ),
                         );
                       },

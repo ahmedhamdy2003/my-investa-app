@@ -1,13 +1,18 @@
+// phaseTwo_screenB.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import http package
-import 'dart:typed_data'; // For Uint8List
+// Removed http import as it's no longer sending data from here
+// Removed dart:typed_data as it's not directly handling bytes here anymore
 
-import 'phaseTwo_screenC.dart'; // Navigation to the next screen
+import 'package:first_page/phaseTwo_screenC.dart'; // Navigation to the next screen
 
 class PhaseTwoScreenB extends StatefulWidget {
+  // 1. إضافة projectId كـ parameter مطلوب في constructor
+  final String projectId;
   final Map<String, dynamic> allCollectedData; // Data from previous screens
 
-  const PhaseTwoScreenB({super.key, required this.allCollectedData});
+  // 2. تحديث الـ constructor ليطلب projectId
+  const PhaseTwoScreenB(
+      {super.key, required this.allCollectedData, required this.projectId});
 
   @override
   State<PhaseTwoScreenB> createState() => _PhaseTwoScreenBState();
@@ -120,82 +125,12 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
       'investmentType': investmentTypeController.text.trim(),
       'totalInvestorsAllowed': totalInvestorsAllowedController.text.trim(),
       'maxInvestorShort': maxInvestorShortController.text.trim(),
-      'maxInvestorLong':
-          maxInvestorLongController.text.trim(), // Include if used
+      'maxInvestorLong': maxInvestorLongController.text.trim(),
     };
     return {...widget.allCollectedData, ...currentScreenData}; // Merge maps
   }
 
-  Future<void> _sendDataToBackend() async {
-    final combinedData = _collectAndMergeData();
-    final String apiUrl =
-        'YOUR_DJANGO_API_ENDPOINT_HERE'; // **IMPORTANT: Replace with your actual Django API endpoint**
-
-    // Extract file bytes and filename
-    final Uint8List? logoBytes = combinedData['projectLogoFileBytes'];
-    final String? logoFileName = combinedData['projectLogoFileName'];
-
-    // Remove the file bytes and name from the map as they will be sent as multipart
-    combinedData.remove('projectLogoFileBytes');
-    combinedData.remove('projectLogoFileName');
-
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-
-    // Add text fields to the request
-    combinedData.forEach((key, value) {
-      request.fields[key] = value.toString();
-    });
-
-    // Add the file if it exists
-    if (logoBytes != null && logoFileName != null) {
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'project_logo', // This should match the name of your file field in Django backend
-          logoBytes,
-          filename: logoFileName,
-        ),
-      );
-    }
-
-    try {
-      // Send the request
-      var response = await request.send();
-
-      // Read the response
-      String responseBody = await response.stream.bytesToString();
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Success
-        print('Data sent successfully!');
-        print('Response: $responseBody');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data submitted successfully!')),
-        );
-        // Navigate to the next screen (PhaseTwoScreenC) after successful submission
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                PhaseTwoScreenC(allCollectedData: combinedData),
-          ),
-        );
-      } else {
-        // Error
-        print('Failed to send data. Status code: ${response.statusCode}');
-        print('Response body: $responseBody');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to submit data: ${response.statusCode}')),
-        );
-      }
-    } catch (e) {
-      print('Error sending data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error sending data: $e")),
-      );
-    }
-  }
+  // Removed _sendDataToBackend function from here
 
   @override
   Widget build(BuildContext context) {
@@ -293,8 +228,7 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
                   '• Maximum number of investor long  '), // Corrected label
               _buildTextField('type here',
                   controller: maxInvestorLongController,
-                  keyboardType:
-                      TextInputType.number), // Assuming this is for long term
+                  keyboardType: TextInputType.number),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -318,7 +252,19 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
                     ),
                     child: IconButton(
                       onPressed: () {
-                        _sendDataToBackend(); // Call the API send function
+                        // Collect and merge data from this screen
+                        Map<String, dynamic> mergedData =
+                            _collectAndMergeData();
+
+                        // 3. تمرير الـ projectId المستلم إلى الشاشة التالية
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PhaseTwoScreenC(
+                                allCollectedData: mergedData,
+                                projectId: widget.projectId), // تمرير projectId
+                          ),
+                        );
                       },
                       icon: const Icon(
                         Icons.arrow_forward,
@@ -443,8 +389,8 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
                 borderSide:
                     const BorderSide(color: Color(0xFF082347), width: 2),
               ),
-              suffixIcon: const Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF082347)), // Dropdown arrow
+              suffixIcon:
+                  const Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
             ),
           ),
         ),

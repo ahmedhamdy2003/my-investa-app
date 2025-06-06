@@ -70,13 +70,13 @@ class _AmountScreenState extends State<AmountScreen> {
     // تعريف رابط الـ API الخاص بالباك إند
     // **مهم جداً: استبدل هذا بالرابط الفعلي لنقطة نهاية الـ API في Django**
     const String apiUrl =
-        'YOUR_DJANGO_BACKEND_URL/api/submit_user_financial_details/'; // مثال على الرابط
+        'https://2859-41-44-137-9.ngrok-free.app/account-verificiation/'; // مثال على الرابط
 
     try {
       final Map<String, dynamic> dataToSend = {
         'gender': widget.selectedGender,
         'employment_status': widget.selectedEmploymentStatus,
-        'fund_source': widget.selectedFundSource,
+        'primary_source_of_fund': widget.selectedFundSource,
         'monthly_income': _monthlyIncome,
         'monthly_save': _monthlySave,
         // يمكنك إضافة أي بيانات أخرى للمستخدم هنا (مثل user_id)

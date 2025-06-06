@@ -1,34 +1,78 @@
-import 'package:first_page/saved_screenB.dart';
-import 'package:flutter/material.dart';
-import 'investment_itemB.dart';
-import 'investment_cardB.dart';
+// categories_pages.dart
 
-/// Mixin to define common UI for category pages.
+import 'package:first_page/investment_card.dart';
+import 'package:first_page/investment_item.dart';
+import 'package:first_page/save_screen.dart';
+import 'package:flutter/material.dart';
+
+// Removed: import 'package:http/http.dart' as http; // لا حاجة لـ http
+// Removed: import 'dart:convert'; // لا حاجة لـ json conversion
+
+/// قيم ثابتة قابلة للتعديل بسهولة
+const Color kScreenBackgroundColor = Colors.white;
+const Color kMetricTextColor = Color(0xFF001F3F);
+const double kCardDividerThickness = 1.0;
+const double kMetricsDividerThickness = 2.0;
+const double kInvestBtnWidth = 114.0;
+const double kInvestBtnHeight = 32.0;
+const Color kInvestBtnColor = Color(0xFF001F3F);
+const Color kInvestBtnTextColor = Colors.white;
+
+const Color kSearchBarFillColor = Color(0xFFF5F5F5);
+const Color kSearchBarHintTextColor = Color(0xFF7E9ACF);
+const Color kSearchBarIconColor = Color(0xFF7E9ACF);
+
+/// Mixin لتحديد واجهة المستخدم والمنطق المشترك لصفحات التصنيفات.
 mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
   String? selectedFilter;
   String? selectedSortOption;
+  String? categoryName; // لاسم التصنيف الحالي الذي تم تمريره من الصفحة الرئيسية
+  List<InvestmentItem> allProjectsFromHome =
+      []; // تستقبل كل المشاريع من Home Screen
+  List<InvestmentItem> savedItems =
+      []; // تستقبل قائمة المشاريع المحفوظة من Home Screen
 
-  /// Build the search bar (same as in Home)
+  String _searchQuery =
+      ''; // لمدخل البحث داخل صفحة التصنيف (يتم البحث محلياً في القائمة المعروضة)
+
+  // New callback for toggling bookmark, passed from Home Screen
+  late void Function(InvestmentItem item)
+      onToggleBookmark; // <--- هام: تم إضافة هذا
+
+  @override
+  void initState() {
+    super.initState(); // استدعاء initState الخاص بالـ Mixin
+    // categoryName, allProjectsFromHome, savedItems, and onToggleBookmark
+    // are assigned in the individual category page's initState BEFORE super.initState().
+  }
+
+  /// بناء شريط البحث (نفس الموجود في Home)
   Widget buildSearchBar() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Color(0xffF5F7FA),
+        color: kSearchBarFillColor,
         borderRadius: BorderRadius.circular(25),
       ),
       child: TextField(
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value
+                .toLowerCase(); // تطبيق البحث على المشاريع المحلية في القائمة المعروضة
+          });
+        },
         decoration: InputDecoration(
           hintText: "Search for a Business or Founder name",
-          hintStyle: TextStyle(color: Color(0xFF7E9ACF), fontSize: 14),
-          prefixIcon: Icon(Icons.search, color: Color(0xFF7E9ACF)),
+          hintStyle: TextStyle(color: kSearchBarHintTextColor, fontSize: 14),
+          prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
           border: InputBorder.none,
         ),
       ),
     );
   }
 
-  /// Build Filter Bar (same for all categories)
+  /// بناء شريط الفلترة (نفس الموجود في Home)
   Widget buildFilterBar() {
     return Column(
       children: [
@@ -41,8 +85,8 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
             buildFilterButton(null, "Viral"),
           ],
         ),
-        SizedBox(height: 16),
-        Divider(color: Colors.black, thickness: 1, height: 20),
+        const SizedBox(height: 16),
+        const Divider(color: Colors.black, thickness: 1, height: 20),
       ],
     );
   }
@@ -52,25 +96,28 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
     bool isSelected = (selectedFilter == label);
     return GestureDetector(
       onTap: () {
-        if (isSortBy) {
-          showSortByBottomSheet();
-        } else {
-          setState(() {
+        setState(() {
+          if (isSortBy) {
+            showSortByBottomSheet();
+          } else {
             selectedFilter = (selectedFilter == label) ? null : label;
-          });
-        }
+            // TODO: هنا يمكنك تطبيق الفلترة على قائمة allProjectsFromHome
+            // (مثلاً، إعادة فلترة `filteredCategoryProjects` بناءً على `selectedFilter`)
+          }
+        });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xff082347) : Colors.transparent,
-          border: Border.all(color: Color(0xff082347)),
+          color: isSelected ? const Color(0xff082347) : Colors.transparent,
+          border: Border.all(color: const Color(0xff082347)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
-            if (icon != null) Icon(icon, size: 16, color: Color(0xff082347)),
-            if (icon != null) SizedBox(width: 6),
+            if (icon != null)
+              Icon(icon, size: 16, color: const Color(0xff082347)),
+            if (icon != null) const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
@@ -78,7 +125,8 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
                 color: isSelected ? Colors.white : Colors.black,
               ),
             ),
-            if (isSortBy) Icon(Icons.arrow_drop_down, color: Color(0xff082347)),
+            if (isSortBy)
+              const Icon(Icons.arrow_drop_down, color: Color(0xff082347)),
           ],
         ),
       ),
@@ -88,20 +136,20 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
   void showSortByBottomSheet() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Type of your investing",
+              const Text("Type of your investing",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              SizedBox(height: 6),
-              Text("How would you like to invest, and get your return?",
+              const SizedBox(height: 6),
+              const Text("How would you like to invest, and get your return?",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               buildSortOption("Long Term"),
               buildSortOption("Short Term"),
             ],
@@ -117,23 +165,24 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
       onTap: () {
         setState(() {
           selectedSortOption = (selectedSortOption == option) ? null : option;
+          // TODO: قم بتطبيق الترتيب هنا على قائمة allProjectsFromHome
         });
         Navigator.pop(context);
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xff082347) : Colors.white,
+          color: isSelected ? const Color(0xff082347) : Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Color(0xff082347)),
+          border: Border.all(color: const Color(0xff082347)),
         ),
         child: Center(
           child: Text(
             option,
             style: TextStyle(
-              color: isSelected ? Colors.white : Color(0xff082347),
+              color: isSelected ? Colors.white : const Color(0xff082347),
             ),
           ),
         ),
@@ -141,42 +190,86 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  /// Build vertical list of Investment Cards.
+  /// بناء قائمة عمودية من Investment Cards.
   Widget buildVerticalList(
-    List<InvestmentItemB> data, {
-    required void Function(InvestmentItemB item) onBookmarkPressedCallback,
+    List<InvestmentItem> dataToDisplay, {
+    required void Function(InvestmentItem item) onBookmarkPressedCallback,
   }) {
+    // البحث المحلي يتم تطبيقه على `dataToDisplay` نفسها (القائمة المفلترة مسبقًا بالتصنيف)
+    final finalFilteredAndSearchedData = dataToDisplay
+        .where((item) =>
+            item.title.toLowerCase().contains(_searchQuery) ||
+            item.description.toLowerCase().contains(_searchQuery))
+        .toList();
+
+    if (finalFilteredAndSearchedData.isEmpty) {
+      return const Center(
+          child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Text(
+            "No projects found in this category or matching your search.",
+            style: TextStyle(fontSize: 16, color: Colors.grey)),
+      ));
+    }
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: finalFilteredAndSearchedData.length,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final item = data[index];
-        // لاحقاً سنضيف منطق الحفظ (isItemSaved)
-        final isSaved = isItemSaved(item);
+        final item = finalFilteredAndSearchedData[index];
+        // الآن، يتم التحقق من حالة الحفظ باستخدام savedItems التي يتم تمريرها من HomeScreen
+        final bool isSaved = savedItems
+            .any((elem) => elem.title == item.title); // يفضل استخدام ID فريد
+
         return Container(
-          margin: EdgeInsets.only(bottom: 10),
-          child: InvestmentCardB(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: InvestmentCard(
             assetImage: item.assetImage,
             title: item.title,
             description: item.description,
             investedAmount: item.investedAmount,
             investors: item.investors,
-            isSaved: isSaved,
-            onBookmarkPressed: () => onBookmarkPressedCallback(item),
+            isSaved: isSaved, // تمرير حالة الحفظ الصحيحة
+            onBookmarkPressed: () {
+              // استدعاء الكول باك الذي سيقوم بتشغيل _toggleBookmark في HomeScreen
+              onBookmarkPressedCallback(item);
+              // تحديث حالة savedItems محلياً فوراً لتعكس التغيير في الـ UI
+              // (لضمان أن أيقونة الحفظ تتغير فوراً بدون انتظار تحديث من HomeScreen)
+              setState(() {
+                if (isSaved) {
+                  savedItems.removeWhere((e) => e.title == item.title);
+                } else {
+                  savedItems.add(item);
+                }
+              });
+            },
+            onTap: () {
+              print('Tapped on ${item.title}');
+            },
           ),
         );
       },
     );
   }
-
-  /// يجب على كل صفحة أن تعرّف هل العنصر محفوظ أم لا
-  bool isItemSaved(InvestmentItemB item);
 }
 
 /// =================== Health & Fitness Page ===================
 class HealthFitnessPage extends StatefulWidget {
-  const HealthFitnessPage({Key? key}) : super(key: key);
+  final String categoryName;
+  final List<InvestmentItem> allProjects; // تستقبل كل المشاريع من Home Screen
+  final List<InvestmentItem>
+      savedProjectsFromHome; // تستقبل المشاريع المحفوظة من Home
+  final void Function(InvestmentItem item)
+      onToggleBookmarkInHome; // تستقبل دالة لتحديث الحفظ في Home
+
+  const HealthFitnessPage({
+    Key? key,
+    required this.categoryName,
+    required this.allProjects,
+    required this.savedProjectsFromHome, // <--- هام جداً: هذا هو الـ parameter المطلوب
+    required this.onToggleBookmarkInHome, // <--- هام جداً: هذا هو الـ parameter المطلوب
+  }) : super(key: key);
 
   @override
   _HealthFitnessPageState createState() => _HealthFitnessPageState();
@@ -184,110 +277,83 @@ class HealthFitnessPage extends StatefulWidget {
 
 class _HealthFitnessPageState extends State<HealthFitnessPage>
     with CategoryPageMixin {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (21).png",
-      title: " iDiet",
-      description:
-          "offering healthy, satisfying meals to support effortless weight loss",
-      investedAmount: "260,000 LE ",
-      investors: "26",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (22).png",
-      title: "MuscleAdd",
-      description:
-          "leading supplement manufacturing company, we serve millions of athletes around world to create better healthy future by improving lifestyle.",
-      investedAmount: "205,000 LE ",
-      investors: "20",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (23).png",
-      title: "Zero Sugar By Ketonista",
-      description:
-          "   We are specialized in Healthy , Keto , Sugar Free , Gluten Free Products",
-      investedAmount: "450,000 LE ",
-      investors: "43",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (24).png",
-      title: " Muscle Seeds",
-      description:
-          "Our mission is to provide premium supplements that support and enhance the fitness journey of individual, as a lifestyle take it as their profession",
-      investedAmount: "205,000 LE",
-      investors: "30",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (25).png",
-      title: " Muscle Seeds",
-      description:
-          "Our mission is to provide premium supplements that support and enhance the fitness journey of individual, as a lifestyle take it as their profession",
-      investedAmount: "220,000 LE ",
-      investors: "23",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (26).png",
-      title: "INFUSE",
-      description:
-          "For fitness wear that are Infusing Quality, Affordability, and Style into Every Thread!",
-      investedAmount: "350,000 LE",
-      investors: "35",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (27).png",
-      title: "Eat Healthy",
-      description: "Meal plans for a healthier lifestyle",
-      investedAmount: "260,000 LE",
-      investors: "26",
-    ),
-  ];
-
-  // قائمة محلية للعناصر المحفوظة
-  List<InvestmentItemB> savedItems = [];
+  List<InvestmentItem> filteredCategoryProjects = [];
 
   @override
-  bool isItemSaved(InvestmentItemB item) {
-    return savedItems.any((elem) => elem.title == item.title);
+  void initState() {
+    categoryName = widget.categoryName; // تعيين اسم التصنيف من الـ widget
+    allProjectsFromHome = widget.allProjects; // تعيين قائمة المشاريع الكاملة
+    savedItems =
+        widget.savedProjectsFromHome; // <-- هام: تعيين المشاريع المحفوظة
+    onToggleBookmark =
+        widget.onToggleBookmarkInHome; // <-- هام: تعيين الكول باك لدالة الحفظ
+
+    super.initState(); // هذا سيقوم بتشغيل initState الخاص بالـ Mixin
+
+    // فلترة المشاريع محلياً بناءً على اسم التصنيف
+    filteredCategoryProjects = allProjectsFromHome
+        .where((item) => item.category == categoryName)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color appBarContentColor = Color(0xff082347);
+
     return Scaffold(
-      // AppBar مع زر رجوع + أيقونة الحفظ
+      backgroundColor: kScreenBackgroundColor, // استخدام اللون الثابت للخلفية
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff082347)),
+          icon: const Icon(Icons.arrow_back, color: appBarContentColor),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_border, color: appBarContentColor),
+            onPressed: () {
+              // Note: This navigates to SaveScreen. Toggling bookmark happens on individual cards.
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SaveScreen(),
+                ),
+              );
+            },
+          ),
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Health & Fitness",
-            style: TextStyle(
-                color: Color(0xff082347),
+        title: Text(widget.categoryName, // عرض اسم التصنيف في الـ AppBar
+            style: const TextStyle(
+                color: appBarContentColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildSearchBar(),
-              SizedBox(height: 16),
-              Divider(color: Colors.black, thickness: 1, height: 20),
-              buildFilterBar(),
-              SizedBox(height: 16),
+              buildSearchBar(), // شريط البحث
+              const SizedBox(height: 16),
+              const Divider(color: Colors.black, thickness: 1, height: 20),
+              buildFilterBar(), // شريط الفلترة
+              const SizedBox(height: 16),
               Container(
-                color: Color(0xffD9E4FF),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child:
-                    buildVerticalList(items, onBookmarkPressedCallback: (item) {
+                color: const Color(0xffD9E4FF), // لون خلفية قسم المشاريع
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                // عرض قائمة المشاريع الرأسية التي تم فلترتها محلياً
+                child: buildVerticalList(filteredCategoryProjects,
+                    onBookmarkPressedCallback: (item) {
+                  // استدعاء الدالة الممررة من Home Screen لتحديث حالة الحفظ
+                  onToggleBookmark(item);
+                  // لا تنسَ تحديث savedItems المحلية هنا أيضاً بعد استدعاء onToggleBookmark
+                  // لتعكس التغيير في الـ UI فوراً.
                   setState(() {
-                    // إذا كان محفوظاً => إزالة، والعكس صحيح
-                    if (isItemSaved(item)) {
-                      savedItems
-                          .removeWhere((elem) => elem.title == item.title);
+                    // يجب أن يكون داخل setState
+                    if (savedItems.any((e) => e.title == item.title)) {
+                      savedItems.removeWhere((e) => e.title == item.title);
                     } else {
                       savedItems.add(item);
                     }
@@ -304,97 +370,58 @@ class _HealthFitnessPageState extends State<HealthFitnessPage>
 
 /// =================== Food Truck Page ===================
 class FoodTruckPage extends StatefulWidget {
-  const FoodTruckPage({Key? key}) : super(key: key);
+  final String categoryName;
+  final List<InvestmentItem> allProjects;
+  final List<InvestmentItem> savedProjectsFromHome; // <--- هام جداً
+  final void Function(InvestmentItem item)
+      onToggleBookmarkInHome; // <--- هام جداً
+
+  const FoodTruckPage(
+      {Key? key,
+      required this.categoryName,
+      required this.allProjects,
+      required this.savedProjectsFromHome,
+      required this.onToggleBookmarkInHome})
+      : super(key: key);
 
   @override
   _FoodTruckPageState createState() => _FoodTruckPageState();
 }
 
 class _FoodTruckPageState extends State<FoodTruckPage> with CategoryPageMixin {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (28).png",
-      title: "The BOBA Truck ",
-      description:
-          "Sip, Smile, and Repeat OUR BOBA drinks in📍Offshell Walk, Seashell",
-      investedAmount: "430,000 LE ",
-      investors: "35",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (29).png",
-      title: "Matter",
-      description:
-          "  Post-modern Matcha & Brew House.All things Matcha🍵 Ceremonial Grade Matcha",
-      investedAmount: "350,000 LE ",
-      investors: "35",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (30).png",
-      title: "El Santo",
-      description:
-          "  We don't mind getting our hands dirty with…. Tacos 🌮Just come AND TRT OUR SPECIAL TACOS",
-      investedAmount: "250,000 LE ",
-      investors: "29",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (31).png",
-      title: "LOU",
-      description:
-          "  Specialized in Bang burger / Mac n cheese burger / Crispy Chicken / Fresh onion B / BBQ B / Hot dog / Mexican nachos chips  ",
-      investedAmount: "190,000 LE ",
-      investors: "20",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (32).png",
-      title: "Burgerista",
-      description:
-          "   A gourmet burger spot serving juicy, handcrafted burgers with bold flavors and fresh ingredients!",
-      investedAmount: "230,000 LE ",
-      investors: "25",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (33).png",
-      title: "The pizza Truck",
-      description:
-          "Special Margarita / pepperoni / Salami / Anchovies / Pesto Buffalo / Truffle Fungi / Vegetarian / Caprese for sweet nutella / Lotus     ",
-      investedAmount: "220,000 LE ",
-      investors: "30",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (34).png",
-      title: "Waffleyano",
-      description:
-          " A musical-themed food truck serving delicious waffles, pancakes, and sweet treats with a creative twist!",
-      investedAmount: "150,000 LE ",
-      investors: "15",
-    ),
-  ];
-
-  List<InvestmentItemB> savedItems = [];
+  List<InvestmentItem> filteredCategoryProjects = [];
 
   @override
-  bool isItemSaved(InvestmentItemB item) {
-    return savedItems.any((elem) => elem.title == item.title);
+  void initState() {
+    categoryName = widget.categoryName;
+    allProjectsFromHome = widget.allProjects;
+    savedItems = widget.savedProjectsFromHome;
+    onToggleBookmark = widget.onToggleBookmarkInHome;
+
+    super.initState();
+    filteredCategoryProjects = allProjectsFromHome
+        .where((item) => item.category == categoryName)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color appBarContentColor = Color(0xff082347);
     return Scaffold(
-      // AppBar مع زر رجوع + أيقونة الحفظ
+      backgroundColor: kScreenBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff082347)),
+          icon: const Icon(Icons.arrow_back, color: appBarContentColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border, color: Color(0xff082347)),
+            icon: const Icon(Icons.bookmark_border, color: appBarContentColor),
             onPressed: () {
-              // صفحة الحفظ
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaveScreenB(savedItems: savedItems),
+                  builder: (context) => const SaveScreen(),
                 ),
               );
             },
@@ -402,32 +429,33 @@ class _FoodTruckPageState extends State<FoodTruckPage> with CategoryPageMixin {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Food Truck",
-            style: TextStyle(
-                color: Color(0xff082347),
+        title: Text(widget.categoryName,
+            style: const TextStyle(
+                color: appBarContentColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSearchBar(),
-              SizedBox(height: 16),
-              Divider(color: Colors.black, thickness: 1, height: 20),
+              const SizedBox(height: 16),
+              const Divider(color: Colors.black, thickness: 1, height: 20),
               buildFilterBar(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
-                color: Color(0xffD9E4FF),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child:
-                    buildVerticalList(items, onBookmarkPressedCallback: (item) {
+                color: const Color(0xffD9E4FF),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: buildVerticalList(filteredCategoryProjects,
+                    onBookmarkPressedCallback: (item) {
+                  onToggleBookmark(item);
                   setState(() {
-                    if (isItemSaved(item)) {
-                      savedItems
-                          .removeWhere((elem) => elem.title == item.title);
+                    // يجب أن يكون داخل setState
+                    if (savedItems.any((e) => e.title == item.title)) {
+                      savedItems.removeWhere((e) => e.title == item.title);
                     } else {
                       savedItems.add(item);
                     }
@@ -444,95 +472,58 @@ class _FoodTruckPageState extends State<FoodTruckPage> with CategoryPageMixin {
 
 /// =================== Fashion Page ===================
 class FashionPage extends StatefulWidget {
-  const FashionPage({Key? key}) : super(key: key);
+  final String categoryName;
+  final List<InvestmentItem> allProjects;
+  final List<InvestmentItem> savedProjectsFromHome; // <--- هام جداً
+  final void Function(InvestmentItem item)
+      onToggleBookmarkInHome; // <--- هام جداً
+
+  const FashionPage(
+      {Key? key,
+      required this.categoryName,
+      required this.allProjects,
+      required this.savedProjectsFromHome,
+      required this.onToggleBookmarkInHome})
+      : super(key: key);
 
   @override
   _FashionPageState createState() => _FashionPageState();
 }
 
 class _FashionPageState extends State<FashionPage> with CategoryPageMixin {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (35).png",
-      title: "Seemly",
-      description:
-          " Seemly brings simplicity and comfort to your wardrobe. Our products are designed with you in stylish, casual, and perfect for all of your needs.",
-      investedAmount: "260,000 LE ",
-      investors: "32",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (36).png",
-      title: "FAKHR",
-      description:
-          " Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness. ",
-      investedAmount: "300,000 LE ",
-      investors: "33",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (37).png",
-      title: "Urban Ducks",
-      description:
-          "Using hibiscus rice, green tea & orange, its products can be found in pharmacy Bloom Egypt, & on several online platforms Source Beauty.",
-      investedAmount: "240,000 LE ",
-      investors: "36",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (39).png",
-      title: "Beyond",
-      description:
-          "   Egyptian with high quality garments with reasonable prices,Beyond ,all stereotypes ,Misconception ,Expectations that comes to mind   ",
-      investedAmount: "250,000 LE ",
-      investors: "28",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (40).png",
-      title: " Eros",
-      description: "LOVE IS A DEADLY SPELL",
-      investedAmount: "230,000 LE",
-      investors: "25",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (40).png",
-      title: " Glitch ",
-      description:
-          " Glitch was founded on passion and we pride ourselves on radical design that unabashedly pushes you outside your comfort zone. ",
-      investedAmount: "150,000 LE ",
-      investors: "22",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (41).png",
-      title: "Fashion 7",
-      description:
-          "    our customers satisfaction is our priority , worldwide shipping ,always connected with our family(customers) ",
-      investedAmount: "220,000 LE  ",
-      investors: "30",
-    ),
-  ];
-
-  List<InvestmentItemB> savedItems = [];
+  List<InvestmentItem> filteredCategoryProjects = [];
 
   @override
-  bool isItemSaved(InvestmentItemB item) {
-    return savedItems.any((elem) => elem.title == item.title);
+  void initState() {
+    categoryName = widget.categoryName;
+    allProjectsFromHome = widget.allProjects;
+    savedItems = widget.savedProjectsFromHome;
+    onToggleBookmark = widget.onToggleBookmarkInHome;
+
+    super.initState();
+    filteredCategoryProjects = allProjectsFromHome
+        .where((item) => item.category == categoryName)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color appBarContentColor = Color(0xff082347);
     return Scaffold(
-      // AppBar مع زر رجوع + أيقونة الحفظ
+      backgroundColor: kScreenBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff082347)),
+          icon: const Icon(Icons.arrow_back, color: appBarContentColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border, color: Color(0xff082347)),
+            icon: const Icon(Icons.bookmark_border, color: appBarContentColor),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaveScreenB(savedItems: savedItems),
+                  builder: (context) => const SaveScreen(),
                 ),
               );
             },
@@ -540,32 +531,33 @@ class _FashionPageState extends State<FashionPage> with CategoryPageMixin {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Fashion",
-            style: TextStyle(
-                color: Color(0xff082347),
+        title: Text(widget.categoryName,
+            style: const TextStyle(
+                color: appBarContentColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSearchBar(),
-              SizedBox(height: 16),
-              Divider(color: Colors.black, thickness: 1, height: 20),
+              const SizedBox(height: 16),
+              const Divider(color: Colors.black, thickness: 1, height: 20),
               buildFilterBar(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
-                color: Color(0xffD9E4FF),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child:
-                    buildVerticalList(items, onBookmarkPressedCallback: (item) {
+                color: const Color(0xffD9E4FF),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: buildVerticalList(filteredCategoryProjects,
+                    onBookmarkPressedCallback: (item) {
+                  onToggleBookmark(item);
                   setState(() {
-                    if (isItemSaved(item)) {
-                      savedItems
-                          .removeWhere((elem) => elem.title == item.title);
+                    // يجب أن يكون داخل setState
+                    if (savedItems.any((e) => e.title == item.title)) {
+                      savedItems.removeWhere((e) => e.title == item.title);
                     } else {
                       savedItems.add(item);
                     }
@@ -582,96 +574,58 @@ class _FashionPageState extends State<FashionPage> with CategoryPageMixin {
 
 /// =================== Beauty Page ===================
 class BeautyPage extends StatefulWidget {
-  const BeautyPage({Key? key}) : super(key: key);
+  final String categoryName;
+  final List<InvestmentItem> allProjects;
+  final List<InvestmentItem> savedProjectsFromHome; // <--- هام جداً
+  final void Function(InvestmentItem item)
+      onToggleBookmarkInHome; // <--- هام جداً
+
+  const BeautyPage(
+      {Key? key,
+      required this.categoryName,
+      required this.allProjects,
+      required this.savedProjectsFromHome,
+      required this.onToggleBookmarkInHome})
+      : super(key: key);
 
   @override
   _BeautyPageState createState() => _BeautyPageState();
 }
 
 class _BeautyPageState extends State<BeautyPage> with CategoryPageMixin {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (42).png",
-      title: "Smack That Scrub ",
-      description:
-          " The brand’s scrubs are the show-stoppers, though, as they target cellulite, eczema, flaky skins, and variousother skin ailments.",
-      investedAmount: "200,000 LE ",
-      investors: "32",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (43).png",
-      title: "Urban Ducks",
-      description:
-          "Using hibiscus rice, green tea & orange, its products can be found in pharmacy Bloom Egypt, & on several online platforms Source Beauty.",
-      investedAmount: "150,000 LE ",
-      investors: "15",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (44).png",
-      title: "Clementine",
-      description:
-          " Clean, and cruelty-free skincare products that bring the perfect mix between health and beauty.",
-      investedAmount: "250,000 LE ",
-      investors: "36",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (46).png",
-      title: "The Bathland",
-      description:
-          "   Collection has everything you need to have naturally glowing skin. From face scrubs to lip & cheek tint, we've got you covered!",
-      investedAmount: "140,000 LE ",
-      investors: "15",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (56).png",
-      title: " Mother Naked",
-      description:
-          ".  flipping the script on beauty , all about clean, glow-boosting.products simplify your routine & amplify your confidence. Designed to match",
-      investedAmount: "270,000 LE ",
-      investors: "25",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (47).png",
-      title: "Glazed",
-      description:
-          ".  Offering monthly subscription boxes . Our connection with our customers is strong since without it loyal customers brands mean nothing",
-      investedAmount: "150,000 LE  ",
-      investors: "22",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (48).png",
-      title: "Meraki",
-      description:
-          " It provides a diversity of natural products for personal care, catering to skin, hair and wellbeing.",
-      investedAmount: "250,000 LE ",
-      investors: "27",
-    ),
-  ];
-
-  List<InvestmentItemB> savedItems = [];
+  List<InvestmentItem> filteredCategoryProjects = [];
 
   @override
-  bool isItemSaved(InvestmentItemB item) {
-    return savedItems.any((elem) => elem.title == item.title);
+  void initState() {
+    categoryName = widget.categoryName;
+    allProjectsFromHome = widget.allProjects;
+    savedItems = widget.savedProjectsFromHome;
+    onToggleBookmark = widget.onToggleBookmarkInHome;
+
+    super.initState();
+    filteredCategoryProjects = allProjectsFromHome
+        .where((item) => item.category == categoryName)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color appBarContentColor = Color(0xff082347);
     return Scaffold(
-      // AppBar مع زر رجوع + أيقونة الحفظ
+      backgroundColor: kScreenBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff082347)),
+          icon: const Icon(Icons.arrow_back, color: appBarContentColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border, color: Color(0xff082347)),
+            icon: const Icon(Icons.bookmark_border, color: appBarContentColor),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaveScreenB(savedItems: savedItems),
+                  builder: (context) => const SaveScreen(),
                 ),
               );
             },
@@ -679,32 +633,33 @@ class _BeautyPageState extends State<BeautyPage> with CategoryPageMixin {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Beauty",
-            style: TextStyle(
-                color: Color(0xff082347),
+        title: Text(widget.categoryName,
+            style: const TextStyle(
+                color: appBarContentColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSearchBar(),
-              SizedBox(height: 16),
-              Divider(color: Colors.black, thickness: 1, height: 20),
+              const SizedBox(height: 16),
+              const Divider(color: Colors.black, thickness: 1, height: 20),
               buildFilterBar(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
-                color: Color(0xffD9E4FF),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child:
-                    buildVerticalList(items, onBookmarkPressedCallback: (item) {
+                color: const Color(0xffD9E4FF),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: buildVerticalList(filteredCategoryProjects,
+                    onBookmarkPressedCallback: (item) {
+                  onToggleBookmark(item);
                   setState(() {
-                    if (isItemSaved(item)) {
-                      savedItems
-                          .removeWhere((elem) => elem.title == item.title);
+                    // يجب أن يكون داخل setState
+                    if (savedItems.any((e) => e.title == item.title)) {
+                      savedItems.removeWhere((e) => e.title == item.title);
                     } else {
                       savedItems.add(item);
                     }
@@ -721,7 +676,19 @@ class _BeautyPageState extends State<BeautyPage> with CategoryPageMixin {
 
 /// =================== Food & Beverage Page ===================
 class FoodAndBeveragePage extends StatefulWidget {
-  const FoodAndBeveragePage({Key? key}) : super(key: key);
+  final String categoryName;
+  final List<InvestmentItem> allProjects;
+  final List<InvestmentItem> savedProjectsFromHome; // <--- هام جداً
+  final void Function(InvestmentItem item)
+      onToggleBookmarkInHome; // <--- هام جداً
+
+  const FoodAndBeveragePage(
+      {Key? key,
+      required this.categoryName,
+      required this.allProjects,
+      required this.savedProjectsFromHome,
+      required this.onToggleBookmarkInHome})
+      : super(key: key);
 
   @override
   _FoodAndBeveragePageState createState() => _FoodAndBeveragePageState();
@@ -729,89 +696,39 @@ class FoodAndBeveragePage extends StatefulWidget {
 
 class _FoodAndBeveragePageState extends State<FoodAndBeveragePage>
     with CategoryPageMixin {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (49).png",
-      title: " Goovy ",
-      description:
-          " A Cairo-based restaurant specializing in smash burgers and crispy fried chicken, known for its bold flavors and high-quality ingredients.",
-      investedAmount: "200,000 LE ",
-      investors: "32",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (50).png",
-      title: " Mesh Beta3 Aseer",
-      description:
-          ".  A juice shop ,  offering fresh juices and smoothies made with 100% natural ingredients.",
-      investedAmount: "150,000 LE ",
-      investors: "15",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (51).png",
-      title: "Waffle Station",
-      description:
-          " Fresh waffles, customizable toppings, sweet & savory delights!",
-      investedAmount: "240,000 LE ",
-      investors: "36",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (52).png",
-      title: "Matros Ali w Dos ",
-      description:
-          "   An Egyptian eatery known for its creative sweet and savory sandwiches, packed with rich flavors and unique ingredients.",
-      investedAmount: "300,000 LE ",
-      investors: "33",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (54).png",
-      title: " Mother Naked",
-      description:
-          ".  flipping the script on beauty , all about clean, glow-boosting.products simplify your routine & amplify your confidence. Designed to match",
-      investedAmount: "280,000 LE ",
-      investors: "27",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (54).png",
-      title: " Zooba",
-      description:
-          ".  serves modern Egyptian street food with authentic flavors and a creative twist. We have are in Kuwait NOW ! ",
-      investedAmount: "150,000 LE ",
-      investors: "22",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (55).png",
-      title: " Azouma Marakbeya",
-      description:
-          " An Egyptian seafood restaurant , known for its fresh fish dishes and flavorful seafood specialties.",
-      investedAmount: "290,000 LE ",
-      investors: "30",
-    ),
-  ];
-
-  List<InvestmentItemB> savedItems = [];
+  List<InvestmentItem> filteredCategoryProjects = [];
 
   @override
-  bool isItemSaved(InvestmentItemB item) {
-    return savedItems.any((elem) => elem.title == item.title);
+  void initState() {
+    categoryName = widget.categoryName;
+    allProjectsFromHome = widget.allProjects;
+    savedItems = widget.savedProjectsFromHome;
+    onToggleBookmark = widget.onToggleBookmarkInHome;
+
+    super.initState();
+    filteredCategoryProjects = allProjectsFromHome
+        .where((item) => item.category == categoryName)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color appBarContentColor = Color(0xff082347);
     return Scaffold(
-      // AppBar مع زر رجوع + أيقونة الحفظ
+      backgroundColor: kScreenBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff082347)),
+          icon: const Icon(Icons.arrow_back, color: appBarContentColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border, color: Color(0xff082347)),
+            icon: const Icon(Icons.bookmark_border, color: appBarContentColor),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaveScreenB(savedItems: savedItems),
+                  builder: (context) => SaveScreen(),
                 ),
               );
             },
@@ -819,32 +736,33 @@ class _FoodAndBeveragePageState extends State<FoodAndBeveragePage>
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Food & Beverage",
-            style: TextStyle(
-                color: Color(0xff082347),
+        title: Text(widget.categoryName,
+            style: const TextStyle(
+                color: appBarContentColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSearchBar(),
-              SizedBox(height: 16),
-              Divider(color: Colors.black, thickness: 1, height: 20),
+              const SizedBox(height: 16),
+              const Divider(color: Colors.black, thickness: 1, height: 20),
               buildFilterBar(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
-                color: Color(0xffD9E4FF),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child:
-                    buildVerticalList(items, onBookmarkPressedCallback: (item) {
+                color: const Color(0xffD9E4FF),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: buildVerticalList(filteredCategoryProjects,
+                    onBookmarkPressedCallback: (item) {
+                  onToggleBookmark(item);
                   setState(() {
-                    if (isItemSaved(item)) {
-                      savedItems
-                          .removeWhere((elem) => elem.title == item.title);
+                    // يجب أن يكون داخل setState
+                    if (savedItems.any((e) => e.title == item.title)) {
+                      savedItems.removeWhere((e) => e.title == item.title);
                     } else {
                       savedItems.add(item);
                     }

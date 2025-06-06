@@ -1,13 +1,11 @@
+// هذا الملف يجب أن يحتوي على كلاس InterestsScreen فقط.
+
 import 'package:flutter/material.dart';
-// تم إزالة استيراد http و dart:convert بما أننا لن نستخدم الـ API مؤقتًا
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-// **مهم جداً: تأكد من هذا المسار لـ welcome_screen.dart.**
-import '../welcome_screen.dart';
-
-// **مهم جداً: تأكد من هذا المسار لـ home_screen.dart.**
-import 'home_screen.dart'; // تأكد أن هذا الملف موجود في نفس المجلد investor_screens
+import '../welcome_screen.dart'; // تأكد من المسار الصحيح لشاشة الترحيب
+import 'home_screen.dart'; // تأكد من المسار الصحيح لشاشة الـ Home
 
 class InterestsScreen extends StatefulWidget {
   @override
@@ -34,13 +32,71 @@ class _InterestsScreenState extends State<InterestsScreen> {
   ];
 
   Set<int> selectedIndices = {};
+  bool _isLoading = false;
+  String _errorMessage = '';
 
-  // تم تعديل هذه الدالة لتنقل مباشرة بدون الاتصال بالـ API
-  void navigateToHome() {
-    // الانتقال لـ home_screen باستخدام المسار الذي تم تعريفه في main.dart
-    // pushReplacementNamed ستقوم بإزالة InterestsScreen من الـ stack
-    // هذا يعني أن الضغط على زر الرجوع في HomeScreen لن يعيدك لـ InterestsScreen
-    Navigator.pushReplacementNamed(context, '/investor_home');
+  // **مهم:** Base URL بتاع الباك إند بتاعك.
+  // لازم تغير 'http://10.0.2.2:8000/api/' بالـ URL الفعلي للـ API بتاعك.
+  static const String _baseUrl = 'https://aed7-102-190-139-157.ngrok-free.app/';
+
+  // دالة إرسال الاهتمامات للباك إند
+  Future<void> _sendInterestsToBackend() async {
+    if (selectedIndices.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one interest.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    List<String> selectedInterests =
+        selectedIndices.map((index) => interestLabels[index]).toList();
+
+    try {
+      final response = await http.post(
+        Uri.parse('${_baseUrl}interests/'), // ده API إرسال الاهتمامات
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN', // لو محتاج توكن للاستيثاق
+        },
+        body: jsonEncode(<String, List<String>>{
+          'interests': selectedInterests,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Interests sent successfully: ${response.body}');
+        // الانتقال لصفحة الـ Home بعد النجاح
+        Navigator.pushReplacementNamed(context, '/investor_home');
+      } else {
+        setState(() {
+          _errorMessage = 'Failed to save interests: ${response.statusCode}';
+        });
+        print('Failed to send interests: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Failed to save interests: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred: $e';
+      });
+      print('Error sending interests: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -49,6 +105,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          // (الفقاقيع Bubble images)
           Positioned(
             top: 0,
             left: 0,
@@ -88,7 +145,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     padding: const EdgeInsets.only(left: 25),
                     child: Text(
                       "What’s your interest?",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Color(0xff001F3F),
@@ -156,21 +213,19 @@ class _InterestsScreenState extends State<InterestsScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: [
+                    if (_isLoading)
+                      const CircularProgressIndicator(color: Color(0xff001F3F)),
+                    if (_errorMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ElevatedButton(
-                      onPressed: () {
-                        // **هنا تم التعديل**: استدعاء navigateToHome() مباشرة
-                        // بدون الحاجة لـ check إذا تم اختيار اهتمامات أم لا في هذا السيناريو
-                        // لأنك تريد رؤية الـ UI مباشرة.
-                        // إذا كنت تريد إبقاء الـ check:
-                        if (selectedIndices.isNotEmpty) {
-                          navigateToHome();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("اختَر على الأقل اهتمام واحد")),
-                          );
-                        }
-                      },
+                      onPressed: _isLoading ? null : _sendInterestsToBackend,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff001F3F),
                         padding: EdgeInsets.zero,
@@ -187,7 +242,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
-                        // الرجوع لـ WelcomeScreen وإزالة كل الشاشات التي كانت بينهما
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

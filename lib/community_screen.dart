@@ -1,8 +1,10 @@
+// community_screen.dart
 import 'package:flutter/material.dart';
-import 'community2_screen.dart';
+import 'package:helloworld/investment_card.dart';
+import 'community2_screen.dart'; // تأكد من المسار الصحيح
 
 /// ————————————————————————————
-///  قيم ثابتة قابلة للتعديل بسهولة ↓
+///  قيم ثابتة قابلة للتعديل بسهولة ↓
 /// ————————————————————————————
 const Color kScreenBackgroundColor = Colors.white;
 const Color kMetricTextColor = Color(0xFF001F3F);
@@ -18,182 +20,22 @@ const Color kSearchBarHintTextColor = Color(0xFF7E9ACF);
 const Color kSearchBarIconColor = Color(0xFF7E9ACF);
 
 /// ————————————————————————————
-///  نهاية القيم القابلة للتعديل
+///  نهاية القيم القابلة للتعديل
 /// ————————————————————————————
 
-class InvestmentItemB {
-  final String assetImage, title, description, investedAmount, investors;
-  InvestmentItemB({
-    required this.assetImage,
-    required this.title,
-    required this.description,
-    required this.investedAmount,
-    required this.investors,
-  });
-}
-
-class InvestmentCardB extends StatelessWidget {
-  final String assetImage, title, description, investedAmount, investors;
-  final VoidCallback onTap, onBookmarkPressed;
-  final bool isSaved;
-
-  const InvestmentCardB({
-    Key? key,
-    required this.assetImage,
-    required this.title,
-    required this.description,
-    required this.investedAmount,
-    required this.investors,
-    required this.onTap,
-    required this.onBookmarkPressed,
-    required this.isSaved,
-  }) : super(key: key);
+/// ————————————————————————————
+///  الصفحة الأولى: CommunityScreen
+/// ————————————————————————————
+class CommunityScreen extends StatefulWidget {
+  // تحويلها لـ StatefulWidget لإضافة البحث
+  const CommunityScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Cover + overlay title
-            Stack(
-              children: [
-                Image.asset(assetImage,
-                    width: double.infinity, height: 140, fit: BoxFit.cover),
-                Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      title.toUpperCase(),
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(blurRadius: 4, color: Colors.black45)
-                          ]),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Title, description & bookmark
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF082347)),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: const Color(0xFF082347),
-                        ),
-                        onPressed: onBookmarkPressed,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 12, color: Colors.black87),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(thickness: kCardDividerThickness),
-            // Invested & investors
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(investedAmount,
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold)),
-                        const Text('invested',
-                            style: TextStyle(
-                                fontSize: 12, color: kMetricTextColor)),
-                      ]),
-                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                    Text(investors,
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold)),
-                    const Text('investors',
-                        style:
-                            TextStyle(fontSize: 12, color: kMetricTextColor)),
-                  ]),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  State<CommunityScreen> createState() => _CommunityScreenState();
 }
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: CommunityScreen(),
-  ));
-}
-
-/// ————————————————————————————
-///  الصفحة الأولى: CommunityScreen
-/// ————————————————————————————
-class CommunityScreen extends StatelessWidget {
-  final List<InvestmentItemB> items = [
-    InvestmentItemB(
-      assetImage: "assets/image (36).png",
-      title: "FAKHR",
-      description:
-          "Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness.",
-      investedAmount: "300,000 LE",
-      investors: "33",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (56).png",
-      title: "Mother Naked",
-      description:
-          "Flipping the script on beauty: all about clean, glow-boosting products. Simplify your routine & amplify your confidence.",
-      investedAmount: "270,000 LE",
-      investors: "25",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (23).png",
-      title: "Zero Sugar By Ketonista",
-      description:
-          "We are specialized in Healthy, Keto, Sugar Free, Gluten Free Products",
-      investedAmount: "450,000 LE",
-      investors: "43",
-    ),
-    InvestmentItemB(
-      assetImage: "assets/image (35).png",
-      title: "Seemly",
-      description:
-          "Seemly brings simplicity and comfort to your wardrobe. Perfect casual pieces for all your needs.",
-      investedAmount: "260,000 LE",
-      investors: "32",
-    ),
-  ];
+class _CommunityScreenState extends State<CommunityScreen> {
+  final List<InvestmentCar> items = [];
 
   final List<Map<String, String>> investorPosts = [
     {
@@ -262,11 +104,19 @@ class CommunityScreen extends StatelessWidget {
     {'label': 'Challenges', 'value': 'Attract customers.'},
   ];
 
+  String _searchQuery = ''; // لمدخل البحث
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     const primaryBlue = Color(0xFF003366);
     const accentRed = Color(0xFFE53935);
     const dividerColor = Color(0xFFDDDDDD);
+
+    final filteredItems = items
+        .where((item) =>
+            item.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
 
     return Scaffold(
       backgroundColor: kScreenBackgroundColor,
@@ -286,7 +136,7 @@ class CommunityScreen extends StatelessWidget {
         ]),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications_active, color: primaryBlue),
+            icon: const Icon(Icons.notifications_active, color: primaryBlue),
             onPressed: () {},
           ),
           const SizedBox(width: 16),
@@ -303,9 +153,15 @@ class CommunityScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: primaryBlue)),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
               decoration: InputDecoration(
                 hintText: 'Search Trending Brands',
                 hintStyle:
@@ -313,7 +169,7 @@ class CommunityScreen extends StatelessWidget {
                 filled: true,
                 fillColor: kSearchBarFillColor,
                 prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                   borderSide: BorderSide.none,
                 ),
@@ -322,13 +178,13 @@ class CommunityScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // --- 4 Cards
+          // --- 4 Cards (Filtered by search)
           ListView.builder(
-            itemCount: items.length,
+            itemCount: filteredItems.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (c, i) {
-              final it = items[i];
+              final it = filteredItems[i];
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -338,15 +194,26 @@ class CommunityScreen extends StatelessWidget {
                   description: it.description,
                   investedAmount: it.investedAmount,
                   investors: it.investors,
-                  onTap: () {},
-                  onBookmarkPressed: () {},
-                  isSaved: false,
+                  onTap: () {
+                    // الانتقال إلى Community2Screen فقط إذا كان العنصر "FAKHR"
+                    if (it.title == 'FAKHR') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => Community2Screen()),
+                      );
+                    }
+                  },
+                  onBookmarkPressed: () {
+                    // هنا يمكن إضافة منطق الحفظ لـ CommunityScreen
+                    // أو يمكنك استخدام نفس دالة _toggleBookmark إذا كان لديك قائمة savedItems هنا
+                  },
+                  isSaved: false, // تحتاج إلى ربط هذا بحالة الحفظ الفعلية
                 ),
               );
             },
           ),
 
-          // --- Investors Posts
+          // --- Investors Posts (باقي الأقسام تظل كما هي حالياً)
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
             child: Text('Investors Posts',
@@ -380,13 +247,13 @@ class CommunityScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(p['name']!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
                                         color: primaryBlue)),
                                 const SizedBox(height: 4),
                                 Text(p['subtitle']!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: primaryBlue)),
@@ -444,13 +311,13 @@ class CommunityScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(p['name']!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
                                         color: primaryBlue)),
                                 const SizedBox(height: 4),
                                 Text(p['subtitle']!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: primaryBlue)),
@@ -534,8 +401,8 @@ class CommunityScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => Community2Screen()),
                   );
                 },
-                child:
-                    Text('See more', style: TextStyle(color: kMetricTextColor)),
+                child: const Text('See more',
+                    style: TextStyle(color: kMetricTextColor)),
               ),
             ]),
           ),
@@ -546,7 +413,6 @@ class CommunityScreen extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {},
-              child: const Text('Invest'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: kInvestBtnColor,
                 foregroundColor: kInvestBtnTextColor,
@@ -554,6 +420,7 @@ class CommunityScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
+              child: const Text('Invest'),
             ),
           ),
 

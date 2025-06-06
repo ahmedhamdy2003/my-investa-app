@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart'; // Import for file picking
-import 'package:http/http.dart' as http; // For making HTTP requests
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 
-// لا يوجد صفحة تالية بعد PhaseTwoScreenE في هذا السيناريو،
-// لذلك لا يوجد استيراد لـ phaseTwo_screenF هنا.
-// إذا كانت هناك صفحة تالية، ستقوم باستيرادها هنا.
+import 'package:first_page/phaseTwo_screenF.dart'; // تأكد من المسار الصحيح
 
 class PhaseTwoScreenE extends StatefulWidget {
-  final Map<String, dynamic> allCollectedData; // Receive all collected data
+  // 1. إضافة projectId كـ parameter مطلوب في constructor
+  final String projectId;
+  final Map<String, dynamic> allCollectedData;
 
-  const PhaseTwoScreenE({super.key, required this.allCollectedData});
+  // 2. تحديث الـ constructor ليطلب projectId
+  const PhaseTwoScreenE(
+      {super.key, required this.allCollectedData, required this.projectId});
 
   @override
   State<PhaseTwoScreenE> createState() => _PhaseTwoScreenEState();
 }
 
 class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
-  // Controllers for each text field
   final TextEditingController _commercialRegController =
       TextEditingController();
   final TextEditingController _financialSummaryController =
       TextEditingController();
   final TextEditingController _businessPlanController = TextEditingController();
 
-  // New: To store the actual PlatformFile objects for potential upload later
   PlatformFile? _commercialRegFile;
   PlatformFile? _financialSummaryFile;
   PlatformFile? _businessPlanFile;
 
-  bool _isLoading = false; // To show loading state during submission
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with any existing data if navigating back
-    // Note: If you stored file paths in allCollectedData, retrieve them here.
     _commercialRegController.text =
         widget.allCollectedData['commercialRegFileName'] ?? '';
     _financialSummaryController.text =
@@ -42,8 +42,18 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
     _businessPlanController.text =
         widget.allCollectedData['simplifiedBusinessPlanFileName'] ?? '';
 
-    // If you passed PlatformFile objects from previous screen, you'd retrieve them here.
-    // This is more complex and usually involves temporary file storage or re-picking.
+    if (widget.allCollectedData['commercialRegFile'] is PlatformFile) {
+      _commercialRegFile = widget.allCollectedData['commercialRegFile'];
+      _commercialRegController.text = _commercialRegFile!.name;
+    }
+    if (widget.allCollectedData['financialSummaryFile'] is PlatformFile) {
+      _financialSummaryFile = widget.allCollectedData['financialSummaryFile'];
+      _financialSummaryController.text = _financialSummaryFile!.name;
+    }
+    if (widget.allCollectedData['businessPlanFile'] is PlatformFile) {
+      _businessPlanFile = widget.allCollectedData['businessPlanFile'];
+      _businessPlanController.text = _businessPlanFile!.name;
+    }
   }
 
   @override
@@ -54,20 +64,19 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
     super.dispose();
   }
 
-  // Function to handle file picking for a specific controller and store the file
   Future<void> _pickFile(
       TextEditingController controller, String fileType) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any, // Allow any file type (documents, spreadsheets, etc.)
+      type: FileType.any,
+      allowMultiple: false,
+      withData: true,
     );
 
     if (result != null) {
       setState(() {
         final pickedFile = result.files.single;
-        controller.text =
-            pickedFile.name; // Display the name of the picked file
+        controller.text = pickedFile.name;
 
-        // Store the actual PlatformFile object based on fileType
         if (fileType == 'commercialReg') {
           _commercialRegFile = pickedFile;
         } else if (fileType == 'financialSummary') {
@@ -76,97 +85,144 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
           _businessPlanFile = pickedFile;
         }
       });
+      print(
+          'File picked: ${result.files.single.name}, Bytes available: ${result.files.single.bytes != null}');
     } else {
-      // User canceled the picker
+      print('User cancelled the file picking.');
     }
   }
 
-  // Function to submit all collected data to Django
   Future<void> _submitAllData() async {
     setState(() {
-      _isLoading = true; // Show loading indicator
+      _isLoading = true;
     });
 
-    // Collect data from this screen
-    Map<String, dynamic> currentScreenData = {
-      // We are sending file names, not actual file content, in the JSON part.
-      // Actual file upload will require a different mechanism (e.g., MultipartRequest).
-      'commercialRegFileName': _commercialRegController.text.trim(),
-      'financialSummaryFileName': _financialSummaryController.text.trim(),
-      'simplifiedBusinessPlanFileName': _businessPlanController.text.trim(),
-    };
+    Map<String, dynamic> currentScreenData = {};
 
-    // Merge with all data collected from previous screens
-    Map<String, dynamic> finalDataToSubmit = {
-      ...widget.allCollectedData,
-      ...currentScreenData
-    };
+    final Map<String, dynamic> finalDataForFields = {};
+    widget.allCollectedData.forEach((key, value) {
+      if (value is! PlatformFile && value is! List<PlatformFile>) {
+        finalDataForFields[key] = value;
+      }
+    });
+    currentScreenData.forEach((key, value) {
+      if (value is! PlatformFile && value is! List<PlatformFile>) {
+        finalDataForFields[key] = value;
+      }
+    });
 
-    // Debugging: Print all collected data before sending
-    print('All collected data for submission:');
-    finalDataToSubmit.forEach((key, value) {
+    // 3. إضافة projectId إلى البيانات المرسلة
+    finalDataForFields['projectId'] = widget.projectId;
+
+    print('All collected data for text fields submission:');
+    finalDataForFields.forEach((key, value) {
       print('$key: $value');
     });
 
-    // --- IMPORTANT: Handling file upload with MultipartRequest ---
-    // If you need to send actual files, you would use MultipartRequest.
-    // This is a simplified example showing how to prepare.
-    // Your Django backend would need to handle file uploads.
-
     final String url =
-        'YOUR_DJANGO_API_ENDPOINT_FOR_FULL_SUBMISSION'; // **استبدل هذا برابط الـ Django API الخاص بك الذي يستقبل كل البيانات والملفات**
+        'https://2859-41-44-137-9.ngrok-free.app/create-project/'; // <--- مهم جداً: تأكد من تحديث هذا الرابط بالرابط الجديد من ngrok
+    // (مثال: 'https://abcd-1234-efgh-5678.ngrok-free.app/create-project/')
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
-      // Add text fields to the request
-      finalDataToSubmit.forEach((key, value) {
+      finalDataForFields.forEach((key, value) {
         request.fields[key] = value.toString();
       });
 
-      // Add files to the request if they were picked
-      if (_commercialRegFile != null && _commercialRegFile!.path != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'commercialRegFile', // Key name for the file in Django
-          _commercialRegFile!.path!,
-          filename: _commercialRegFile!.name,
-        ));
-      }
-      if (_financialSummaryFile != null &&
-          _financialSummaryFile!.path != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'financialSummaryFile', // Key name for the file in Django
-          _financialSummaryFile!.path!,
-          filename: _financialSummaryFile!.name,
-        ));
-      }
-      if (_businessPlanFile != null && _businessPlanFile!.path != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'simplifiedBusinessPlanFile', // Key name for the file in Django
-          _businessPlanFile!.path!,
-          filename: _businessPlanFile!.name,
+      if (widget.allCollectedData['projectLogoFile'] is PlatformFile &&
+          (widget.allCollectedData['projectLogoFile'] as PlatformFile).bytes !=
+              null) {
+        final PlatformFile logoFile =
+            widget.allCollectedData['projectLogoFile'];
+        request.files.add(http.MultipartFile.fromBytes(
+          'project_logo',
+          logoFile.bytes!,
+          filename: logoFile.name,
+          contentType: MediaType('image', logoFile.extension ?? 'jpeg'),
         ));
       }
 
-      // Send the request
+      if (widget.allCollectedData['pickedMediaFiles'] is List<PlatformFile>) {
+        final List<PlatformFile> mediaFiles =
+            widget.allCollectedData['pickedMediaFiles'];
+        for (int i = 0; i < mediaFiles.length; i++) {
+          final PlatformFile mediaFile = mediaFiles[i];
+          if (mediaFile.bytes != null) {
+            request.files.add(http.MultipartFile.fromBytes(
+              'media_files',
+              mediaFile.bytes!,
+              filename: mediaFile.name,
+              contentType: MediaType(
+                  'application', mediaFile.extension ?? 'octet-stream'),
+            ));
+          }
+        }
+      }
+
+      if (_commercialRegFile != null && _commercialRegFile!.bytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'commercialRegFile',
+          _commercialRegFile!.bytes!,
+          filename: _commercialRegFile!.name,
+          contentType:
+              MediaType('application', _commercialRegFile!.extension ?? 'pdf'),
+        ));
+      }
+      if (_financialSummaryFile != null &&
+          _financialSummaryFile!.bytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'financialSummaryFile',
+          _financialSummaryFile!.bytes!,
+          filename: _financialSummaryFile!.name,
+          contentType: MediaType(
+              'application', _financialSummaryFile!.extension ?? 'pdf'),
+        ));
+      }
+      if (_businessPlanFile != null && _businessPlanFile!.bytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'simplifiedBusinessPlanFile',
+          _businessPlanFile!.bytes!,
+          filename: _businessPlanFile!.name,
+          contentType:
+              MediaType('application', _businessPlanFile!.extension ?? 'pdf'),
+        ));
+      }
+
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Success
         print('All project data submitted successfully!');
         print('Response: ${response.body}');
+
+        String? receivedProjectId;
+        try {
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          receivedProjectId = responseData['projectId']
+              as String?; // تأكد إن المفتاح اسمه 'projectId'
+          print(
+              'Received Project ID from backend: $receivedProjectId'); // <-- للتحقق في الـ Console
+        } catch (e) {
+          print('Error parsing project ID from response: $e');
+        }
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('All data submitted successfully!')),
           );
-          // Navigate to the next screen (if phaseTwo_screenF exists)
-          // OR pop all routes until the first one (as in original code)
-          // Assuming there is no PhaseTwoScreenF, we pop to the first route.
-          Navigator.popUntil(context, (route) => route.isFirst);
+          // الانتقال لصفحة PhaseTwoScreenF وتمرير الـ projectId
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PhaseTwoScreenF(
+                projectId: receivedProjectId ??
+                    'fallback_id_if_null', // <--- أهم تغيير: تمرير الـ ID المستلم أو قيمة احتياطية
+              ),
+            ),
+          );
         }
       } else {
-        // Error
         print(
             'Failed to submit all project data. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -188,7 +244,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
     } finally {
       if (mounted) {
         setState(() {
-          _isLoading = false; // Hide loading indicator
+          _isLoading = false;
         });
       }
     }
@@ -213,7 +269,6 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                   color: Color(0xFF082347),
                 ),
               ),
-              // Commercial Registration
               _buildLabel(
                   '• Commercial Registration or Legal Proof of the Project'),
               _buildTextFieldWithAttachment(
@@ -222,7 +277,6 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                 () => _pickFile(_commercialRegController,
                     'commercialReg'), // Pass file type
               ),
-              // Financial Performance Summary
               _buildLabel('• Financial Performance Summary (Excel or PDF)'),
               _buildTextFieldWithAttachment(
                 _financialSummaryController,
@@ -230,7 +284,6 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                 () => _pickFile(_financialSummaryController,
                     'financialSummary'), // Pass file type
               ),
-              // Simplified Business Plan
               _buildLabel('• Simplified Business Plan'),
               _buildTextFieldWithAttachment(
                 _businessPlanController,
@@ -245,9 +298,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                     width: 368,
                     height: 61,
                     child: ElevatedButton(
-                      onPressed: _isLoading
-                          ? null
-                          : _submitAllData, // Disable if loading
+                      onPressed: _isLoading ? null : _submitAllData,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF082347),
                         shape: RoundedRectangleBorder(
@@ -255,10 +306,9 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                         ),
                       ),
                       child: _isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white) // Show loading
+                          ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(
-                              'Start', // This is your final "Submit" button
+                              'Start',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -311,8 +361,8 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
       margin: const EdgeInsets.only(bottom: 10),
       child: TextField(
         controller: controller,
-        readOnly: true, // Make it read-only to prevent manual typing
-        onTap: onAttachmentPressed, // Allow tapping to pick files
+        readOnly: true,
+        onTap: onAttachmentPressed,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.grey),

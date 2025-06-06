@@ -1,4 +1,10 @@
+// هذا الملف يجب أن يحتوي على كلاس InvestmentCard فقط.
+
 import 'package:flutter/material.dart';
+
+// القيم الثابتة، ممكن تنقلها لملف constants.dart لو عايز تنظم أكتر
+const Color kMetricTextColor = Color(0xFF001F3F);
+const double kCardDividerThickness = 1.0;
 
 class InvestmentCard extends StatelessWidget {
   final String assetImage;
@@ -8,8 +14,10 @@ class InvestmentCard extends StatelessWidget {
   final String investors;
   final VoidCallback onBookmarkPressed;
   final bool isSaved;
+  final VoidCallback? onTap;
 
-  InvestmentCard({
+  const InvestmentCard({
+    Key? key,
     required this.assetImage,
     required this.title,
     required this.description,
@@ -17,119 +25,108 @@ class InvestmentCard extends StatelessWidget {
     required this.investors,
     required this.onBookmarkPressed,
     required this.isSaved,
-  });
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      height: 219,
-      margin: EdgeInsets.only(left: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // صورة البطاقة
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(
-              assetImage,
-              width: 200,
-              height: 100,
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Image.asset(
+                assetImage,
+                width: double.infinity,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          // المحتوى
-          Expanded(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // العنوان + أيقونة الحفظ
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: onBookmarkPressed,
-                        child: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          size: 18,
-                          color: Color(0xff082347),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  // الوصف
-                  Expanded(
-                    child: Text(
-                      description,
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Divider(color: Colors.black26, thickness: 1),
-                  SizedBox(
-                    height: 32,
-                    child: Row(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              investedAmount,
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "invested",
-                              style: TextStyle(
-                                  fontSize: 10, color: Colors.black54),
-                            ),
-                          ],
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF082347)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              investors,
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "investors",
-                              style: TextStyle(
-                                  fontSize: 10, color: Colors.black54),
-                            ),
-                          ],
+                        IconButton(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
+                            color: const Color(0xFF082347),
+                          ),
+                          onPressed: onBookmarkPressed,
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Expanded(
+                      child: Text(
+                        description,
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black87),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Divider(
+                        color: Colors.black26,
+                        thickness: kCardDividerThickness),
+                    SizedBox(
+                      height: 32,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(investedAmount,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                Text('invested',
+                                    style: const TextStyle(
+                                        fontSize: 12, color: kMetricTextColor)),
+                              ]),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(investors,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                Text('investors',
+                                    style: const TextStyle(
+                                        fontSize: 12, color: kMetricTextColor)),
+                              ]),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

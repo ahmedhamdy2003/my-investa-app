@@ -214,7 +214,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
     }
 
     final String assignUrl =
-        'https://386b-102-184-50-253.ngrok-free.app/insert-project/';
+        'https://2859-41-44-137-9.ngrok-free.app/insert-project/';
 
     // لاحظ هنا: كيفية إرسال الملف المختار إلى Django
     // على الويب، ليس لدينا "مسار" ملف تقليدي.

@@ -43,7 +43,7 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
   // --- دالة إرسال كل البيانات المجمعة (Send) ---
   Future<void> _sendAllCollectedData() async {
     final String sendUrl =
-        'https://386b-102-184-50-253.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
+        'https://2859-41-44-137-9.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
 
     // جمع البيانات من الصفحة الحالية
     final Map<String, dynamic> currentPageData = {

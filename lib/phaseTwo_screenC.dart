@@ -1,13 +1,18 @@
+// phaseTwo_screenC.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import the http package
-import 'dart:convert'; // For encoding JSON
+// Removed http import as it's no longer sending data from here
+// Removed dart:convert as it's not directly encoding JSON here anymore
 
-import 'phaseTwo_screenD.dart'; // Navigation to the next screen
+import 'package:first_page/phaseTwo_screenD.dart'; // Navigation to the next screen
 
 class PhaseTwoScreenC extends StatefulWidget {
+  // 1. إضافة projectId كـ parameter مطلوب في constructor
+  final String projectId;
   final Map<String, dynamic> allCollectedData; // Data from previous screens
 
-  const PhaseTwoScreenC({super.key, required this.allCollectedData});
+  // 2. تحديث الـ constructor ليطلب projectId
+  const PhaseTwoScreenC(
+      {super.key, required this.allCollectedData, required this.projectId});
 
   @override
   State<PhaseTwoScreenC> createState() => _PhaseTwoScreenCState();
@@ -73,51 +78,7 @@ class _PhaseTwoScreenCState extends State<PhaseTwoScreenC> {
     return {...widget.allCollectedData, ...currentScreenData}; // Merge maps
   }
 
-  // Function to send data to Django backend
-  Future<void> _sendDataToBackend(Map<String, dynamic> data) async {
-    const String apiUrl =
-        'YOUR_DJANGO_BACKEND_API_ENDPOINT'; // **IMPORTANT: Replace with your actual API endpoint**
-
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Data sent successfully
-        print('Data sent to backend successfully!');
-        print('Response from backend: ${response.body}');
-        // Navigate to the next screen after successful submission
-        if (mounted) {
-          // Check if the widget is still mounted before navigating
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PhaseTwoScreenD(allCollectedData: data),
-            ),
-          );
-        }
-      } else {
-        // Failed to send data
-        print(
-            'Failed to send data to backend. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        // Optionally, show an error message to the user
-        _showErrorDialog('Failed to submit data. Please try again.');
-      }
-    } catch (e) {
-      print('Error sending data to backend: $e');
-      // Optionally, show an error message to the user
-      _showErrorDialog(
-          'An error occurred. Please check your internet connection and try again.');
-    }
-  }
-
-  // Helper to show an error dialog
+  // Helper to show an error dialog (kept for potential future local validation errors)
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -163,7 +124,6 @@ class _PhaseTwoScreenCState extends State<PhaseTwoScreenC> {
               _buildLabel('• Opportunities'),
               _buildTextField('type here', controller: opportunitiesController),
               _buildLabel('• Threats'),
-              // Changed from _buildDropdownField to _buildTextField
               _buildTextField('type here', controller: threatsController),
               _buildLabel(
                   '• Business Model (Business Model Canvas or a summarized version)'),
@@ -199,15 +159,20 @@ class _PhaseTwoScreenCState extends State<PhaseTwoScreenC> {
                       color: Color(0xFF082347),
                     ),
                     child: IconButton(
-                      onPressed: () async {
+                      onPressed: () {
                         // Collect and merge data from this screen
                         Map<String, dynamic> mergedData =
                             _collectAndMergeData();
 
-                        // Send data to the backend
-                        await _sendDataToBackend(mergedData);
-                        // Navigation to the next screen happens inside _sendDataToBackend
-                        // after a successful response from the backend.
+                        // 3. تمرير الـ projectId المستلم إلى الشاشة التالية
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PhaseTwoScreenD(
+                                allCollectedData: mergedData,
+                                projectId: widget.projectId), // تمرير projectId
+                          ),
+                        );
                       },
                       icon: const Icon(
                         Icons.arrow_forward,
@@ -320,7 +285,7 @@ class _PhaseTwoScreenCState extends State<PhaseTwoScreenC> {
               hintText: 'Choose from list',
               hintStyle: const TextStyle(color: Colors.grey),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: Color(0xFF082347)),

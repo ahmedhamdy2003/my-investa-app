@@ -77,16 +77,14 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
       return;
     }
 
-    // هنا تضع رابط الـ API الخاص بالباك إند لاستقبال الصورة
     const String uploadUrl =
-        'https://8dbf-102-184-50-253.ngrok-free.app/life-picture/'; // استبدل هذا بالرابط الفعلي
-
+        'https://2859-41-44-137-9.ngrok-free.app/life-picture/'; //
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
       request.files.add(http.MultipartFile.fromBytes(
-        'image', // هذا هو اسم الحقل الذي سيتوقعه Django لاستقبال الصورة
+        'image',
         _imageBytes!,
-        filename: 'user_face_capture.jpg', // اسم الملف الذي سيتم إرساله
+        filename: 'user_face_capture.jpg',
       ));
 
       ScaffoldMessenger.of(context).showSnackBar(

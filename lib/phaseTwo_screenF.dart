@@ -1,8 +1,14 @@
+import 'package:first_page/phaseThree_screen.dart';
 import 'package:flutter/material.dart';
-import 'mail_screen.dart'; // تأكد إن المسار صحيح حسب مكان الملف
+// إضافة استيراد MailScreen لأنها هي الشاشة التالية
 
 class PhaseTwoScreenF extends StatelessWidget {
-  const PhaseTwoScreenF({super.key});
+  // <--- هنا المشكلة
+  // 1. إضافة الـ projectId parameter لاستقباله
+  final String projectId;
+
+  // 2. تحديث الـ constructor ليطلب projectId
+  const PhaseTwoScreenF({super.key, required this.projectId});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +61,7 @@ class PhaseTwoScreenF extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context); // Navigates back
                     },
                     child: const Text(
                       'Back',
@@ -72,10 +78,13 @@ class PhaseTwoScreenF extends StatelessWidget {
                     ),
                     child: IconButton(
                       onPressed: () {
+                        // 3. الانتقال إلى MailScreen، وتمرير الـ projectId
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MailScreen(),
+                            builder: (context) => phaseThree_screen(
+                                projectId:
+                                    projectId), // <--- هنا كان الخطأ، المفروض تكون widget.projectId
                           ),
                         );
                       },

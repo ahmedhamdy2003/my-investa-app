@@ -1,36 +1,46 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'founderHome_screen.dart'; // ✅ تمت الإضافة
+
+// تأكد من أن هذا المسار صحيح لملف FounderHomeScreen
+import 'package:first_page/founderHome_screen.dart'; // تأكد أن المسار ده صح
 
 class phaseThree_screen extends StatefulWidget {
-  const phaseThree_screen({Key? key}) : super(key: key);
+  // 1. إضافة projectId كـ parameter مطلوب في constructor
+  final String projectId;
+
+  const phaseThree_screen({Key? key, required this.projectId})
+      : super(key: key);
 
   @override
   State<phaseThree_screen> createState() => _PhaseThreeScreenState();
 }
 
 class _PhaseThreeScreenState extends State<phaseThree_screen> {
-  File? _selectedFile;
+  // هذه المتغيرات لم تعد ضرورية بعد إزالة وظائف اختيار/رفع الملفات
+  // File? _selectedFilePage1;
+  // File? _selectedFilePage2;
+  // bool _isUploading = false;
 
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+  // دالة للانتقال إلى FounderHomeScreen
+  void _navigateToFounderHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        // 2. تمرير الـ projectId المستلم إلى FounderHomeScreen
+        builder: (context) =>
+            FounderHomeScreen(projectId: widget.projectId), // تمرير projectId
+      ),
     );
-
-    if (result != null) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      _PageOne(onPickFile: _pickFile, selectedFile: _selectedFile),
-      _PageTwo(onPickFile: _pickFile, selectedFile: _selectedFile),
-      const _PageThree(),
+      _PageOne(), // لا حاجة لتمرير onPickFile أو selectedFile
+      _PageTwo(), // لا حاجة لتمرير onPickFile أو selectedFile
+      _PageThree(
+        onGotIt: _navigateToFounderHome, // استدعاء دالة الانتقال مباشرة
+        isUploading: false, // دائمًا false بما أنه لا يوجد رفع ملفات
+      ),
     ];
 
     return Scaffold(
@@ -82,10 +92,8 @@ class BackgroundHeader extends StatelessWidget {
 }
 
 class _PageOne extends StatelessWidget {
-  final VoidCallback onPickFile;
-  final File? selectedFile;
-
-  const _PageOne({required this.onPickFile, this.selectedFile});
+  // تمت إزالة onPickFile و selectedFile لأنهما لم يعدا مستخدمين
+  const _PageOne();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +106,7 @@ class _PageOne extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (physical store):',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -108,7 +116,7 @@ class _PageOne extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
+                const Text(
                   '1. Commercial registration: To prove that the project is officially registered with the state.\n\n'
                   '2. Even home-based projects can now register themselves as "small or micro projects".\n\n'
                   '3. Tax card: To verify that the project pays taxes and is recognized by the tax authority.\n\n'
@@ -124,32 +132,8 @@ class _PageOne extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ElevatedButton(
-                    onPressed: onPickFile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00194A),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'drag the file',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                if (selectedFile != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Selected file: ${selectedFile!.path.split('/').last}',
-                      style: const TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                  ),
+                // تمت إزالة ElevatedButton لـ "drag the file"
+                // والنص الخاص بالملف المحدد
               ],
             ),
           ),
@@ -160,10 +144,8 @@ class _PageOne extends StatelessWidget {
 }
 
 class _PageTwo extends StatelessWidget {
-  final VoidCallback onPickFile;
-  final File? selectedFile;
-
-  const _PageTwo({required this.onPickFile, this.selectedFile});
+  // تمت إزالة onPickFile و selectedFile لأنهما لم يعدا مستخدمين
+  const _PageTwo();
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +158,7 @@ class _PageTwo extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (home-based projects):',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -186,7 +168,7 @@ class _PageTwo extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
+                const Text(
                   '1. A declaration from the owner that they are conducting the activity from a specific location, along with photos of that place.\n\n'
                   '2. Invoices for raw material purchases or product sales in the last 3 months.\n\n'
                   '3. Active social media links + the number of orders/customers over the past months.\n\n'
@@ -199,32 +181,8 @@ class _PageTwo extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ElevatedButton(
-                    onPressed: onPickFile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00194A),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'drag the file',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                if (selectedFile != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Selected file: ${selectedFile!.path.split('/').last}',
-                      style: const TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                  ),
+                // تمت إزالة ElevatedButton لـ "drag the file"
+                // والنص الخاص بالملف المحدد
               ],
             ),
           ),
@@ -235,7 +193,10 @@ class _PageTwo extends StatelessWidget {
 }
 
 class _PageThree extends StatelessWidget {
-  const _PageThree();
+  final VoidCallback onGotIt;
+  final bool isUploading;
+
+  const _PageThree({required this.onGotIt, required this.isUploading});
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +209,7 @@ class _PageThree extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   '📊 Monthly audit: How to learn it?',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -258,7 +219,7 @@ class _PageThree extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                const Text(
                   '\nRevenue and expense report (very simple, in Excel or Google Sheets)\n'
                   'Number of orders or new customers\n'
                   'Fixed and variable expenses',
@@ -270,7 +231,7 @@ class _PageThree extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                const Text(
                   'Any debts or installments paid\nInventory at the beginning, middle, and end of the month\nPhotos of the main invoices (purchases of raw materials – sales)',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -285,29 +246,28 @@ class _PageThree extends StatelessWidget {
                     width: 316,
                     height: 61,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const FounderHomeScreen(), // ✅ تم التعديل هنا
-                          ),
-                        );
-                      },
+                      onPressed: isUploading
+                          ? null
+                          : onGotIt, // لا يزال يحترم isUploading، على الرغم من أنه سيكون دائمًا false الآن
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF082347),
+                        backgroundColor: const Color(0xFF082347),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text(
-                        'Got It',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: isUploading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            )
+                          : const Text(
+                              'Got It',
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ),

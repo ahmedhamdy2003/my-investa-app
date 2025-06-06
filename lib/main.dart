@@ -44,8 +44,8 @@ class MyApp extends StatelessWidget {
         // Using distinct names to avoid clashes if any
         '/investor_interests': (ctx) => InterestsScreen(),
         '/investor_home': (ctx) => HomeScreen(),
-        '/investor_saved': (ctx) => SaveScreen(
-            savedItems: const []), // Make sure savedItems is handled correctly if it's required
+        '/investor_saved': (ctx) =>
+            SaveScreen(), // Make sure savedItems is handled correctly if it's required
         '/investor_community': (ctx) => CommunityScreen(),
         '/investor_reels': (ctx) => ReelsScreen(),
         '/investor_dashboard': (ctx) => DashboardScreen(),

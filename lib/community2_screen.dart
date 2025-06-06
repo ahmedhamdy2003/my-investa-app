@@ -1,7 +1,14 @@
+import 'package:first_page/investment_item.dart';
 import 'package:flutter/material.dart';
+// Removed: Duplicate InvestmentItem definition from here
+// Make sure InvestmentItem is defined ONLY in 'package:helloworld/investment_item.dart'
+
+import 'package:http/http.dart'
+    as http; // Still needed if you intend to use API in the future
+import 'dart:convert'; // Still needed if you intend to use JSON conversion in the future
 
 /// ————————————————————————————
-///  قيم ثابتة قابلة للتعديل بسهولة ↓
+///  Fixed values for easy modification ↓
 /// ————————————————————————————
 const Color kScreenBackgroundColor = Colors.white;
 const Color kMetricTextColor = Color(0xFF001F3F);
@@ -17,20 +24,10 @@ const Color kSearchBarHintTextColor = Color(0xFF7E9ACF);
 const Color kSearchBarIconColor = Color(0xFF7E9ACF);
 
 /// ————————————————————————————
-///  نهاية القيم القابلة للتعديل
+///  End of editable values
 /// ————————————————————————————
 
-class InvestmentItemB {
-  final String assetImage, title, description, investedAmount, investors;
-  InvestmentItemB({
-    required this.assetImage,
-    required this.title,
-    required this.description,
-    required this.investedAmount,
-    required this.investors,
-  });
-}
-
+// InvestmentCardB class (assuming it's intentionally separate from InvestmentCard, though generally one is preferred)
 class InvestmentCardB extends StatelessWidget {
   final String assetImage, title, description, investedAmount, investors;
   final VoidCallback onTap, onBookmarkPressed;
@@ -169,69 +166,80 @@ class InvestmentCardB extends StatelessWidget {
   }
 }
 
-/// الصفحة الثانية: Community2Screen مع تفاصيل FAKHR
+/// Community2Screen with FAKHR details
 class Community2Screen extends StatefulWidget {
   @override
   State<Community2Screen> createState() => _Community2ScreenState();
 }
 
 class _Community2ScreenState extends State<Community2Screen> {
-  InvestmentItemB? selected;
+  InvestmentItem? selected;
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  final List<InvestmentItemB> allItems = [
-    InvestmentItemB(
+  // IMPORTANT FIX: Added the 'category' field to each InvestmentItem.
+  // Ensure these categories match the exact strings used in HomeScreen
+  // and in your InvestmentItem.fromJson method if you're fetching from API.
+  final List<InvestmentItem> allItems = [
+    InvestmentItem(
       assetImage: "assets/image (36).png",
       title: "FAKHR",
       description:
           "Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness.",
       investedAmount: "300,000 LE",
       investors: "33",
+      category: "Fashion", // Assumed category based on common sense
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (56).png",
       title: "Mother Naked",
       description:
           "Flipping the script on beauty: all about clean, glow-boosting products.",
       investedAmount: "270,000 LE",
       investors: "25",
+      category: "Beauty", // Assumed category
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (23).png",
       title: "Zero Sugar By Ketonista",
       description:
           "We are specialized in Healthy, Keto, Sugar Free, Gluten Free Products",
       investedAmount: "450,000 LE",
       investors: "43",
+      category: "Food & Beverage", // Assumed category
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (35).png",
       title: "Seemly",
       description: "Seemly brings simplicity and comfort to your wardrobe.",
       investedAmount: "260,000 LE",
       investors: "32",
+      category: "Fashion", // Assumed category
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (40).png",
       title: "Beyond",
       description: "Empowering individuals through innovative tech solutions.",
       investedAmount: "320,000 LE",
       investors: "30",
+      category:
+          "Technology", // Assumed category (if not in your list, pick an existing one)
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (22).png",
       title: "Infuse",
       description: "Revolutionizing aromatherapy with cutting-edge blends.",
       investedAmount: "280,000 LE",
       investors: "27",
+      category: "Health & Fitness", // Assumed category
     ),
-    InvestmentItemB(
+    InvestmentItem(
       assetImage: "assets/image (30).png",
       title: "Eros",
       description: "Bringing artisanal coffee experiences to your doorstep.",
       investedAmount: "500,000 LE",
       investors: "45",
+      category: "Food & Beverage", // Assumed category
     ),
   ];
 
@@ -339,6 +347,7 @@ class _Community2ScreenState extends State<Community2Screen> {
     const Color primaryBlue = Color(0xFF003366);
     const Color dividerColor = Color(0xFFDDDDDD);
 
+    // Filter items based on search query (local filtering)
     final filteredItems = allItems
         .where((item) => item.title.toLowerCase().contains(_searchQuery))
         .toList();
@@ -387,7 +396,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                 ),
               ),
 
-              // List of cards
+              // List of cards (filtered locally)
               ListView.builder(
                 itemCount: filteredItems.length,
                 shrinkWrap: true,
@@ -398,18 +407,30 @@ class _Community2ScreenState extends State<Community2Screen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: InvestmentCardB(
+                      // Assuming InvestmentCardB is the desired card here
                       assetImage: it.assetImage,
                       title: it.title,
                       description: it.description,
                       investedAmount: it.investedAmount,
                       investors: it.investors,
                       onTap: () {
+                        // This logic needs to be updated if you want to navigate
+                        // to a dynamic project details page based on the tapped item.
+                        // For now, it only navigates to FAKHR if 'FAKHR' is tapped.
                         if (it.title == 'FAKHR') {
                           setState(() => selected = it);
+                        } else {
+                          // Handle tapping on other items, e.g., navigate to a generic details page
+                          print('Tapped on ${it.title} in Community List');
                         }
                       },
-                      onBookmarkPressed: () {},
-                      isSaved: false,
+                      onBookmarkPressed: () {
+                        // Implement bookmark toggle if this screen needs it
+                        print(
+                            'Bookmark pressed for ${it.title} in Community List');
+                      },
+                      isSaved:
+                          false, // You might need to fetch saved state for these items
                     ),
                   );
                 },
@@ -418,7 +439,10 @@ class _Community2ScreenState extends State<Community2Screen> {
               const SizedBox(height: 24),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // This button doesn't have a specific function in the current UI
+                    print('Invest button pressed on Community List');
+                  },
                   child: const Text('Invest'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kInvestBtnColor,
@@ -436,7 +460,7 @@ class _Community2ScreenState extends State<Community2Screen> {
       );
     }
 
-    // Detailed FAKHR view
+    // Detailed FAKHR view (This part is hardcoded to 'FAKHR' details)
     return Scaffold(
       backgroundColor: kScreenBackgroundColor,
       appBar: AppBar(
@@ -444,10 +468,11 @@ class _Community2ScreenState extends State<Community2Screen> {
         elevation: 0,
         leading: BackButton(
           color: primaryBlue,
-          onPressed: () => setState(() => selected = null),
+          onPressed: () =>
+              setState(() => selected = null), // Go back to community list
         ),
         title: Text(
-          'FAKHR',
+          'FAKHR', // Hardcoded title for FAKHR details page
           style: TextStyle(
             color: primaryBlue,
             fontSize: 20,
@@ -471,7 +496,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                 Positioned.fill(
                   child: Center(
                     child: Text(
-                      'FAKHR',
+                      'FAKHR', // Hardcoded overlay text
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -522,7 +547,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                         ),
                       ),
                       if (idx != fakhrMetrics.length - 1)
-                        Divider(
+                        const Divider(
                           thickness: 1,
                           color: Color(0xff001F3F),
                         ),
@@ -592,7 +617,7 @@ class _Community2ScreenState extends State<Community2Screen> {
             ),
 
             const SizedBox(height: 24),
-            // Discussion: بدون dividers، مع إزاحة لأسماء الدكاترة
+            // Discussion: no dividers, with indentation for doctor names
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
@@ -652,14 +677,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        p['content']!,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                      Text(p['content']!),
                     ],
                   ),
                 );
@@ -684,7 +702,7 @@ class _Community2ScreenState extends State<Community2Screen> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: investorPosts.length,
-              separatorBuilder: (_, __) => Divider(
+              separatorBuilder: (_, __) => const Divider(
                   color: dividerColor, thickness: kCardDividerThickness),
               itemBuilder: (c, i) {
                 final p = investorPosts[i];
@@ -752,7 +770,7 @@ class _Community2ScreenState extends State<Community2Screen> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: latestDiscussions.length,
-              separatorBuilder: (_, __) => Divider(
+              separatorBuilder: (_, __) => const Divider(
                   color: dividerColor, thickness: kCardDividerThickness),
               itemBuilder: (c, i) {
                 final p = latestDiscussions[i];
@@ -805,7 +823,9 @@ class _Community2ScreenState extends State<Community2Screen> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  print('Invest button pressed on FAKHR details page');
+                },
                 child: const Text('Invest'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kInvestBtnColor,

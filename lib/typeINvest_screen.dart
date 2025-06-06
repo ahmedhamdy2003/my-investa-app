@@ -38,7 +38,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
     // 2. Define your Django API endpoint URL
     // IMPORTANT: Replace with your actual Django backend URL
     const String apiUrl =
-        'http://10.0.2.2:8000/api/investments/'; // For Android emulator
+        'https://2859-41-44-137-9.ngrok-free.app/account-verificiation-2/'; // For Android emulator
     // const String apiUrl = 'http://127.0.0.1:8000/api/investments/'; // For iOS simulator or web
 
     // 3. Prepare the data to be sent in JSON format
@@ -59,8 +59,9 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
       );
 
       // 5. Handle the response
-      if (response.statusCode == 201) {
-        // Data sent successfully (201 Created is common for successful POST)
+      // تم التعديل هنا: قبول كل من 201 Created و 200 OK كرمز للنجاح
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        // Data sent successfully
         print('Data sent successfully to Django backend!');
         print('Response body: ${response.body}');
 
@@ -70,7 +71,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
           MaterialPageRoute(builder: (context) => const PolicyScreen()),
         );
       } else {
-        // Error sending data
+        // Error sending data for other status codes
         print('Failed to send data. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(

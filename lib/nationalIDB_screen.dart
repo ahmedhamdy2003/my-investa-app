@@ -85,10 +85,8 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
       return;
     }
 
-    // Define your Django backend API endpoint for ID image submission
-    // **IMPORTANT: Replace with your actual Django backend URL**
     const String uploadUrl =
-        'https://8dbf-102-184-50-253.ngrok-free.app/upload-national-card/';
+        'https://2859-41-44-137-9.ngrok-free.app/upload-national-card/';
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));

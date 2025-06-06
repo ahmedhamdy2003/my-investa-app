@@ -125,14 +125,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         'country': countryController.text,
         'postal_code': postalCodeController.text,
         'address_1': address1Controller.text,
-        'address_2':
-            address2Controller.text, // This will be the string from map picker
+        'address_2': address2Controller.text,
       };
 
-      // Define your Django backend API endpoint
       const String apiUrl =
-          'https://8dbf-102-184-50-253.ngrok-free.app/personal-data-list/'; // Replace with your actual URL
-
+          'https://2859-41-44-137-9.ngrok-free.app/personal-data/';
       try {
         final http.Response response = await http.post(
           Uri.parse(apiUrl),

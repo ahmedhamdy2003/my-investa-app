@@ -1,6 +1,6 @@
+// phaseTwo_screen.dart
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:typed_data'; // For Uint8List
 
 import 'phaseTwo_screenB.dart'; // Navigation to the next screen
 
@@ -26,7 +26,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
       TextEditingController(); // Controller for dropdown
 
   String? _pickedLogoFileName;
-  Uint8List? _pickedLogoFileBytes;
+  PlatformFile? _pickedLogoFile; // Store the PlatformFile object directly
   bool _isLogoFilePicked = false;
   bool _isPickingLogoFile = false;
 
@@ -48,7 +48,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
     setState(() {
       _isPickingLogoFile = true;
       _pickedLogoFileName = null;
-      _pickedLogoFileBytes = null;
+      _pickedLogoFile = null; // Clear previous file object
       _isLogoFilePicked = false;
     });
 
@@ -56,13 +56,14 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.image,
         allowMultiple: false,
+        withData: true, // Crucial for web and for getting bytes
       );
 
       if (result != null) {
         PlatformFile file = result.files.first;
         setState(() {
           _pickedLogoFileName = file.name;
-          _pickedLogoFileBytes = file.bytes;
+          _pickedLogoFile = file; // Store the actual PlatformFile object
           _isLogoFilePicked = true;
         });
         print('Selected logo file: ${file.name}');
@@ -70,7 +71,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
         print('Logo file picking cancelled or no file selected.');
         setState(() {
           _pickedLogoFileName = null;
-          _pickedLogoFileBytes = null;
+          _pickedLogoFile = null;
           _isLogoFilePicked = false;
         });
       }
@@ -81,7 +82,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
       );
       setState(() {
         _pickedLogoFileName = null;
-        _pickedLogoFileBytes = null;
+        _pickedLogoFile = null;
         _isLogoFilePicked = false;
       });
     } finally {
@@ -97,13 +98,11 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
       'projectName': projectNameController.text.trim(),
       'briefDescription': briefDescriptionController.text.trim(),
       'detailedDescription': detailedDescriptionController.text.trim(),
-      'projectCategory':
-          projectCategoryController.text.trim(), // Get value from controller
+      'projectCategory': projectCategoryController.text.trim(),
       'projectStartDate': projectStartDateController.text.trim(),
       'geographicalLocation': geographicalLocationController.text.trim(),
       'teamSize': teamSizeController.text.trim(),
-      'projectLogoFileName': _pickedLogoFileName,
-      'projectLogoFileBytes': _pickedLogoFileBytes, // Pass the actual bytes
+      'projectLogoFile': _pickedLogoFile, // Pass the actual PlatformFile object
     };
   }
 
@@ -239,12 +238,15 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                         Map<String, dynamic> currentScreenData =
                             _collectScreenAData();
 
-                        // Navigate to the next screen, passing collected data
+                        // Navigate to the next screen, passing collected data AND a projectId
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PhaseTwoScreenB(
-                                allCollectedData: currentScreenData),
+                                allCollectedData: currentScreenData,
+                                // هنا تم إضافة الـ projectId
+                                projectId:
+                                    'ProjectID_123'), // يمكنك تغيير هذه القيمة أو جلبها من مكان آخر
                           ),
                         );
                       },
@@ -341,7 +343,6 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                     onTap: () {
                       setState(() {
                         controller!.text = option;
-                        // _selectedCategory = option; // This is now handled by the controller's text
                       });
                       Navigator.pop(context);
                     },
