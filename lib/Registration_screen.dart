@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
 
-import 'package:geolocator/geolocator.dart';
-
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_map/flutter_map.dart';
 
 import 'package:latlong2/latlong.dart';
+// ignore: depend_on_referenced_packages
+import 'package:geolocator/geolocator.dart';
 
 // قائمة المحافظات المصرية
 const List<String> governorates = [
