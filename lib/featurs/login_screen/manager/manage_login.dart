@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/apis/login.dart';
 import 'package:investa4/core/model/user.dart';
 import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/nasar/setup_screen.dart';
 import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 // import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 
@@ -29,7 +30,8 @@ class ManageLogin {
     if (result != null) {
       checkAndSaveUser(result);
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => MainLayout()),
+        MaterialPageRoute(builder: (context) => SetupScreen()),
+        // MaterialPageRoute(builder: (context) => MainLayout()),
         (Route<dynamic> route) => false,
       );
     }
