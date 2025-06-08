@@ -16,8 +16,9 @@ class _SetupScreenState extends State<SetupScreen> {
     initMethod();
     super.initState();
   }
-
+  
   initMethod() async {
+    // ManageCurrentUser.currentUser.guid; ------  to get user id ------
     // // check user setup screen in backend %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // // after that call setState to update the UI with isInitFinih = true;
     // bool userHasData = false; // Replace with actual check for user data
