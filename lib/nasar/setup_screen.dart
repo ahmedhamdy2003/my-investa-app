@@ -10,13 +10,13 @@ class SetupScreen extends StatefulWidget {
 }
 
 class _SetupScreenState extends State<SetupScreen> {
-  bool isInitFinih = false; // Variable to track if it's the first step
+  bool isInitFinih = true; // Variable to track if it's the first step
   @override
   void initState() {
     initMethod();
     super.initState();
   }
-  
+
   initMethod() async {
     // ManageCurrentUser.currentUser.guid; ------  to get user id ------
     // // check user setup screen in backend %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,9 +27,8 @@ class _SetupScreenState extends State<SetupScreen> {
     //   } else {
     //     setState(() {
     //   isInitFinih = true;
-    // }); 
+    // });
     //   }
-   
   }
 
   @override

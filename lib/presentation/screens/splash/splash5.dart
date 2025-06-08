@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/assets_managers.dart';
 import 'package:investa4/core/model/user.dart';
 import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/nasar/setup_screen.dart';
 import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 
 import '../../../core/routes_manager/routes.dart';
@@ -28,7 +29,8 @@ class _Splash5State extends State<Splash5> {
       if (signedUser != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainLayout()),
+          MaterialPageRoute(builder: (context) => const SetupScreen()),
+          // MaterialPageRoute(builder: (context) => const MainLayout()),
         );
       } else {
         Navigator.pushReplacementNamed(context, AppRoutes.onboarding1);
