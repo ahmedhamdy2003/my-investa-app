@@ -12,18 +12,24 @@ class AnalyticsDashboardScreen extends StatelessWidget {
 
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('AnalyticsDashboard', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'AnalyticsDashboard',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),

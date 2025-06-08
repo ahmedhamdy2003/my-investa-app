@@ -4,7 +4,8 @@ class GeneralNotification extends StatefulWidget {
   const GeneralNotification({super.key});
 
   @override
-  State<GeneralNotification> createState() => _GeneralNotificationsScreenState();
+  State<GeneralNotification> createState() =>
+      _GeneralNotificationsScreenState();
 }
 
 class _GeneralNotificationsScreenState extends State<GeneralNotification> {
@@ -17,18 +18,24 @@ class _GeneralNotificationsScreenState extends State<GeneralNotification> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('General Notification', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'General Notification',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -64,9 +71,7 @@ class _GeneralNotificationsScreenState extends State<GeneralNotification> {
     return Card(
       color: Colors.white,
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
@@ -74,10 +79,7 @@ class _GeneralNotificationsScreenState extends State<GeneralNotification> {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             Switch.adaptive(
               value: value,

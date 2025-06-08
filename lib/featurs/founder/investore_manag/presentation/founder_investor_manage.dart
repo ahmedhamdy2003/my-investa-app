@@ -11,8 +11,8 @@ class FounderInvestorManage extends StatelessWidget {
       screenType: FounderSideMenuScreen.investorManage,
       isMain: false,
       title: 'Investor Management',
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [],

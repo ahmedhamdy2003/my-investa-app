@@ -7,23 +7,28 @@ class DocumentsUploadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      backgroundColor:ColorsManagers.white,
+      backgroundColor: ColorsManagers.white,
 
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
           decoration: BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('DocumentsUpload', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'DocumentsUpload',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -37,11 +42,16 @@ class DocumentsUploadScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
-            _buildUploadItem(title: 'Commercial Registration :', action: 'Update'),
+            _buildUploadItem(
+              title: 'Commercial Registration :',
+              action: 'Update',
+            ),
             _buildUploadItem(title: 'Tax Card :'),
             _buildUploadItem(title: 'Ownership or Lease Proof :'),
             _buildUploadItem(title: 'Income Report or Bank Statements:'),
-            _buildUploadItem(title: 'Photos/Contracts of Manufacturing or Service provision:'),
+            _buildUploadItem(
+              title: 'Photos/Contracts of Manufacturing or Service provision:',
+            ),
             const SizedBox(height: 24),
             const Row(
               children: [
@@ -56,28 +66,22 @@ class DocumentsUploadScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              '''
+            const Text('''
 • The attached documents are reviewed by our specialized team to verify their accuracy and approve them within the platform.
 • Expected review time: up to 8 working hours at most.
 • You will be notified once the document is approved or if there are any remarks requiring re-upload.
-              ''',
-              style: TextStyle(height: 1.5),
-            ),
+              ''', style: TextStyle(height: 1.5)),
             const SizedBox(height: 24),
             const Text(
               'Why is this phase important?',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '''
+            const Text('''
 • To protect investors and ensure there are no fake projects.
 • The documents are not visible to investors but are verified internally.
 • Once the documents are approved, the user can start completing the remaining steps to build their project page.
-              ''',
-              style: TextStyle(height: 1.5),
-            ),
+              ''', style: TextStyle(height: 1.5)),
           ],
         ),
       ),

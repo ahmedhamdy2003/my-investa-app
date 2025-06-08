@@ -260,13 +260,16 @@ class BusinessDetailsScreen extends StatelessWidget {
       backgroundColor: ColorsManagers.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
           decoration: BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -281,29 +284,39 @@ class BusinessDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSection("Project Name", "Fakhr"),
-            _buildSection("Description",
-                "Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness."),
-            _buildSection("Logo", ""),
-            Center(
-              child: Image.asset("assets/images/fakhr.png", height: 100),
+            _buildSection(
+              "Description",
+              "Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness.",
             ),
+            _buildSection("Logo", ""),
+            Center(child: Image.asset("assets/images/fakhr.png", height: 100)),
             _buildSection("Field", "Fashion"),
-            _buildSection("Type of Activity",
-                "Summer wears / Winter wears / Accessories\n(T-shirts, Shorts, Tops, Chemises, Swim shorts, Skirts, Pants, Hoodies, Sweat pants, Jackets, Caps, Socks)"),
-            _buildSection("Project Location (if physical or online)", "Online Store"),
-            _buildSection("Address (warehouse)",
-                "12 El Tahrir Street, Ground Floor,\nIn front of Dokki Metro Station\nDokki District, Giza Governorate"),
+            _buildSection(
+              "Type of Activity",
+              "Summer wears / Winter wears / Accessories\n(T-shirts, Shorts, Tops, Chemises, Swim shorts, Skirts, Pants, Hoodies, Sweat pants, Jackets, Caps, Socks)",
+            ),
+            _buildSection(
+              "Project Location (if physical or online)",
+              "Online Store",
+            ),
+            _buildSection(
+              "Address (warehouse)",
+              "12 El Tahrir Street, Ground Floor,\nIn front of Dokki Metro Station\nDokki District, Giza Governorate",
+            ),
             _buildSection("Postal Code", "12611"),
             _buildSection("Phone", "+20 100 123 4567"),
-            _buildSection("Operating Duration",
-                "Started Operation in: March 2024\nTotal Duration: 2 years and 2 months"),
-            _buildSection("Number of Branches",
-                "Main Branch: Dokki, Giza\nBranch 2: New Cairo, Fifth Settlement\nTotal Branches: 2"),
+            _buildSection(
+              "Operating Duration",
+              "Started Operation in: March 2024\nTotal Duration: 2 years and 2 months",
+            ),
+            _buildSection(
+              "Number of Branches",
+              "Main Branch: Dokki, Giza\nBranch 2: New Cairo, Fifth Settlement\nTotal Branches: 2",
+            ),
           ],
         ),
       ),
     );
-
   }
 
   Widget _buildSection(String title, String content) {

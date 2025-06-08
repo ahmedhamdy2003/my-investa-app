@@ -11,8 +11,8 @@ class FounderTransaction extends StatelessWidget {
       screenType: FounderSideMenuScreen.transaction,
       isMain: false,
       title: 'Transaction',
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [],

@@ -184,5 +184,9 @@ class AppStyles {
 }
 
 Shadow textShadow() {
-  return Shadow(color: Colors.black, offset: Offset(.1, .1), blurRadius: 2);
+  return const Shadow(
+    color: Colors.black,
+    offset: Offset(.1, .1),
+    blurRadius: 2,
+  );
 }

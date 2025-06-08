@@ -14,7 +14,7 @@ class Treansactions extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: SideBar(currentScreen: SideMenuScreen.transaction),
-      backgroundColor: Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFF5F7FA),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

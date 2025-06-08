@@ -20,7 +20,7 @@ class StartScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             IconButton(
-              icon: Icon(Icons.video_collection_sharp),
+              icon: const Icon(Icons.video_collection_sharp),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -29,7 +29,7 @@ class StartScreen extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.list),
+              icon: const Icon(Icons.list),
               onPressed: () {
                 // Navigator.push(
                 //   context,
@@ -41,7 +41,7 @@ class StartScreen extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.personal_injury_outlined),
+              icon: const Icon(Icons.personal_injury_outlined),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -50,7 +50,7 @@ class StartScreen extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.dashboard),
+              icon: const Icon(Icons.dashboard),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -59,7 +59,7 @@ class StartScreen extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.transcribe),
+              icon: const Icon(Icons.transcribe),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -107,7 +107,7 @@ class StartScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Have an account already? ',
                       style: TextStyle(fontSize: 14, color: Colors.black),
                     ),
@@ -127,7 +127,7 @@ class StartScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Enter as a ',
                       style: TextStyle(fontSize: 14, color: Colors.black),
                     ),
@@ -185,7 +185,7 @@ void customSnackBar(BuildContext context, String message) {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Text(
                 message,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
           ),
@@ -193,5 +193,5 @@ void customSnackBar(BuildContext context, String message) {
   );
 
   overlay.insert(overlayEntry);
-  Future.delayed(Duration(seconds: 3), () => overlayEntry.remove());
+  Future.delayed(const Duration(seconds: 3), () => overlayEntry.remove());
 }

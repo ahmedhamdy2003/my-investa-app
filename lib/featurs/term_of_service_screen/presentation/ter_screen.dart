@@ -40,7 +40,7 @@ class TermScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     TermsItem(
                       data:
@@ -97,7 +97,7 @@ class TermScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     TermsItem(
                       data:
@@ -154,7 +154,7 @@ class TermScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     TermsItem(
                       data:
@@ -179,7 +179,7 @@ class TermScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              TermsItem(
+              const TermsItem(
                 data:
                     'For detailed examples, you can refer to the Privacy Policies of established investment platforms:',
               ),
@@ -187,7 +187,7 @@ class TermScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     TermsItem(
                       data:

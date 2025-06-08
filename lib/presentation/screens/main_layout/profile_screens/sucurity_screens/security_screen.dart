@@ -26,13 +26,14 @@ class SecurityScreen extends StatelessWidget {
             color: Color(0xFF001F3F),
           ),
           child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Profile()),
-                );
-              }),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Profile()),
+              );
+            },
+          ),
         ),
         backgroundColor: Colors.white,
         title: const Text('Security', style: TextStyle(color: Colors.black)),
@@ -95,7 +96,7 @@ class SecurityScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ClearFees()),
+                  MaterialPageRoute(builder: (context) => const ClearFees()),
                 );
               },
             ),
@@ -122,7 +123,9 @@ class SecurityScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const DisputeResolution()),
+                  MaterialPageRoute(
+                    builder: (context) => const DisputeResolution(),
+                  ),
                 );
               },
             ),
@@ -131,7 +134,9 @@ class SecurityScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SecureTransaction()),
+                  MaterialPageRoute(
+                    builder: (context) => const SecureTransaction(),
+                  ),
                 );
               },
             ),
@@ -162,11 +167,7 @@ class SecurityScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
       ),

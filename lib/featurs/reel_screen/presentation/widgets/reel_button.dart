@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ReelButton extends StatelessWidget {
-  const ReelButton({
-    super.key,
-    required this.iconChild,
-    this.desc, this.onTap,
-  });
+  const ReelButton({super.key, required this.iconChild, this.desc, this.onTap});
   final Widget iconChild;
   final void Function()? onTap;
   final String? desc;
@@ -14,15 +10,9 @@ class ReelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        InkWell(
-          onTap: onTap,
-          child: iconChild,
-        ),
+        InkWell(onTap: onTap, child: iconChild),
         if (desc != null)
-          Text(
-            desc!,
-            style: TextStyle(color: Colors.white),
-          ),
+          Text(desc!, style: const TextStyle(color: Colors.white)),
       ],
     );
   }

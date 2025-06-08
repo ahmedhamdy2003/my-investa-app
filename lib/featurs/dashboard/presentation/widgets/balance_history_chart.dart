@@ -5,19 +5,18 @@ class BalanceHistoryChart extends StatelessWidget {
   const BalanceHistoryChart({super.key, required this.spotsData});
   final List<FlSpot> spotsData;
   // Sample data points for Jul→Jan
- 
 
   // X-axis labels
   static const _months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'];
 
   @override
   Widget build(BuildContext context) {
-    final lineColor = const Color(0xFF3B4DF5);
+    const lineColor = Color(0xFF3B4DF5);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 8),
           child: Text(
             'Balance History',
             style: TextStyle(
@@ -39,11 +38,12 @@ class BalanceHistoryChart extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 horizontalInterval: 200,
-                getDrawingHorizontalLine: (y) => FlLine(
-                  color: Colors.grey.withAlpha(50),
-                  strokeWidth: 1,
-                  dashArray: [5, 5],
-                ),
+                getDrawingHorizontalLine:
+                    (y) => FlLine(
+                      color: Colors.grey.withAlpha(50),
+                      strokeWidth: 1,
+                      dashArray: [5, 5],
+                    ),
               ),
               titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
@@ -85,10 +85,12 @@ class BalanceHistoryChart extends StatelessWidget {
                     },
                   ),
                 ),
-                topTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: false),
               lineBarsData: [

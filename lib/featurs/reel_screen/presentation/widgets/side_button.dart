@@ -16,11 +16,11 @@ class SideBottonsBar extends StatelessWidget {
           ReelButton(
             iconChild: Container(
               padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
               ),
-              child: Icon(Icons.person, color: Colors.green, size: 24),
+              child: const Icon(Icons.person, color: Colors.green, size: 24),
             ),
           ),
           const SizedBox(height: 16),
@@ -47,7 +47,7 @@ class SideBottonsBar extends StatelessWidget {
           ReelButton(
             iconChild: Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
               ),
@@ -55,7 +55,9 @@ class SideBottonsBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ReelButton(iconChild: Icon(Icons.more_horiz, color: Colors.white)),
+          ReelButton(
+            iconChild: const Icon(Icons.more_horiz, color: Colors.white),
+          ),
         ],
       ),
     );

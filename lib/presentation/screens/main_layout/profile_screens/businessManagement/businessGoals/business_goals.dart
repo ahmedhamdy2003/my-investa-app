@@ -86,7 +86,7 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/core/routes_manager/colors_managers.dart';
 
-import '../../../../../../config/theme/custom_butt_nav_bar.dart'; // تأكد من المسار الصحيح
+// تأكد من المسار الصحيح
 
 class BusinessGoalsScreen extends StatefulWidget {
   const BusinessGoalsScreen({super.key});
@@ -112,13 +112,16 @@ class _BusinessGoalsScreenState extends State<BusinessGoalsScreen> {
 
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
           decoration: BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),

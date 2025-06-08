@@ -53,7 +53,11 @@ class Onboarding1 extends StatelessWidget {
                 const SizedBox(height: 10),
                 const Text(
                   "Your investment starts Here!",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
@@ -65,14 +69,18 @@ class Onboarding1 extends StatelessWidget {
               height: 150,
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 450,
             left: 20,
             right: 20,
-            child: const Text(
+            child: Text(
               "“Discover simple tools and smart opportunities to grow your money with ease.”",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF001F3F)),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF001F3F),
+              ),
             ),
           ),
           Positioned(
@@ -96,7 +104,9 @@ class Onboarding1 extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Onboarding2()),
+                      MaterialPageRoute(
+                        builder: (context) => const Onboarding2(),
+                      ),
                     );
                     print('arrow forward clicked now ');
                   },
@@ -111,7 +121,7 @@ class Onboarding1 extends StatelessWidget {
                           color: Colors.black.withOpacity(0.8),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
-                        )
+                        ),
                       ],
                     ),
                     child: const Icon(

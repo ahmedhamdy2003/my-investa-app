@@ -8,23 +8,28 @@ class AiHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: ColorsManagers.white,
 
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
           decoration: BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('AI Evaluation History', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'AI Evaluation History',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -38,14 +43,11 @@ class AiHistory extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Text('• Success Probability:'),
                 Spacer(),
-                Text(
-                  '91%',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text('91%', style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 20),
@@ -60,8 +62,16 @@ class AiHistory extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildChartColumn('Success', AssetsManagers.successFlowChart, context),
-                _buildChartColumn('Failure', AssetsManagers.failureFlowChart, context),
+                _buildChartColumn(
+                  'Success',
+                  AssetsManagers.successFlowChart,
+                  context,
+                ),
+                _buildChartColumn(
+                  'Failure',
+                  AssetsManagers.failureFlowChart,
+                  context,
+                ),
               ],
             ),
             const SizedBox(height: 32),
@@ -82,7 +92,8 @@ class AiHistory extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 32), Column(
+            const SizedBox(height: 32),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('•  SWOT Analysis :'),
@@ -101,7 +112,9 @@ class AiHistory extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('•  Benchmarking (Comparing with Similar Projects) :'),
+                const Text(
+                  '•  Benchmarking (Comparing with Similar Projects) :',
+                ),
                 const SizedBox(height: 8),
                 Center(
                   child: Image.asset(
@@ -155,7 +168,11 @@ class AiHistory extends StatelessWidget {
     );
   }
 
-  static Widget _buildChartColumn(String label, String imagePath, BuildContext context) {
+  static Widget _buildChartColumn(
+    String label,
+    String imagePath,
+    BuildContext context,
+  ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final imageSize = screenWidth * 0.30;
 
@@ -170,10 +187,7 @@ class AiHistory extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const Text('-%'),
       ],

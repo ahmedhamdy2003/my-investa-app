@@ -13,17 +13,13 @@ class Onboarding2 extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-
-        ),
+        decoration: const BoxDecoration(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              AssetsManagers.curve2,
-            ),
+            Image.asset(AssetsManagers.curve2),
             Padding(
-              padding: const EdgeInsets.only(right: 9 ,top:1),
+              padding: const EdgeInsets.only(right: 9, top: 1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end, // محاذاة إلى اليمين
                 children: [
@@ -31,7 +27,9 @@ class Onboarding2 extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute (builder: (context) => const Onboarding3()),
+                        MaterialPageRoute(
+                          builder: (context) => const Onboarding3(),
+                        ),
                       );
                       print("Skip button clicked!");
                     },
@@ -49,7 +47,6 @@ class Onboarding2 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20), // مسافة بين الصورة والنصوص
-
             // النصوص العلوية
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -71,7 +68,7 @@ class Onboarding2 extends StatelessWidget {
                       Container(
                         width: 200,
                         height: 2,
-                        color: Color(0xFF001F3F),
+                        color: const Color(0xFF001F3F),
                       ),
                       const SizedBox(height: 10),
                       const Text(
@@ -88,16 +85,10 @@ class Onboarding2 extends StatelessWidget {
             ),
 
             const SizedBox(height: 50), // مسافة بين النصوص والصورة المتحركة
-
             // الصورة المتحركة
-            Image.asset(
-              AssetsManagers.light,
-              width: 450,
-              height: 150,
-            ),
+            Image.asset(AssetsManagers.light, width: 450, height: 150),
 
             const SizedBox(height: 30), // مسافة بين الصورة المتحركة والنصوص
-
             // النص في المنتصف
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 50),
@@ -113,7 +104,6 @@ class Onboarding2 extends StatelessWidget {
             ),
 
             const Spacer(), // يدفع الأزرار للأسفل
-
             // الأزرار السفلية
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -141,7 +131,9 @@ class Onboarding2 extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Onboarding3()),
+                        MaterialPageRoute(
+                          builder: (context) => const Onboarding3(),
+                        ),
                       );
                       print("Arrow button clicked!");
                     },

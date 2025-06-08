@@ -48,7 +48,7 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
         obscureText: false,
       ).copyWith(
         suffixIcon: IconButton(
-          icon: Icon(Icons.calendar_today),
+          icon: const Icon(Icons.calendar_today),
           onPressed: () => _selectDate(context),
         ),
       ),

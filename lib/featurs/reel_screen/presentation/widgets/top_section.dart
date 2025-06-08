@@ -40,7 +40,7 @@ class TopSection extends StatelessWidget {
                         width: 120, // Adjust width according to text
                         height: 2, // Thickness of underline
                         // color: Colors.white, // Color of underline
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(

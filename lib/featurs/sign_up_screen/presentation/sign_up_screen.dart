@@ -223,29 +223,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               email: emailController.text,
                                               otp: otp,
                                             );
-                                            if (userId != null) {
-                                              UserMethods.saveUser(
-                                                UserModel(
-                                                  signedUp: true,
-                                                  guid: userId,
-                                                  email: emailController.text,
-                                                  username:
-                                                      userNAmeController.text,
-                                                  birthdate:
-                                                      birthDate ??
-                                                      DateTime.now(),
-                                                ),
-                                              );
-                                              Navigator.of(
-                                                context,
-                                              ).pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (context) => MainLayout(),
-                                                ),
-                                                (Route<dynamic> route) => false,
-                                              );
-                                            }
+                                            UserMethods.saveUser(
+                                              UserModel(
+                                                signedUp: true,
+                                                guid: userId ?? '',
+                                                email: emailController.text,
+                                                username:
+                                                    userNAmeController.text,
+                                                birthdate:
+                                                    birthDate ?? DateTime.now(),
+                                              ),
+                                            );
+                                            Navigator.of(
+                                              context,
+                                            ).pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) => MainLayout(),
+                                              ),
+                                              (Route<dynamic> route) => false,
+                                            );
 
                                             notifier.value = false;
                                           },

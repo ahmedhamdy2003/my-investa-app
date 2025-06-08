@@ -17,13 +17,16 @@ class _EmailNotificationState extends State<EmailNotification> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -53,10 +56,7 @@ class _EmailNotificationState extends State<EmailNotification> {
 
             const Text(
               "It consists of:",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
 
@@ -69,7 +69,6 @@ class _EmailNotificationState extends State<EmailNotification> {
             ),
           ],
         ),
-
       ),
     );
   }

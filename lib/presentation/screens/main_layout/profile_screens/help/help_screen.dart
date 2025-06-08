@@ -3,7 +3,6 @@ import 'package:investa4/presentation/screens/main_layout/profile_screens/help/s
 
 import '../../../../../core/routes_manager/colors_managers.dart';
 import 'callRequest/call_request.dart';
-import 'faq/faq_screen.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -14,13 +13,16 @@ class HelpScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -79,7 +81,7 @@ class HelpScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PhoneCallRequest(),
+                          builder: (context) => const PhoneCallRequest(),
                         ),
                       );
                     },

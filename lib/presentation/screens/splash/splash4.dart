@@ -71,7 +71,8 @@ class Splash4 extends StatelessWidget {
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center, // يمركز العناصر أفقيًا
-          crossAxisAlignment: CrossAxisAlignment.center, // يمركز العناصر عموديًا
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // يمركز العناصر عموديًا
           children: [
             // الصورة
             Image.asset(
@@ -84,18 +85,20 @@ class Splash4 extends StatelessWidget {
             const SizedBox(width: 10),
 
             // النص مع تحديد الأبعاد
-            Padding(
-              padding: const EdgeInsets.only(top: 60, right: 30),
+            const Padding(
+              padding: EdgeInsets.only(top: 60, right: 30),
               child: SizedBox(
                 width: 145, // عرض النص
                 height: 100, // زيادة الارتفاع ليشمل النص الثاني
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // يمركز النصوص عموديًا
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // يمركز النصوص عموديًا
                   children: [
                     // النص الأول "INVESTA"
                     Text(
                       "INVESTA",
-                      textAlign: TextAlign.center, // يجعل النص مركزي داخل SizedBox
+                      textAlign:
+                          TextAlign.center, // يجعل النص مركزي داخل SizedBox
                       style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
@@ -104,12 +107,13 @@ class Splash4 extends StatelessWidget {
                     ),
 
                     // مسافة بين النصين
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
 
                     // النص الثاني "Welcome Here!"
                     Text(
                       "Welcome Here!",
-                      textAlign: TextAlign.center, // يجعل النص مركزي داخل SizedBox
+                      textAlign:
+                          TextAlign.center, // يجعل النص مركزي داخل SizedBox
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.normal,

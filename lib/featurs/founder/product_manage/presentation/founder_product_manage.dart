@@ -11,8 +11,8 @@ class FounderProductManage extends StatelessWidget {
       screenType: FounderSideMenuScreen.productManage,
       isMain: false,
       title: 'Product & Investment Managemen',
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [],

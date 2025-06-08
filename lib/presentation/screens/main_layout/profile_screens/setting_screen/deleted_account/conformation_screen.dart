@@ -16,18 +16,24 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('Confirm Deletion', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Confirm Deletion',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -38,10 +44,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           children: [
             const Text(
               'Your deletion reason:',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Container(
@@ -78,15 +81,18 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                     text: const TextSpan(
                       style: TextStyle(color: Colors.black87),
                       children: [
-                        TextSpan(text: '• You can recover your account within '),
+                        TextSpan(
+                          text: '• You can recover your account within ',
+                        ),
                         TextSpan(
                           text: '25 days',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(text: ' of deletion.\n'),
                         TextSpan(
-                            text:
-                            '• We will help you as much as we can to support you in making the best decision.'),
+                          text:
+                              '• We will help you as much as we can to support you in making the best decision.',
+                        ),
                       ],
                     ),
                   ),
@@ -109,7 +115,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(Colors.red[400]),
                 foregroundColor: WidgetStateProperty.all(Colors.white),
-                minimumSize: WidgetStateProperty.all(const Size(double.infinity, 50)),
+                minimumSize: WidgetStateProperty.all(
+                  const Size(double.infinity, 50),
+                ),
                 shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -119,19 +127,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                   const EdgeInsets.symmetric(vertical: 12),
                 ),
                 textStyle: WidgetStateProperty.all(
-                  const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                overlayColor: WidgetStateProperty.resolveWith<Color>(
-                      (states) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return Colors.red[600]!;
-                    }
-                    return Colors.transparent;
-                  },
-                ),
+                overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.pressed)) {
+                    return Colors.red[600]!;
+                  }
+                  return Colors.transparent;
+                }),
               ),
               child: const Text('Delete My Account'),
             ),
@@ -141,9 +144,13 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Color(0xFF001F3F)),
+                backgroundColor: WidgetStateProperty.all(
+                  const Color(0xFF001F3F),
+                ),
                 foregroundColor: WidgetStateProperty.all(Colors.white),
-                minimumSize: WidgetStateProperty.all(const Size(double.infinity, 50)),
+                minimumSize: WidgetStateProperty.all(
+                  const Size(double.infinity, 50),
+                ),
                 shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -153,19 +160,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                   const EdgeInsets.symmetric(vertical: 12),
                 ),
                 textStyle: WidgetStateProperty.all(
-                  const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                overlayColor: WidgetStateProperty.resolveWith<Color>(
-                      (states) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return Color(0xFF001F3F);
-                    }
-                    return Colors.transparent;
-                  },
-                ),
+                overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.pressed)) {
+                    return const Color(0xFF001F3F);
+                  }
+                  return Colors.transparent;
+                }),
               ),
               child: const Text('Keep My Account'),
             ),

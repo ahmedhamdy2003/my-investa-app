@@ -12,18 +12,24 @@ class ShowInvestors extends StatelessWidget {
 
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('FundingProgress', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'FundingProgress',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -32,7 +38,6 @@ class ShowInvestors extends StatelessWidget {
         children: [
           // الحقل الفارغ فوق الصورة (لن نستخدم Expanded هنا)
           const SizedBox(height: 40), // مسافة من الأعلى قبل الصورة
-
           // الجزء الذي يحتوي على الصورة في المنتصف
           Expanded(
             child: Center(

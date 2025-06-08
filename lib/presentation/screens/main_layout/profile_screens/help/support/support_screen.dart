@@ -129,7 +129,7 @@ class _ChatPageState extends State<ChatPage> {
             color: ColorsManagers.darkBlue,
           ),
           child: IconButton(
-            icon: ImageIcon(
+            icon: const ImageIcon(
               AssetImage(AssetsManagers.existIcon),
               color: Colors.white,
             ),
@@ -146,15 +146,14 @@ class _ChatPageState extends State<ChatPage> {
               height: 72,
             ),
             const SizedBox(width: 1), // مسافة بين الصورة والنص
-            Padding(
-              padding: const EdgeInsets.only(top: 14,right: 15),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(top: 14, right: 15),
+              child: Text(
                 'INVESTA ',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-
                 ),
               ),
             ),
@@ -163,7 +162,6 @@ class _ChatPageState extends State<ChatPage> {
         centerTitle: false,
         elevation: 0,
       ),
-
 
       body: DashChat(
         currentUser: _currentUser,
@@ -184,15 +182,17 @@ class _ChatPageState extends State<ChatPage> {
       _typingUsers.add(_gptUser);
     });
 
-    List<Map<String, dynamic>> history = _messages.reversed.map((msg) {
-      return {
-        "role": msg.user.id == _currentUser.id ? "user" : "assistant",
-        "content": msg.text,
-      };
-    }).toList();
+    List<Map<String, dynamic>> history =
+        _messages.reversed.map((msg) {
+          return {
+            "role": msg.user.id == _currentUser.id ? "user" : "assistant",
+            "content": msg.text,
+          };
+        }).toList();
 
     final request = ChatCompleteText(
-      model: GptTurbo0301ChatModel(), // ممكن تستبدلها بـ GptTurboChatModel() لو القديم مش شغال
+      model:
+          GptTurbo0301ChatModel(), // ممكن تستبدلها بـ GptTurboChatModel() لو القديم مش شغال
       messages: history,
       maxToken: 200,
     );

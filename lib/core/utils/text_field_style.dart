@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 OutlineInputBorder get textFieldBorder {
-  return OutlineInputBorder(
-    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+  return const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(8.0)),
     borderSide: BorderSide(color: Colors.grey, width: 1.0),
   );
 }
@@ -24,15 +24,17 @@ InputDecoration textFieldDecoration(
     filled: true,
     counterText: '',
     errorText: errorText,
-    labelStyle: TextStyle(color: Colors.black),
-    suffixIcon: suffixIcon ??
+    labelStyle: const TextStyle(color: Colors.black),
+    suffixIcon:
+        suffixIcon ??
         (isPassword
             ? InkWell(
-                onTap: togglePassword,
-                child: obscureText
-                    ? Image.asset('assets/images/notvisible.png')
-                    : Image.asset('assets/images/visibility.png'),
-              )
+              onTap: togglePassword,
+              child:
+                  obscureText
+                      ? Image.asset('assets/images/notvisible.png')
+                      : Image.asset('assets/images/visibility.png'),
+            )
             : null),
   );
 }

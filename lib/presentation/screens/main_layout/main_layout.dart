@@ -483,7 +483,7 @@ class _MainLayoutState extends State<MainLayout> {
           backgroundColor: ColorsManagers.darkBlue,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
-            side: BorderSide(color: ColorsManagers.darkBlue, width: 3),
+            side: const BorderSide(color: ColorsManagers.darkBlue, width: 3),
           ),
           child: Padding(
             padding: const EdgeInsets.all(12.0),

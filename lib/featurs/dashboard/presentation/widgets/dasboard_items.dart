@@ -31,7 +31,7 @@ class DasboardItems extends StatelessWidget {
                 child:
                     iconPath != null
                         ? Image.asset(iconPath!)
-                        : Icon(Icons.person),
+                        : const Icon(Icons.person),
               ),
               const SizedBox(width: 10),
               Column(

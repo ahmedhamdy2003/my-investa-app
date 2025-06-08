@@ -10,18 +10,14 @@ class FounderFilter extends StatefulWidget {
 class _FounderFilterState extends State<FounderFilter> {
   int _selectedIndex = 0;
 
-  final List<String> _filters = [
-    'Daily',
-    'Monthly',
-    'Yearly',
-  ];
+  final List<String> _filters = ['Daily', 'Monthly', 'Yearly'];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Color(0xFFF2F2F2),
+        color: const Color(0xFFF2F2F2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -40,9 +36,7 @@ class _FounderFilterState extends State<FounderFilter> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: isSelected ? const Color(0xFF3E4377) : Colors.white,
                     borderRadius: BorderRadius.circular(10),

@@ -50,7 +50,7 @@ class _Splash5State extends State<Splash5> {
               width: 126,
               fit: BoxFit.contain,
             ),
-            Text('Great, Enjoy Your Journey'),
+            const Text('Great, Enjoy Your Journey'),
           ],
         ),
       ),

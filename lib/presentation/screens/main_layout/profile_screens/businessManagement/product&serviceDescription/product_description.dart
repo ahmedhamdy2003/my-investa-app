@@ -527,7 +527,8 @@ class ProductDescriptionScreen extends StatefulWidget {
   const ProductDescriptionScreen({super.key});
 
   @override
-  State<ProductDescriptionScreen> createState() => _ProductDescriptionScreenState();
+  State<ProductDescriptionScreen> createState() =>
+      _ProductDescriptionScreenState();
 }
 
 class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
@@ -559,10 +560,10 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
           'Product Description',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        actions: [
+        actions: const [
           TextButton(
             onPressed: null, // غير مفعل الآن
-            child: const Text('Save', style: TextStyle(color: Colors.grey)),
+            child: Text('Save', style: TextStyle(color: Colors.grey)),
           ),
         ],
       ),
@@ -571,7 +572,10 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Each product you offer:', style: TextStyle(fontSize: 16)),
+            const Text(
+              'Each product you offer:',
+              style: TextStyle(fontSize: 16),
+            ),
             const SizedBox(height: 16),
 
             // Image slider container
@@ -610,7 +614,7 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       imagePaths.length,
-                          (index) => Padding(
+                      (index) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: _DotIndicator(isActive: index == _currentPage),
                       ),
@@ -636,16 +640,13 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '''
+            const Text('''
 • Age range: 18 to 30 years old.
 • Interested in fashion and casual styles.
 • University students or recent employees.
 • Interested in local brands at affordable prices.
 • Active online and shop through Instagram or websites.
-              ''',
-              style: TextStyle(height: 1.6),
-            ),
+              ''', style: TextStyle(height: 1.6)),
             const SizedBox(height: 24),
 
             // Target audience section
@@ -656,11 +657,13 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
             const SizedBox(height: 12),
             _buildCheckboxItem(
               'Direct Sales Outlets (Physical stores):\nHas one or more stores (like an exhibition or showroom).',
-              example: 'Example: We have two branches in Tagamoa and Sheikh Zayed.',
+              example:
+                  'Example: We have two branches in Tagamoa and Sheikh Zayed.',
             ),
             _buildCheckboxItem(
               'Indirect Sales Outlets:\nDistributed through other shops or chains.',
-              example: 'Example: Products sold at Spinneys, Carrefour, Market...',
+              example:
+                  'Example: Products sold at Spinneys, Carrefour, Market...',
             ),
             _buildCheckboxItem(
               'Online:\nHas an e-commerce store (Shopify, Zid, WooCommerce).\nSells via Instagram, Facebook, TikTok shop.',

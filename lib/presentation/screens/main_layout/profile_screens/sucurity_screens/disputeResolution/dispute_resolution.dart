@@ -12,19 +12,22 @@ class DisputeResolution extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityScreen()),
-                );
-              } // وظيفة الرجوع
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecurityScreen()),
+              );
+            }, // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
@@ -48,8 +51,8 @@ class DisputeResolution extends StatelessWidget {
             const SizedBox(height: 24),
             const Text(
               'In case of conflict, we provide legal\n'
-                  'assistance and mediation through licensed\n'
-                  'legal advisors according to Egyptian law.',
+              'assistance and mediation through licensed\n'
+              'legal advisors according to Egyptian law.',
               style: TextStyle(
                 fontSize: 16,
                 height: 1.5,
@@ -57,8 +60,8 @@ class DisputeResolution extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // Add legal support action button
 
+            // Add legal support action button
           ],
         ),
       ),

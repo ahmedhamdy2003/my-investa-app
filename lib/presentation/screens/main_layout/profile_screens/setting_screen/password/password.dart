@@ -220,13 +220,16 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -235,7 +238,8 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
         centerTitle: false,
         elevation: 0,
       ),
-      body: Container(color: Colors.white,
+      body: Container(
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
@@ -250,9 +254,10 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                   controller: _currentPasswordController,
                   label: 'Current Password',
                   obscureText: _obscureCurrentPassword,
-                  onToggleVisibility: () => setState(() {
-                    _obscureCurrentPassword = !_obscureCurrentPassword;
-                  }),
+                  onToggleVisibility:
+                      () => setState(() {
+                        _obscureCurrentPassword = !_obscureCurrentPassword;
+                      }),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your current password';
@@ -271,9 +276,10 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                   controller: _newPasswordController,
                   label: 'New Password',
                   obscureText: _obscureNewPassword,
-                  onToggleVisibility: () => setState(() {
-                    _obscureNewPassword = !_obscureNewPassword;
-                  }),
+                  onToggleVisibility:
+                      () => setState(() {
+                        _obscureNewPassword = !_obscureNewPassword;
+                      }),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a new password';
@@ -295,9 +301,10 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                   controller: _confirmPasswordController,
                   label: 'Re-Enter New Password',
                   obscureText: _obscureConfirmPassword,
-                  onToggleVisibility: () => setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  }),
+                  onToggleVisibility:
+                      () => setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      }),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please confirm your new password';
@@ -317,7 +324,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF001F3F),
+                      backgroundColor: const Color(0xFF001F3F),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -327,7 +334,10 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                     ),
                     child: const Text(
                       'Update',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -381,7 +391,9 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
               borderSide: const BorderSide(color: Colors.black, width: 1.5),
             ),
             contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 14),
+              horizontal: 16,
+              vertical: 14,
+            ),
             suffixIcon: IconButton(
               icon: Icon(
                 obscureText ? Icons.visibility_off : Icons.visibility,
@@ -396,8 +408,6 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
       ],
     );
   }
-
-
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {

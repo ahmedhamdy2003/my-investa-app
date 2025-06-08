@@ -11,13 +11,16 @@ class PaymentHistoryDetailsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -33,10 +36,7 @@ class PaymentHistoryDetailsScreen extends StatelessWidget {
           children: [
             const Text(
               'Payment History',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             const Center(
@@ -62,7 +62,10 @@ class PaymentHistoryDetailsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildDetailRow('Name', 'Younis Mahmoud'),
-                    _buildDetailRow('Address', 'Maadi, el nasr street, retaj building'),
+                    _buildDetailRow(
+                      'Address',
+                      'Maadi, el nasr street, retaj building',
+                    ),
                     _buildDetailRow('Phone number', '0112845673'),
                     _buildDetailRow('Transaction ID', 'TXN012349'),
                     _buildDetailRow('Date', '01/02/2025 - 10:24 pm'),
@@ -91,10 +94,7 @@ class PaymentHistoryDetailsScreen extends StatelessWidget {
               child: const Center(
                 child: Text(
                   'TOTAL Amount',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

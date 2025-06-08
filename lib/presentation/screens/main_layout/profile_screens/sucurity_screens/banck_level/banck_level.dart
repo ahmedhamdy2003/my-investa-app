@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../security_screen.dart';
 
-
-
 class BankLevel extends StatelessWidget {
   const BankLevel({super.key});
 
@@ -13,19 +11,22 @@ class BankLevel extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityScreen()),
-                );
-              } // وظيفة الرجوع
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecurityScreen()),
+              );
+            }, // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,

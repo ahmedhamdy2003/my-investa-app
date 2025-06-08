@@ -5,7 +5,8 @@ class PhoneNumberUpdateScreen extends StatefulWidget {
   const PhoneNumberUpdateScreen({super.key});
 
   @override
-  State<PhoneNumberUpdateScreen> createState() => _PhoneNumberUpdateScreenState();
+  State<PhoneNumberUpdateScreen> createState() =>
+      _PhoneNumberUpdateScreenState();
 }
 
 class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
@@ -21,18 +22,24 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('Phone Number', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Phone Number',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -79,7 +86,7 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
                 child: ElevatedButton(
                   onPressed: _isUpdating ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF001F3F),
+                    backgroundColor: const Color(0xFF001F3F),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -87,22 +94,23 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: _isUpdating
-                      ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                      : const Text(
-                    'Update',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child:
+                      _isUpdating
+                          ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                          : const Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                 ),
               ),
 
@@ -133,16 +141,13 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFF001F3F)),
+            border: Border.all(color: const Color(0xFF001F3F)),
             borderRadius: BorderRadius.circular(12),
             color: Colors.white,
           ),
           child: Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 16, color: Colors.black87),
           ),
         ),
       ],
@@ -169,9 +174,7 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
         TextFormField(
           controller: controller,
           keyboardType: TextInputType.phone,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-          ],
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
             hintText: 'Enter new phone number',
             border: OutlineInputBorder(
@@ -187,14 +190,15 @@ class _PhoneNumberUpdateScreenState extends State<PhoneNumberUpdateScreen> {
               borderSide: const BorderSide(color: Colors.black, width: 1.5),
             ),
             contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 14),
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
           validator: validator,
         ),
       ],
     );
   }
-
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {

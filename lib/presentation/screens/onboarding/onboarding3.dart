@@ -60,7 +60,11 @@ class Onboarding3 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Container(width: 253, height: 2, color: Color(0xFF001F3F)),
+                Container(
+                  width: 253,
+                  height: 2,
+                  color: const Color(0xFF001F3F),
+                ),
                 const SizedBox(height: 10),
                 const Text(
                   "Your investment starts Here !",
@@ -84,11 +88,11 @@ class Onboarding3 extends StatelessWidget {
           ),
 
           // النص الجديد تحت الصورة
-          Positioned(
+          const Positioned(
             top: 450,
             left: 20,
             right: 20,
-            child: const Text(
+            child: Text(
               "“Whether you are a beginner or a professional, save your time and start with confidence.”",
               textAlign: TextAlign.center,
               style: TextStyle(

@@ -52,7 +52,7 @@ class PieChartWithLegend extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFF9F9FA),
+        color: const Color(0xFFF9F9FA),
         borderRadius: BorderRadius.circular(16),
       ),
       child: AspectRatio(

@@ -110,7 +110,8 @@ class Splash3 extends StatelessWidget {
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center, // يمركز العناصر أفقيًا
-          crossAxisAlignment: CrossAxisAlignment.center, // يمركز العناصر عموديًا
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // يمركز العناصر عموديًا
           children: [
             // الصورة
             Image.asset(
@@ -123,8 +124,8 @@ class Splash3 extends StatelessWidget {
             const SizedBox(width: 10),
 
             // النص مع تحديد الأبعاد
-            Padding(
-              padding: const EdgeInsets.only(top: 30 ,right: 30),
+            const Padding(
+              padding: EdgeInsets.only(top: 30, right: 30),
               child: SizedBox(
                 width: 145, // عرض النص
                 height: 60, // ارتفاع النص

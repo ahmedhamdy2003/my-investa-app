@@ -36,8 +36,13 @@ class CustomLineChart extends StatelessWidget {
                   showTitles: true,
                   // reservedSize: 56,
                   getTitlesWidget: (value, meta) {
-                    return Text(value.toInt().toString(),
-                        style: TextStyle(color: Colors.blueGrey, fontSize: 12));
+                    return Text(
+                      value.toInt().toString(),
+                      style: const TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 12,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -47,23 +52,31 @@ class CustomLineChart extends StatelessWidget {
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
                     if (value % 10000 == 0) {
-                      return Text('\$${value ~/ 1000},000',
-                          style:
-                              TextStyle(color: Colors.blueGrey, fontSize: 12));
+                      return Text(
+                        '\$${value ~/ 1000},000',
+                        style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 12,
+                        ),
+                      );
                     }
                     return Container();
                   },
                 ),
               ),
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
             lineBarsData: [
               LineChartBarData(
-                spots: data
-                    .map((point) => FlSpot(point.year.toDouble(), point.value))
-                    .toList(),
+                spots:
+                    data
+                        .map(
+                          (point) => FlSpot(point.year.toDouble(), point.value),
+                        )
+                        .toList(),
                 isCurved: true,
                 barWidth: 4,
                 color: Colors.cyan,

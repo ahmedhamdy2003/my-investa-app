@@ -17,7 +17,7 @@ class SideBar extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -48,7 +48,7 @@ class SideBar extends StatelessWidget {
                 // ),
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             SideBarItem(
               title: 'Home',
               iconPath: 'assets/icon/filedHome.png',

@@ -143,13 +143,16 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -164,7 +167,7 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
           key: _formKey,
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              const SizedBox(height: 20),
               // Current Email Field
               TextFormField(
                 controller: _emailController,
@@ -173,22 +176,23 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12), // هنا أضفنا Radius
                   ),
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: const Icon(Icons.email),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your current email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
                 },
               ),
 
-
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // New Email Field
               TextFormField(
@@ -198,14 +202,16 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: Icon(Icons.email_outlined),
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a new email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   if (value == _emailController.text) {
@@ -215,7 +221,7 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                 },
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Password Field
               TextFormField(
@@ -223,12 +229,14 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -249,7 +257,7 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                 },
               ),
 
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
 
               ElevatedButton(
                 onPressed: () {
@@ -259,12 +267,11 @@ class _EmailUpdateFormState extends State<EmailUpdateForm> {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Color(0xFF001F3F), // لون الخلفية
+                  backgroundColor: const Color(0xFF001F3F), // لون الخلفية
                   foregroundColor: Colors.white, // لون النص
                 ),
                 child: const Text('Update'),
-              )
-
+              ),
             ],
           ),
         ),

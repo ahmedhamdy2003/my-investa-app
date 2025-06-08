@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:investa4/core/routes_manager/colors_managers.dart';
 
@@ -13,19 +12,22 @@ class ClearFees extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityScreen()),
-                );
-              } // وظيفة الرجوع
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecurityScreen()),
+              );
+            }, // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
@@ -49,9 +51,9 @@ class ClearFees extends StatelessWidget {
             const SizedBox(height: 24),
             const Text(
               'We charge a flat 4% -10% it depend on\n'
-                  'investment period service fee, deducted\n'
-                  'once only when you invest. You always know\n'
-                  'what you\'re paying for and why',
+              'investment period service fee, deducted\n'
+              'once only when you invest. You always know\n'
+              'what you\'re paying for and why',
               style: TextStyle(
                 fontSize: 16,
                 height: 1.5,

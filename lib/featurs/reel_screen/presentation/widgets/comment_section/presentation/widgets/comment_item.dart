@@ -26,7 +26,7 @@ class CommentItem extends StatelessWidget {
         children: [
           // Profile avatar
           profileImageUrl == null
-              ? CircleAvatar(radius: 18, child: Icon(Icons.person))
+              ? const CircleAvatar(radius: 18, child: Icon(Icons.person))
               : CircleAvatar(
                 radius: 18,
                 backgroundImage: NetworkImage(profileImageUrl!),

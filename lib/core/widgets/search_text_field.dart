@@ -12,11 +12,11 @@ class SearchTextField extends StatelessWidget {
       cursorColor: Colors.grey[700],
       decoration: InputDecoration(
         filled: true,
-        fillColor: Color(0xFFF2F4F8), // light pill‐shaped bg
+        fillColor: const Color(0xFFF2F4F8), // light pill‐shaped bg
         hintText: hintText,
-        hintStyle: TextStyle(color: Color(0xFF8BA3CB)),
+        hintStyle: const TextStyle(color: Color(0xFF8BA3CB)),
         prefixIcon: Icon(Icons.search, color: dashboardItemsSubTitleColor),
-        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(30),

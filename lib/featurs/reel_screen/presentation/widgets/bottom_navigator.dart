@@ -67,7 +67,7 @@ class BottomNavigation extends StatelessWidget {
             child: _buildNavItem(
               icon: Container(
                 // padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),

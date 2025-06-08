@@ -11,8 +11,8 @@ class FounderFinance extends StatelessWidget {
       screenType: FounderSideMenuScreen.finance,
       isMain: false,
       title: 'Finance',
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [],

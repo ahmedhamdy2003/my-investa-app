@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../security_screen.dart';
@@ -12,19 +11,22 @@ class DirectAccess extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityScreen()),
-                );
-              } // وظيفة الرجوع
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecurityScreen()),
+              );
+            }, // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
@@ -42,7 +44,7 @@ class DirectAccess extends StatelessWidget {
               'Direct Access to Founders',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF001F3F),
+                color: const Color(0xFF001F3F),
               ),
             ),
             const SizedBox(height: 24),
@@ -55,8 +57,8 @@ class DirectAccess extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // Add a chat button if needed
 
+            // Add a chat button if needed
           ],
         ),
       ),

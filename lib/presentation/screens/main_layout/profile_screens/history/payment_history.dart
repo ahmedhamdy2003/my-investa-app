@@ -9,13 +9,16 @@ class PaymentHistoryScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -31,10 +34,7 @@ class PaymentHistoryScreen extends StatelessWidget {
           children: [
             const Text(
               'Payment History',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
             _buildPaymentCard(
@@ -80,21 +80,22 @@ class PaymentHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildPaymentCard(
-      BuildContext context, {
-        required String month,
-        required String date,
-        required String amount,
-      }) {
+    BuildContext context, {
+    required String month,
+    required String date,
+    required String amount,
+  }) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PaymentDetailsScreen(
-              month: month,
-              date: date,
-              amount: amount,
-            ),
+            builder:
+                (context) => PaymentDetailsScreen(
+                  month: month,
+                  date: date,
+                  amount: amount,
+                ),
           ),
         );
       },
@@ -102,9 +103,7 @@ class PaymentHistoryScreen extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -122,10 +121,7 @@ class PaymentHistoryScreen extends StatelessWidget {
                   ),
                   Text(
                     date,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -164,9 +160,10 @@ class PaymentHistoryScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: (label == 'Type' || label == 'Status' || label == 'Company')
-                    ? const Color(0xFF3629B7)
-                    : Colors.black,
+                color:
+                    (label == 'Type' || label == 'Status' || label == 'Company')
+                        ? const Color(0xFF3629B7)
+                        : Colors.black,
               ),
             ),
           ),
@@ -194,18 +191,24 @@ class PaymentDetailsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text('Payment Details', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Payment Details',
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: false,
         elevation: 0,
       ),
@@ -235,7 +238,10 @@ class PaymentDetailsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildDetailRow('Name', 'Younis Mahmoud'),
-                    _buildDetailRow('Address', 'Maadi, el nasr street, retaj building'),
+                    _buildDetailRow(
+                      'Address',
+                      'Maadi, el nasr street, retaj building',
+                    ),
                     _buildDetailRow('Phone number', '0112845673'),
                     _buildDetailRow('Transaction ID', 'TXN012349'),
                     _buildDetailRow('Date', date),
@@ -262,10 +268,7 @@ class PaymentDetailsScreen extends StatelessWidget {
               child: const Center(
                 child: Text(
                   'TOTAL Amount',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

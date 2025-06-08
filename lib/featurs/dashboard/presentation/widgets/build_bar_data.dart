@@ -13,14 +13,13 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 4),
-        Text(label,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF718EBF))),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Color(0xFF718EBF)),
+        ),
       ],
     );
   }
@@ -35,8 +34,10 @@ Widget barData({
   double minY = 0,
   double maxY = 500,
 }) {
-  assert(seriesA.length == seriesB.length && seriesA.length == labels.length,
-      'seriesA, seriesB, and labels must match length');
+  assert(
+    seriesA.length == seriesB.length && seriesA.length == labels.length,
+    'seriesA, seriesB, and labels must match length',
+  );
 
   final count = seriesA.length;
   final step = (maxY - minY) / 5;
@@ -45,11 +46,11 @@ Widget barData({
     crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       // ─── Legend row ──────────────────────────────────────────────────────────
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
+          children: [
             _LegendItem(color: Color(0xFF16DBCC), label: 'Saving'),
             SizedBox(width: 16),
             _LegendItem(color: Color(0xFF1814F3), label: 'Investing'),
@@ -68,14 +69,10 @@ Widget barData({
               show: true,
               drawVerticalLine: false,
               horizontalInterval: step,
-              getDrawingHorizontalLine: (_) => FlLine(
-                color: const Color(0xFFF3F3F5),
-                strokeWidth: 1,
-              ),
+              getDrawingHorizontalLine:
+                  (_) => FlLine(color: const Color(0xFFF3F3F5), strokeWidth: 1),
             ),
-            borderData: FlBorderData(
-              show: false,
-            ),
+            borderData: FlBorderData(show: false),
             barGroups: List.generate(count, (i) {
               return BarChartGroupData(
                 x: i,
@@ -139,8 +136,9 @@ Widget barData({
                   },
                 ),
               ),
-              rightTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
           ),

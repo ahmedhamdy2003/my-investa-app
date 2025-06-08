@@ -14,13 +14,16 @@ class Setting extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: Color(0xFF001F3F), // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
@@ -49,8 +52,11 @@ class Setting extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EmailUpdateForm()),
-                      );                    },
+                        MaterialPageRoute(
+                          builder: (context) => const EmailUpdateForm(),
+                        ),
+                      );
+                    },
                   ),
 
                   // خط فاصل
@@ -64,8 +70,11 @@ class Setting extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PasswordChangeScreen()),
-                      );                     },
+                        MaterialPageRoute(
+                          builder: (context) => PasswordChangeScreen(),
+                        ),
+                      );
+                    },
                   ),
 
                   // خط فاصل
@@ -79,7 +88,9 @@ class Setting extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PhoneNumberUpdateScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => PhoneNumberUpdateScreen(),
+                        ),
                       );
                     },
                   ),
@@ -100,26 +111,24 @@ class Setting extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const DeleteAccountScreen()),
-                  );                 },
+                    MaterialPageRoute(
+                      builder: (context) => const DeleteAccountScreen(),
+                    ),
+                  );
+                },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.grey, // لون النص أحمر
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 child: const Text(
                   "Delete Account",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
           ],
         ),
       ),
-
-
     );
   }
 }
@@ -259,5 +268,3 @@ class Setting extends StatelessWidget {
 // }
 //
 //
-
-

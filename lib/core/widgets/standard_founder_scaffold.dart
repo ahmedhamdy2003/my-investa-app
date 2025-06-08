@@ -98,7 +98,7 @@ class FounderTopSection extends StatelessWidget {
         // Spacer to balance the layout (same as the menu icon width)
         // const Spacer(),
         if (isMain)
-          CircleAvatar(radius: 20, child: Icon(Icons.person))
+          const CircleAvatar(radius: 20, child: Icon(Icons.person))
         else
           const SizedBox.shrink(),
         const SizedBox(width: 20),

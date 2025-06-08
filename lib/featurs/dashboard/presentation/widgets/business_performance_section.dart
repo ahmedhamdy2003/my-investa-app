@@ -98,7 +98,7 @@ class BusinessPerformanceSection extends StatelessWidget {
                                                 'contact with ${project.projectName}',
                                             // trailingText: '12.322 LE',
                                           ),
-                                          SizedBox(height: 16),
+                                          const SizedBox(height: 16),
                                           Text(
                                             "To reach the team , you can use the  community to be connected to Zero sugar by ketonista .Either if you need investa team you can reach us throughout the support from the Profile .  ",
                                             style: TextStyle(
@@ -107,7 +107,7 @@ class BusinessPerformanceSection extends StatelessWidget {
                                               color: sectionsColor,
                                             ),
                                           ),
-                                          SizedBox(height: 24),
+                                          const SizedBox(height: 24),
                                         ],
                                       ),
                                     ),

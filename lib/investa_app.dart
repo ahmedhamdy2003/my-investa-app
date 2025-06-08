@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:investa4/core/routes_manager/colors_managers.dart';
 import 'package:investa4/core/routes_manager/routes.dart';
@@ -15,10 +14,8 @@ class InvestaApp extends StatelessWidget {
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           selectedItemColor: ColorsManagers.blue,
           unselectedItemColor: ColorsManagers.gray,
-          selectedIconTheme: IconThemeData(
-            size: 30,
-          )
-        )
+          selectedIconTheme: const IconThemeData(size: 30),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       routes: AppRoutes.routes,

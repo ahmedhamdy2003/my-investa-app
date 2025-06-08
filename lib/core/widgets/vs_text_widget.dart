@@ -17,7 +17,10 @@ class VsTextWidget extends StatelessWidget {
         style: AppStyles.vsTitleStyle,
         children: [
           TextSpan(text: firestSection),
-          TextSpan(text: ' Vs ', style: TextStyle(color: Color(0xFFDD2925))),
+          const TextSpan(
+            text: ' Vs ',
+            style: TextStyle(color: Color(0xFFDD2925)),
+          ),
           TextSpan(text: secondSection),
         ],
       ),

@@ -115,10 +115,7 @@ class PhoneCallRequest extends StatelessWidget {
 
   Future<void> _makePhoneCall() async {
     const phoneNumber = '19143';
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     } else {
@@ -135,85 +132,95 @@ class PhoneCallRequest extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(
-          margin: EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.all(8), // هامش حول الدائرة
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white), // لون السهم أبيض
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // لون السهم أبيض
             onPressed: () => Navigator.pop(context), // وظيفة الرجوع
           ),
         ),
         backgroundColor: Colors.white,
-        title: const Text("Phone Call Request", style: TextStyle(color: Colors.black ,fontSize: 22)),
+        title: const Text(
+          "Phone Call Request",
+          style: TextStyle(color: Colors.black, fontSize: 22),
+        ),
         centerTitle: false,
         elevation: 0,
-      ),      body: SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: isSmallScreen ? 20.0 : screenWidth * 0.1,
-        vertical: 20.0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Added image at the top
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: isSmallScreen ? 20.0 : screenWidth * 0.1,
+          vertical: 20.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Added image at the top
+            const SizedBox(height: 20),
 
-          const SizedBox(height: 20),
-
-          Text(
-            'How to Reach us immediately?',
-            style: TextStyle(
-              fontSize: isSmallScreen ? 20 : 24,
-              fontWeight: FontWeight.bold,
+            Text(
+              'How to Reach us immediately?',
+              style: TextStyle(
+                fontSize: isSmallScreen ? 20 : 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          RichText(
-            text: const TextSpan(
-              style: TextStyle(fontSize: 16, color: Colors.black),
-              children: [
-                TextSpan(text: 'To reach us just call us '),
-                TextSpan(
-                  text: '19143',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            RichText(
+              text: const TextSpan(
+                style: TextStyle(fontSize: 16, color: Colors.black),
+                children: [
+                  TextSpan(text: 'To reach us just call us '),
+                  TextSpan(
+                    text: '19143',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                TextSpan(text: ' or by the\n'),
-                TextSpan(
-                  text: 'Support Request',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  TextSpan(text: ' or by the\n'),
+                  TextSpan(
+                    text: 'Support Request',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                TextSpan(text: ' otherwise you can also\n'),
-                TextSpan(text: 'reach us from the chatbot of the technical\n'),
-                TextSpan(text: 'support. You should know that by\n'),
-                TextSpan(text: 'Reaching us the process will be recorded\n'),
-                TextSpan(text: 'pleasantly.'),
-              ],
+                  TextSpan(text: ' otherwise you can also\n'),
+                  TextSpan(
+                    text: 'reach us from the chatbot of the technical\n',
+                  ),
+                  TextSpan(text: 'support. You should know that by\n'),
+                  TextSpan(text: 'Reaching us the process will be recorded\n'),
+                  TextSpan(text: 'pleasantly.'),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
+            const SizedBox(height: 30),
 
-          // Call button
-          Center(
-            child: Column(
-              children: [
-                Image.asset(AssetsManagers.call,
-                  width: isSmallScreen ? 200 : 300,
-                  height: isSmallScreen ? 200 : 300,
-                  fit: BoxFit.contain,)
-              ],
+            // Call button
+            Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    AssetsManagers.call,
+                    width: isSmallScreen ? 200 : 300,
+                    height: isSmallScreen ? 200 : 300,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
