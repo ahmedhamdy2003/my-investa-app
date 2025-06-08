@@ -12,7 +12,7 @@ class InvestaApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       theme: ThemeData(
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor: ColorsManagers.blue,
           unselectedItemColor: ColorsManagers.gray,
           selectedIconTheme: IconThemeData(
