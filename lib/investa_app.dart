@@ -14,7 +14,7 @@ class InvestaApp extends StatelessWidget {
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor: ColorsManagers.blue,
           unselectedItemColor: ColorsManagers.gray,
-          selectedIconTheme: const IconThemeData(size: 30),
+          selectedIconTheme: IconThemeData(size: 30),
         ),
       ),
       debugShowCheckedModeBanner: false,

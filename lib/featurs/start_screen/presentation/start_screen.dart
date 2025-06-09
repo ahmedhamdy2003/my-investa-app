@@ -24,7 +24,7 @@ class StartScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ReelScreen()),
+                  MaterialPageRoute(builder: (context) => const ReelScreen()),
                 );
               },
             ),
@@ -45,7 +45,7 @@ class StartScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FounderDashboard()),
+                  MaterialPageRoute(builder: (context) => const FounderDashboard()),
                 );
               },
             ),
@@ -54,7 +54,7 @@ class StartScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Dashboard()),
+                  MaterialPageRoute(builder: (context) => const Dashboard()),
                 );
               },
             ),

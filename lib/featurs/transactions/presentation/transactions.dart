@@ -13,7 +13,7 @@ class Treansactions extends StatelessWidget {
     var topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       key: _scaffoldKey,
-      drawer: SideBar(currentScreen: SideMenuScreen.transaction),
+      drawer: const SideBar(currentScreen: SideMenuScreen.transaction),
       backgroundColor: const Color(0xFFF5F7FA),
       body: SingleChildScrollView(
         child: Column(
@@ -22,9 +22,9 @@ class Treansactions extends StatelessWidget {
             SizedBox(height: topPadding),
             TransactionTopSection(scaffoldKey: _scaffoldKey),
             const SizedBox(height: 12),
-            HistoryChart(),
+            const HistoryChart(),
             const SizedBox(height: 16),
-            RecentTransactions(),
+            const RecentTransactions(),
           ],
         ),
       ),

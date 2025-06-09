@@ -57,7 +57,7 @@ class SideBar extends StatelessWidget {
                 // Handle home button tap
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Dashboard()),
+                  MaterialPageRoute(builder: (context) => const Dashboard()),
                 );
               },
             ),

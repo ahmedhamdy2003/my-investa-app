@@ -9,7 +9,7 @@ class AppTheme{
   static final ThemeData light = ThemeData(
   useMaterial3: false,
     scaffoldBackgroundColor: ColorsManagers.white,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: ColorsManagers.white,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: ColorsManagers.blue,

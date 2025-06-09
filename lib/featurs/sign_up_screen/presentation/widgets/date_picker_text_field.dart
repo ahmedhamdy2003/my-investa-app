@@ -26,14 +26,23 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
+
+    // *** هنا هو الحل ***
     if (picked != null) {
+      // لو المستخدم اختار تاريخ (مش null)
       setState(() {
-        controller.text = "${picked.toLocal()}".split(' ')[0];
+        controller.text =
+            "${picked.toLocal()}".split(' ')[0]; // استخدم toLocal عادي
       });
       if (widget.onDateSelected != null) {
-        widget.onDateSelected!(picked);
+        widget.onDateSelected!(picked); // ابعت التاريخ للدالة لو موجودة
       }
+    } else {
+      // لو المستخدم لم يختار تاريخ (يعني قفل الـ picker)
+      // ممكن تسيب الـ TextField فاضي أو تعمل أي حاجة تانية
+      // controller.text = ""; // مثلاً امسح التاريخ القديم لو كان موجود
     }
+    // *** نهاية الحل ***
   }
 
   @override

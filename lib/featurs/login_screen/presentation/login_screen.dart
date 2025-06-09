@@ -164,7 +164,7 @@ class PasswordSection extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return ForgetPassword();
+                      return const ForgetPassword();
                     },
                   ),
                 );

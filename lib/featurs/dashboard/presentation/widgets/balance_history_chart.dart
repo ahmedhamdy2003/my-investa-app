@@ -85,10 +85,10 @@ class BalanceHistoryChart extends StatelessWidget {
                     },
                   ),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
               ),
@@ -99,7 +99,7 @@ class BalanceHistoryChart extends StatelessWidget {
                   isCurved: true,
                   color: lineColor,
                   barWidth: 4,
-                  dotData: FlDotData(show: false),
+                  dotData: const FlDotData(show: false),
                   belowBarData: BarAreaData(
                     show: true,
                     gradient: LinearGradient(

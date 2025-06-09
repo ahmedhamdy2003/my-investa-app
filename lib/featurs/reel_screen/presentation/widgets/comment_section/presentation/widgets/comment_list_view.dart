@@ -10,7 +10,7 @@ class CommentListView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ListView.builder(
         itemBuilder:
-            (_, index) => CommentItem(
+            (_, index) => const CommentItem(
               username: 'martini_rond',
               comment: 'How neatly I write the date in my book',
               timeAgo: '22h',

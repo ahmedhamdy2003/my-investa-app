@@ -57,9 +57,9 @@ class _CommentScreenState extends State<CommentScreen>
             child: SizedBox(
               height: size.height * .7,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: commentBackgroundColor,
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
@@ -76,8 +76,8 @@ class _CommentScreenState extends State<CommentScreen>
                         ),
                       ),
                     ),
-                    Expanded(child: CommentListView()),
-                    CommentTextField(),
+                    const Expanded(child: CommentListView()),
+                    const CommentTextField(),
                   ],
                 ),
               ),

@@ -64,8 +64,8 @@ class CustomLineChart extends StatelessWidget {
                   },
                 ),
               ),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: AxisTitles(
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
             ),
@@ -81,10 +81,10 @@ class CustomLineChart extends StatelessWidget {
                 barWidth: 4,
                 color: Colors.cyan,
                 belowBarData: BarAreaData(show: false),
-                dotData: FlDotData(show: false),
+                dotData: const FlDotData(show: false),
               ),
             ],
-            gridData: FlGridData(show: true, drawVerticalLine: false),
+            gridData: const FlGridData(show: true, drawVerticalLine: false),
             borderData: FlBorderData(show: false),
           ),
         ),

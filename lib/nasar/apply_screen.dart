@@ -118,18 +118,24 @@ class _ApplyScreenState extends State<ApplyScreen> {
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.image, color: Color(0xFF082347)),
-                title: const Text('Photo',
-                    style: TextStyle(color: Color(0xFF082347))),
+                title: const Text(
+                  'Photo',
+                  style: TextStyle(color: Color(0xFF082347)),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _handleFilePicking(FileType.image);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.insert_drive_file,
-                    color: Color(0xFF082347)),
-                title: const Text('File',
-                    style: TextStyle(color: Color(0xFF082347))),
+                leading: const Icon(
+                  Icons.insert_drive_file,
+                  color: Color(0xFF082347),
+                ),
+                title: const Text(
+                  'File',
+                  style: TextStyle(color: Color(0xFF082347)),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _handleFilePicking(FileType.any);
@@ -181,9 +187,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
       }
     } catch (e) {
       print('Error picking file: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking file: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error picking file: $e")));
       setState(() {
         _pickedFileName = null;
         // _pickedFilePath = null;
@@ -201,7 +207,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Please fill all required fields correctly.')),
+          content: Text('Please fill all required fields correctly.'),
+        ),
       );
       return;
     }
@@ -249,12 +256,14 @@ class _ApplyScreenState extends State<ApplyScreen> {
 
     // إضافة الملف إذا تم اختياره
     if (_pickedFileBytes != null && _pickedFileName != null) {
-      request.files.add(http.MultipartFile.fromBytes(
-        'project_image', // هذا هو اسم الحقل المتوقع في Django لملف الصورة
-        _pickedFileBytes!,
-        filename: _pickedFileName,
-        // contentType: MediaType('image', 'jpeg'), // يمكن تحديد نوع المحتوى إذا كنت تعرفه
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'project_image', // هذا هو اسم الحقل المتوقع في Django لملف الصورة
+          _pickedFileBytes!,
+          filename: _pickedFileName,
+          // contentType: MediaType('image', 'jpeg'), // يمكن تحديد نوع المحتوى إذا كنت تعرفه
+        ),
+      );
     }
 
     try {
@@ -269,14 +278,16 @@ class _ApplyScreenState extends State<ApplyScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ApplyScreenB(
-                firstPageData: json.decode(
-                    responseBody)), // قد تحتاج لتعديل هذا ليتناسب مع استجابة Django
+            builder:
+                (context) => ApplyScreenB(
+                  firstPageData: json.decode(responseBody),
+                ), // قد تحتاج لتعديل هذا ليتناسب مع استجابة Django
           ),
         );
       } else {
         print(
-            'Failed to send assign data. Status code: ${response.statusCode}');
+          'Failed to send assign data. Status code: ${response.statusCode}',
+        );
         print('Response body: $responseBody');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to assign data: $responseBody')),
@@ -284,9 +295,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
       }
     } catch (e) {
       print('Error sending assign data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error assigning data: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error assigning data: $e')));
     }
   }
 
@@ -330,19 +341,27 @@ class _ApplyScreenState extends State<ApplyScreen> {
               ),
               const SizedBox(height: 16),
               _buildLabel('First name'),
-              _buildTextField('Enter your first name',
-                  controller: firstNameController),
+              _buildTextField(
+                'Enter your first name',
+                controller: firstNameController,
+              ),
               _buildLabel('Last name'),
-              _buildTextField('Enter your second name',
-                  controller: secondNameController),
+              _buildTextField(
+                'Enter your second name',
+                controller: secondNameController,
+              ),
               _buildLabel('Email'),
-              _buildTextField('Enter your email',
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress),
+              _buildTextField(
+                'Enter your email',
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+              ),
               _buildLabel('Phone number'),
-              _buildTextField('011867809',
-                  controller: phoneController,
-                  keyboardType: TextInputType.phone),
+              _buildTextField(
+                '011867809',
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+              ),
               _buildLabel('Date of birth'),
               GestureDetector(
                 onTap: () => _selectDate(context),
@@ -387,53 +406,74 @@ class _ApplyScreenState extends State<ApplyScreen> {
               _buildLabel('City'),
               _buildTextField('Enter your city', controller: cityController),
               _buildLabel('Company Name'),
-              _buildTextField('Enter your company name',
-                  controller: companyNameController),
+              _buildTextField(
+                'Enter your company name',
+                controller: companyNameController,
+              ),
               _buildLabel('What is the service ?'),
-              _buildTextField('Describe your service',
-                  controller: serviceDescriptionController, maxLines: 3),
+              _buildTextField(
+                'Describe your service',
+                controller: serviceDescriptionController,
+                maxLines: 3,
+              ),
               _buildLabel('Number of company employees'),
-              _buildTextField('Enter the number of employees',
-                  controller: employeesCountController,
-                  keyboardType: TextInputType.number),
+              _buildTextField(
+                'Enter the number of employees',
+                controller: employeesCountController,
+                keyboardType: TextInputType.number,
+              ),
               _buildLabel('Number of years company has been in business'),
-              _buildTextField('Enter the number of years',
-                  controller: yearsInBusinessController,
-                  keyboardType: TextInputType.number),
+              _buildTextField(
+                'Enter the number of years',
+                controller: yearsInBusinessController,
+                keyboardType: TextInputType.number,
+              ),
               _buildLabel('Annual Return'),
-              _buildTextField('Enter annual return (EGP)',
-                  controller: annualReturnController,
-                  keyboardType: TextInputType.number),
+              _buildTextField(
+                'Enter annual return (EGP)',
+                controller: annualReturnController,
+                keyboardType: TextInputType.number,
+              ),
               const SizedBox(height: 6),
               const Text(
                 '(One hundred thousand)',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF718EBF),
-                ),
+                style: TextStyle(fontSize: 12, color: Color(0xFF718EBF)),
               ),
               const SizedBox(height: 16),
               _buildLabel('Drop your company website'),
-              _buildTextField('Enter your company website',
-                  controller: companyWebsiteController,
-                  keyboardType: TextInputType.url),
+              _buildTextField(
+                'Enter your company website',
+                controller: companyWebsiteController,
+                keyboardType: TextInputType.url,
+              ),
               _buildLabel('Type of business'),
-              _buildTextField('Enter type of business',
-                  controller: businessTypeController),
+              _buildTextField(
+                'Enter type of business',
+                controller: businessTypeController,
+              ),
               _buildLabel('Business Stage'),
-              _buildTextField('Enter business stage',
-                  controller: businessStageController),
+              _buildTextField(
+                'Enter business stage',
+                controller: businessStageController,
+              ),
               _buildLabel('Do you have any partners ?'),
               _buildTextField('Yes or No', controller: partnersController),
               _buildLabel(
-                  'What is the estimated investment amount required from investors?'),
-              _buildTextField('Enter the investment amount',
-                  controller: investmentAmountController,
-                  keyboardType: TextInputType.number),
+                'What is the estimated investment amount required from investors?',
+              ),
+              _buildTextField(
+                'Enter the investment amount',
+                controller: investmentAmountController,
+                keyboardType: TextInputType.number,
+              ),
               _buildLabel(
-                  'Please provide a brief description of your project or product.'),
-              _buildTextField('Brief description',
-                  controller: projectDescriptionController, maxLines: 5),
+                'Please provide a brief description of your project or product.',
+              ),
+              _buildTextField(
+                'Brief description',
+                controller: projectDescriptionController,
+                maxLines: 5,
+              ),
               const SizedBox(height: 24),
               const Text(
                 'Please upload an image of the project or product (.jpg)',
@@ -453,38 +493,42 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     foregroundColor:
                         _isFilePicked ? const Color(0xFF082347) : Colors.grey,
                     side: BorderSide(
-                        color: _isFilePicked
-                            ? const Color(0xFF082347)
-                            : Colors.black26),
+                      color:
+                          _isFilePicked
+                              ? const Color(0xFF082347)
+                              : Colors.black26,
+                    ),
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  icon: _isPickingFile
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Color(0xFF082347),
+                  icon:
+                      _isPickingFile
+                          ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xFF082347),
+                            ),
+                          )
+                          : Icon(
+                            _isFilePicked
+                                ? Icons.check_circle
+                                : Icons.attach_file,
+                            color:
+                                _isFilePicked
+                                    ? Colors.green
+                                    : const Color(0xFF082347),
+                            size: 20,
                           ),
-                        )
-                      : Icon(
-                          _isFilePicked
-                              ? Icons.check_circle
-                              : Icons.attach_file,
-                          color: _isFilePicked
-                              ? Colors.green
-                              : const Color(0xFF082347),
-                          size: 20,
-                        ),
                   label: Text(
                     _isPickingFile
                         ? 'Picking file...'
                         : _isFilePicked
-                            ? 'Picked!'
-                            : 'Choose the file',
+                        ? 'Picked!'
+                        : 'Choose the file',
                     style: TextStyle(
                       color:
                           _isFilePicked ? const Color(0xFF082347) : Colors.grey,
@@ -511,9 +555,11 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              _buildTextField('Enter the link',
-                  controller: videoLinkController,
-                  keyboardType: TextInputType.url),
+              _buildTextField(
+                'Enter the link',
+                controller: videoLinkController,
+                keyboardType: TextInputType.url,
+              ),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -528,10 +574,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   ),
                   const Text(
                     "I'm not a robot",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black),
                   ),
                 ],
               ),
@@ -548,7 +591,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 25),
                     textStyle: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -577,21 +622,23 @@ class _ApplyScreenState extends State<ApplyScreen> {
     );
   }
 
-  Widget _buildTextField(String hintText,
-      {TextEditingController? controller,
-      TextInputType keyboardType = TextInputType.text,
-      int maxLines = 1}) {
+  Widget _buildTextField(
+    String hintText, {
+    TextEditingController? controller,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          color: Color(0xFF86878B),
+        hintStyle: const TextStyle(color: Color(0xFF86878B)),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 10,
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.black26),
           borderRadius: BorderRadius.circular(16),

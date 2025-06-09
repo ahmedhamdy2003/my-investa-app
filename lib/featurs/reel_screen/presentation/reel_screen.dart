@@ -66,7 +66,7 @@ class _ReelScreenState extends State<ReelScreen> {
                                 },
                               ),
                     ),
-                    TopSection(),
+                    const TopSection(),
                     SideBottonsBar(
                       manageCommentAnimation: manageCommentAnimation,
                     ),

@@ -11,7 +11,7 @@ class EditBusinessDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         leading: Container(
           margin: const EdgeInsets.all(8), // هامش حول الدائرة
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle, // شكل دائري
             color: ColorsManagers.darkBlue, // لون الخلفية
           ),

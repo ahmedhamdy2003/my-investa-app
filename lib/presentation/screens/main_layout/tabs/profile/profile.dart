@@ -572,7 +572,7 @@ class Profile extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MainLayout()),
+                MaterialPageRoute(builder: (context) => const MainLayout()),
               );
             },
           ),
@@ -803,7 +803,7 @@ class Profile extends StatelessWidget {
                   Navigator.pop(context); // Close the dialog
                   UserMethods.removeSignedUser(ManageCurrentUser.currentUser);
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => StartScreen()),
+                    MaterialPageRoute(builder: (context) => const StartScreen()),
                     (Route<dynamic> route) => false,
                   );
                 },

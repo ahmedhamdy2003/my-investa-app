@@ -455,11 +455,11 @@ class _MainLayoutState extends State<MainLayout> {
   static const int _reelsTabIndex = 2;
 
   final List<Widget> tabs = [
-    Home(),
-    Community(),
-    ReelScreen(),
-    Dashboard(),
-    Profile(),
+    const Home(),
+    const Community(),
+    const ReelScreen(),
+    const Dashboard(),
+    const Profile(),
   ];
 
   void _onTabSelected(int index) {

@@ -75,10 +75,10 @@ class InvestmentLineChart extends StatelessWidget {
               child: LineChart(
                 LineChartData(
                   titlesData: FlTitlesData(
-                    topTitles: AxisTitles(
+                    topTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    rightTitles: AxisTitles(
+                    rightTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
                     bottomTitles: AxisTitles(
@@ -170,7 +170,7 @@ class InvestmentLineChart extends StatelessWidget {
                       ),
                     ),
                   ],
-                  gridData: FlGridData(
+                  gridData: const FlGridData(
                     show: true,
                     drawHorizontalLine: true,
                     drawVerticalLine: false,

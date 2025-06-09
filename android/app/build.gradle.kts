@@ -8,15 +8,19 @@ plugins {
 android {
     namespace = "com.example.graduation_project"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    
+    // *** تم التعديل هنا: تحديد إصدار NDK المطلوب صراحةً ***
+    ndkVersion = "27.0.12077973" 
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        // *** تم التعديل هنا: تحديد إصدار Java 17 للتوافق مع Java 21 ***
+        sourceCompatibility = JavaVersion.VERSION_17 
+        targetCompatibility = JavaVersion.VERSION_17 
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        // *** تم التعديل هنا: تحديد jvmTarget لـ Java 17 ***
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {

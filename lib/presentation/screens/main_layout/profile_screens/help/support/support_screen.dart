@@ -124,7 +124,7 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         leading: Container(
           margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: ColorsManagers.darkBlue,
           ),

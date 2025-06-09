@@ -99,7 +99,7 @@ class BusinessPerformanceSection extends StatelessWidget {
                                             // trailingText: '12.322 LE',
                                           ),
                                           const SizedBox(height: 16),
-                                          Text(
+                                          const Text(
                                             "To reach the team , you can use the  community to be connected to Zero sugar by ketonista .Either if you need investa team you can reach us throughout the support from the Profile .  ",
                                             style: TextStyle(
                                               fontSize: 16,
@@ -114,7 +114,7 @@ class BusinessPerformanceSection extends StatelessWidget {
                                   ),
                             );
                           },
-                          child: DasboardItems(
+                          child: const DasboardItems(
                             normalTrailingText: true,
                             title: 'Contact with founder Team',
                             subTitle: 'click here',

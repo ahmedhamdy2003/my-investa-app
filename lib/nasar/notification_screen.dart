@@ -44,6 +44,16 @@ class NotificationScreen extends StatelessWidget {
     );
   }
 
+  // دالة مساعدة للانتقال للصفحة المطلوبة بعد إغلاق الـ Dialog
+  void _navigateToVerifiedScreen(BuildContext context) {
+    Navigator.of(context).pop(); // أولاً: اغلاق الـ Dialog
+    Navigator.push(
+      // ثم: الانتقال لشاشة VerifiedScreen
+      context,
+      MaterialPageRoute(builder: (context) => const VerifiedScreen()),
+    );
+  }
+
   void _showNotificationDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
@@ -69,9 +79,9 @@ class NotificationScreen extends StatelessWidget {
           actions: <Widget>[
             CupertinoDialogAction(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                print('Don\'t Allow pressed');
-                // TODO: Add logic for 'Don't Allow'
+                print('Don\'t Allow pressed. Navigating to VerifiedScreen.');
+                // هنا هنستدعي الدالة المساعدة اللي بتنتقل للصفحة
+                _navigateToVerifiedScreen(context);
               },
               child: const Text(
                 'Don\'t Allow',
@@ -84,15 +94,9 @@ class NotificationScreen extends StatelessWidget {
             ),
             CupertinoDialogAction(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog first
                 print('OK pressed. Navigating to VerifiedScreen.');
-                // Navigate to VerifiedScreen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const VerifiedScreen(),
-                  ),
-                );
+                // هنا كمان هنستدعي نفس الدالة المساعدة
+                _navigateToVerifiedScreen(context);
               },
               child: const Text(
                 'OK',

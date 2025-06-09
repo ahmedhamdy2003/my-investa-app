@@ -55,8 +55,8 @@ class SideBottonsBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ReelButton(
-            iconChild: const Icon(Icons.more_horiz, color: Colors.white),
+          const ReelButton(
+            iconChild: Icon(Icons.more_horiz, color: Colors.white),
           ),
         ],
       ),

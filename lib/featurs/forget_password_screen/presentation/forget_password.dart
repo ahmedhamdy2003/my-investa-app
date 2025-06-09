@@ -15,7 +15,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   @override
   void initState() {
     super.initState();
-    ManageForgetPassword.currentSection = ForgetPasswordEnterEmailSection();
+    ManageForgetPassword.currentSection = const ForgetPasswordEnterEmailSection();
   }
 
   @override

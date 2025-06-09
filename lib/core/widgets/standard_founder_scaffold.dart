@@ -41,8 +41,8 @@ class StandardFounderScaffold extends StatelessWidget {
                     title: title,
                   ),
                   const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
+                  const Padding(
+                    padding: EdgeInsets.all(20),
                     child: SearchTextField(hintText: 'Search for something'),
                   ),
                 ],

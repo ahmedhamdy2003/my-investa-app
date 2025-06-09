@@ -14,8 +14,8 @@ class DashBoardTopSection extends StatelessWidget {
             scaffoldKey.currentState?.openDrawer();
           },
         ),
-        Padding(
-          padding: const EdgeInsets.all(22.0),
+        const Padding(
+          padding: EdgeInsets.all(22.0),
           child: SearchTextField(
             hintText: 'Search for businesses you investment in',
           ),

@@ -36,11 +36,11 @@ class TermScreen extends StatelessWidget {
               ),
               verticalSpce,
               verticalSpce,
-              Padding(
-                padding: const EdgeInsets.symmetric(
+              const Padding(
+                padding: EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     TermsItem(
                       data:
@@ -93,11 +93,11 @@ class TermScreen extends StatelessWidget {
               ),
               verticalSpce,
               verticalSpce,
-              Padding(
-                padding: const EdgeInsets.symmetric(
+              const Padding(
+                padding: EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     TermsItem(
                       data:
@@ -150,11 +150,11 @@ class TermScreen extends StatelessWidget {
               ),
               verticalSpce,
               verticalSpce,
-              Padding(
-                padding: const EdgeInsets.symmetric(
+              const Padding(
+                padding: EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     TermsItem(
                       data:
@@ -183,11 +183,11 @@ class TermScreen extends StatelessWidget {
                 data:
                     'For detailed examples, you can refer to the Privacy Policies of established investment platforms:',
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
+              const Padding(
+                padding: EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     TermsItem(
                       data:

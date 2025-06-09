@@ -19,7 +19,7 @@ class Analysis extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
-      drawer: SideBar(currentScreen: SideMenuScreen.analysis),
+      drawer: const SideBar(currentScreen: SideMenuScreen.analysis),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,8 +30,8 @@ class Analysis extends StatelessWidget {
                 _scaffoldKey.currentState?.openDrawer();
               },
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
+            const Padding(
+              padding: EdgeInsets.all(20),
               child: SearchTextField(
                 hintText: 'Search for businesses you investment in',
               ),
@@ -54,15 +54,15 @@ class Analysis extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  PieChartWithLegend(
+                  const PieChartWithLegend(
                     data: pieChartData,
                     title: 'Investing in Investa Categories ',
                   ),
-                  PieChartWithLegend(
+                  const PieChartWithLegend(
                     data: pieChartData2,
                     title: 'Your investments',
                   ),
-                  VsTextWidget(
+                  const VsTextWidget(
                     firestSection: ' ROI if you invested',
                     secondSection: 'Saving',
                   ),
@@ -79,8 +79,8 @@ class Analysis extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
                       vertical: 40,
                       horizontal: 10,
                     ),

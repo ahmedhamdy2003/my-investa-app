@@ -71,7 +71,7 @@ class Setting extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PasswordChangeScreen(),
+                          builder: (context) => const PasswordChangeScreen(),
                         ),
                       );
                     },
@@ -89,7 +89,7 @@ class Setting extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PhoneNumberUpdateScreen(),
+                          builder: (context) => const PhoneNumberUpdateScreen(),
                         ),
                       );
                     },

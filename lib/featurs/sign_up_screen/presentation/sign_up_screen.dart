@@ -239,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             ).pushAndRemoveUntil(
                                               MaterialPageRoute(
                                                 builder:
-                                                    (context) => MainLayout(),
+                                                    (context) => const MainLayout(),
                                               ),
                                               (Route<dynamic> route) => false,
                                             );
@@ -273,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       verticalSpce,
-                      TermsSection(),
+                      const TermsSection(),
                       verticalSpce,
                       verticalSpce,
                       verticalSpce,

@@ -67,7 +67,7 @@ class HelpScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatPage()),
+                        MaterialPageRoute(builder: (context) => const ChatPage()),
                       );
                     },
                   ),

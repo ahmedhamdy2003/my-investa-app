@@ -70,7 +70,7 @@ Widget barData({
               drawVerticalLine: false,
               horizontalInterval: step,
               getDrawingHorizontalLine:
-                  (_) => FlLine(color: const Color(0xFFF3F3F5), strokeWidth: 1),
+                  (_) => const FlLine(color: Color(0xFFF3F3F5), strokeWidth: 1),
             ),
             borderData: FlBorderData(show: false),
             barGroups: List.generate(count, (i) {
@@ -136,10 +136,10 @@ Widget barData({
                   },
                 ),
               ),
-              rightTitles: AxisTitles(
+              rightTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
           ),
         ),

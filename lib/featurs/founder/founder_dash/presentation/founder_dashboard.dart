@@ -22,27 +22,27 @@ class FounderDashboard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            FounderFilter(),
+            const FounderFilter(),
             const SizedBox(height: 20),
-            FounderDashItem(
+            const FounderDashItem(
               iconPath: 'assets/icon/totalinv.png',
               title: 'Total Invested Amount',
               value: '\$12,345',
             ),
             const SizedBox(height: 6),
-            FounderDashItem(
+            const FounderDashItem(
               iconPath: 'assets/icon/numberinv.png',
               title: 'Number of Investors',
               value: '\$12,345',
             ),
             const SizedBox(height: 6),
-            FounderDashItem(
+            const FounderDashItem(
               iconPath: 'assets/icon/revenue.png',
               title: 'Revenue',
               value: '\$12,345',
             ),
             const SizedBox(height: 6),
-            FounderDashItem(
+            const FounderDashItem(
               iconPath: 'assets/icon/profit.png',
               title: 'profit',
               value: '\$12,345',

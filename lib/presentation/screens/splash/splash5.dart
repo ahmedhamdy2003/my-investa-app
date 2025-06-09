@@ -5,7 +5,6 @@ import 'package:investa4/core/assets_managers.dart';
 import 'package:investa4/core/model/user.dart';
 import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/nasar/setup_screen.dart';
-import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 
 import '../../../core/routes_manager/routes.dart';
 

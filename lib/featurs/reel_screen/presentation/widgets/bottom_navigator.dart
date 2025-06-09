@@ -75,7 +75,7 @@ class BottomNavigation extends StatelessWidget {
                   padding: const EdgeInsets.all(6.0),
                   child: Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: mainTextColor,
                     ),

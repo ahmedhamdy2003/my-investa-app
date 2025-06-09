@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
     var topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       key: _scaffoldKey,
-      drawer: SideBar(currentScreen: SideMenuScreen.home),
+      drawer: const SideBar(currentScreen: SideMenuScreen.home),
       body:
           initDone == false
               ? const Center(child: CircularProgressIndicator())

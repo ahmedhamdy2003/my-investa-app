@@ -29,7 +29,7 @@ class ManageLogin {
     if (result != null) {
       checkAndSaveUser(result);
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => SetupScreen()),
+        MaterialPageRoute(builder: (context) => const SetupScreen()),
         // MaterialPageRoute(builder: (context) => MainLayout()),
         (Route<dynamic> route) => false,
       );

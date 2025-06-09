@@ -45,7 +45,7 @@ class FounderSideBar extends StatelessWidget {
                         ManageCurrentUser.currentUser,
                       );
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => StartScreen()),
+                        MaterialPageRoute(builder: (context) => const StartScreen()),
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -62,7 +62,7 @@ class FounderSideBar extends StatelessWidget {
                 // Handle home button tap
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FounderDashboard()),
+                  MaterialPageRoute(builder: (context) => const FounderDashboard()),
                 );
               },
             ),
@@ -74,7 +74,7 @@ class FounderSideBar extends StatelessWidget {
                 // Handle transactions button tap
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FounderTransaction()),
+                  MaterialPageRoute(builder: (context) => const FounderTransaction()),
                 );
               },
             ),
@@ -86,7 +86,7 @@ class FounderSideBar extends StatelessWidget {
                 // Handle analysis button tap
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FounderAnalytics()),
+                  MaterialPageRoute(builder: (context) => const FounderAnalytics()),
                 );
               },
             ),
@@ -99,7 +99,7 @@ class FounderSideBar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FounderProductManage(),
+                    builder: (context) => const FounderProductManage(),
                   ),
                 );
               },
@@ -113,7 +113,7 @@ class FounderSideBar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FounderInvestorManage(),
+                    builder: (context) => const FounderInvestorManage(),
                   ),
                 );
               },
@@ -126,7 +126,7 @@ class FounderSideBar extends StatelessWidget {
                 // Handle analysis button tap
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FounderFinance()),
+                  MaterialPageRoute(builder: (context) => const FounderFinance()),
                 );
               },
             ),

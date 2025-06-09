@@ -138,6 +138,8 @@ class UserModel extends HiveObject {
     this.birthdate,
     this.signedUp = false,
   });
+
+  String? get token => null;
 }
 
 class UserMethods {

@@ -15,7 +15,7 @@ class SearchTextField extends StatelessWidget {
         fillColor: const Color(0xFFF2F4F8), // light pill‐shaped bg
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFF8BA3CB)),
-        prefixIcon: Icon(Icons.search, color: dashboardItemsSubTitleColor),
+        prefixIcon: const Icon(Icons.search, color: dashboardItemsSubTitleColor),
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide.none,

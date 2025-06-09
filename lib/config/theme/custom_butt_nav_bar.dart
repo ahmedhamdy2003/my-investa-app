@@ -187,20 +187,20 @@ class CustomBottomNavBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: ImageIcon(
-            AssetImage(AssetsManagers.homeIcon),
+            const AssetImage(AssetsManagers.homeIcon),
             color: selectedIndex == 0 ? ColorsManagers.blue : Colors.grey,
           ),
           label: "Home",
         ),
         BottomNavigationBarItem(
           icon: ImageIcon(
-            AssetImage(AssetsManagers.communityIcon),
+            const AssetImage(AssetsManagers.communityIcon),
             color: selectedIndex == 1 ? ColorsManagers.blue : Colors.grey,
           ),
           label: "Community",
         ), BottomNavigationBarItem(
           icon: ImageIcon(
-            AssetImage(AssetsManagers.communityIcon),
+            const AssetImage(AssetsManagers.communityIcon),
             color: selectedIndex == 1 ? ColorsManagers.blue : Colors.grey,
           ),
           label: "ٌReels",
@@ -212,14 +212,14 @@ class CustomBottomNavBar extends StatelessWidget {
         // ),
         BottomNavigationBarItem(
           icon: ImageIcon(
-            AssetImage(AssetsManagers.dashBoardIcon),
+            const AssetImage(AssetsManagers.dashBoardIcon),
             color: selectedIndex == 3 ? ColorsManagers.blue : Colors.grey,
           ),
           label: "Dashboard",
         ),
         BottomNavigationBarItem(
           icon: ImageIcon(
-            AssetImage(AssetsManagers.profileIcon),
+            const AssetImage(AssetsManagers.profileIcon),
             color: selectedIndex == 4 ? ColorsManagers.blue : Colors.grey,
           ),
           label: "Profile",

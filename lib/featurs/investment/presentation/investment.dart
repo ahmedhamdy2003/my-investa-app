@@ -15,7 +15,7 @@ class Investment extends StatelessWidget {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: SideBar(currentScreen: SideMenuScreen.investment),
+      drawer: const SideBar(currentScreen: SideMenuScreen.investment),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,7 @@ class Investment extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SearchTextField(
+                  const SearchTextField(
                     hintText: 'Search for businesses you investment in',
                   ),
                   const SizedBox(height: 32),

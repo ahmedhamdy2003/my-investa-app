@@ -18,8 +18,8 @@ class TransactionTopSection extends StatelessWidget {
               scaffoldKey.currentState?.openDrawer();
             },
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
+          const Padding(
+            padding: EdgeInsets.all(20),
             child: SearchTextField(hintText: 'Search for a Transaction'),
           ),
         ],
