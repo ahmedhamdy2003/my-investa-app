@@ -12,12 +12,12 @@ class BalanceHistoryChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lineColor = const Color(0xFF3B4DF5);
+    const lineColor = Color(0xFF3B4DF5);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 8),
           child: Text(
             'Balance History',
             style: TextStyle(
@@ -86,9 +86,9 @@ class BalanceHistoryChart extends StatelessWidget {
                   ),
                 ),
                 topTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 rightTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
               borderData: FlBorderData(show: false),
               lineBarsData: [
@@ -97,7 +97,7 @@ class BalanceHistoryChart extends StatelessWidget {
                   isCurved: true,
                   color: lineColor,
                   barWidth: 4,
-                  dotData: FlDotData(show: false),
+                  dotData: const FlDotData(show: false),
                   belowBarData: BarAreaData(
                     show: true,
                     gradient: LinearGradient(

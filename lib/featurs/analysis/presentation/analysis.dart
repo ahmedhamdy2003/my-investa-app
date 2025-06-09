@@ -71,8 +71,8 @@ class Analysis extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: barData(
-                        seriesA: seriesA,
-                        seriesB: seriesB,
+                        investing: seriesA,
+                        saving: seriesB,
                         labels: monthLabels,
                         minY: 0,
                         maxY: 500,

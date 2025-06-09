@@ -13,14 +13,13 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 4),
-        Text(label,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF718EBF))),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Color(0xFF718EBF)),
+        ),
       ],
     );
   }
@@ -29,27 +28,29 @@ class _LegendItem extends StatelessWidget {
 /// Returns a widget that shows the legend at the top-left,
 /// then your BarChart below it.
 Widget barData({
-  required List<double> seriesA, // “Investing”
-  required List<double> seriesB, // “Saving”
+  required List<double> investing, // “Investing”
+  required List<double> saving, // “Saving”
   required List<String> labels,
   double minY = 0,
   double maxY = 500,
 }) {
-  assert(seriesA.length == seriesB.length && seriesA.length == labels.length,
-      'seriesA, seriesB, and labels must match length');
+  assert(
+    investing.length == saving.length && investing.length == labels.length,
+    'seriesA, seriesB, and labels must match length',
+  );
 
-  final count = seriesA.length;
+  final count = investing.length;
   final step = (maxY - minY) / 5;
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       // ─── Legend row ──────────────────────────────────────────────────────────
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
+          children: [
             _LegendItem(color: Color(0xFF16DBCC), label: 'Saving'),
             SizedBox(width: 16),
             _LegendItem(color: Color(0xFF1814F3), label: 'Investing'),
@@ -68,26 +69,22 @@ Widget barData({
               show: true,
               drawVerticalLine: false,
               horizontalInterval: step,
-              getDrawingHorizontalLine: (_) => FlLine(
-                color: const Color(0xFFF3F3F5),
-                strokeWidth: 1,
-              ),
+              getDrawingHorizontalLine:
+                  (_) => const FlLine(color: Color(0xFFF3F3F5), strokeWidth: 1),
             ),
-            borderData: FlBorderData(
-              show: false,
-            ),
+            borderData: FlBorderData(show: false),
             barGroups: List.generate(count, (i) {
               return BarChartGroupData(
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: seriesB[i],
+                    toY: saving[i],
                     width: 16,
                     borderRadius: BorderRadius.circular(4),
                     color: const Color(0xFF16DBCC), // Saving
                   ),
                   BarChartRodData(
-                    toY: seriesA[i],
+                    toY: investing[i],
                     width: 16,
                     borderRadius: BorderRadius.circular(4),
                     color: const Color(0xFF1814F3), // Investing
@@ -139,9 +136,12 @@ Widget barData({
                   },
                 ),
               ),
-              rightTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
           ),
         ),

@@ -14,7 +14,7 @@ class ChartsSection extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        VsTextWidget(
+        const VsTextWidget(
           firestSection: 'Monthly ROI if you invested',
           secondSection: 'Saving',
         ),
@@ -23,8 +23,8 @@ class ChartsSection extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 1,
             child: barData(
-              seriesA: seriesA,
-              seriesB: seriesB,
+              investing: seriesA,
+              saving: seriesB,
               labels: monthLabels,
               minY: 0,
               maxY: 500,
@@ -36,8 +36,8 @@ class ChartsSection extends StatelessWidget {
             data: manageDashboard.pieChartData,
             title: 'Investing in Investa Categories ',
           ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
           child: BalanceHistoryChart(spotsData: spots),
         ),
       ],
