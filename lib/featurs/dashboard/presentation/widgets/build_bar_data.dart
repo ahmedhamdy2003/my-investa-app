@@ -28,18 +28,18 @@ class _LegendItem extends StatelessWidget {
 /// Returns a widget that shows the legend at the top-left,
 /// then your BarChart below it.
 Widget barData({
-  required List<double> seriesA, // “Investing”
-  required List<double> seriesB, // “Saving”
+  required List<double> investing, // “Investing”
+  required List<double> saving, // “Saving”
   required List<String> labels,
   double minY = 0,
   double maxY = 500,
 }) {
   assert(
-    seriesA.length == seriesB.length && seriesA.length == labels.length,
+    investing.length == saving.length && investing.length == labels.length,
     'seriesA, seriesB, and labels must match length',
   );
 
-  final count = seriesA.length;
+  final count = investing.length;
   final step = (maxY - minY) / 5;
 
   return Column(
@@ -78,13 +78,13 @@ Widget barData({
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: seriesB[i],
+                    toY: saving[i],
                     width: 16,
                     borderRadius: BorderRadius.circular(4),
                     color: const Color(0xFF16DBCC), // Saving
                   ),
                   BarChartRodData(
-                    toY: seriesA[i],
+                    toY: investing[i],
                     width: 16,
                     borderRadius: BorderRadius.circular(4),
                     color: const Color(0xFF1814F3), // Investing
@@ -139,7 +139,9 @@ Widget barData({
               rightTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
           ),
         ),
