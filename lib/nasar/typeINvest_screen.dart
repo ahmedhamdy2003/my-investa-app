@@ -1,9 +1,10 @@
-// typeINvest_screen.dart
 import 'package:investa4/nasar/policy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http; // Import the http package
 import 'dart:convert'; // Import for JSON encoding
+// **[NEW]** استيراد ملف إدارة المستخدمين
+import 'package:investa4/core/utils/manage_current_user.dart'; // تأكد أن المسار ده صح عندك
 
 class TypeInvestScreen extends StatefulWidget {
   const TypeInvestScreen({super.key});
@@ -37,14 +38,36 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
       return;
     }
 
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+
+    // **[NEW]** التحقق لو user_id مش موجود
+    if (userId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xffF44336),
+          content: Text("Error: User ID not found. Please log in again."),
+        ),
+      );
+      print(
+        'Error: User ID is null or empty. Cannot submit investment details.',
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Submitting investment details...")),
+    );
+
     // 2. Define your Django API endpoint URL
     // IMPORTANT: Replace with your actual Django backend URL
     const String apiUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/account-verificiation-2/'; // For Android emulator
+        'https://4ae0-156-215-229-89.ngrok-free.app/account-verificiation-2/'; // For Android emulator
     // const String apiUrl = 'http://127.0.0.1:8000/api/investments/'; // For iOS simulator or web
 
     // 3. Prepare the data to be sent in JSON format
     final Map<String, dynamic> data = {
+      'user_id': userId, // **[NEW]** إضافة user_id
       'investment_term': _selectedInvestmentTerm,
       'description': _descriptionController.text,
       // Add any other fields you need to send to your backend
@@ -56,6 +79,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN_HERE', // أضف التوثيق إذا لزم الأمر
         },
         body: jsonEncode(data),
       );
@@ -76,18 +100,41 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
         // Error sending data for other status codes
         print('Failed to send data. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
+
+        // **[FIXED]** Ensure response.body is not empty before decoding
+        String errorMessage;
+        if (response.body.isNotEmpty) {
+          try {
+            final Map<String, dynamic> errorData = json.decode(response.body);
+            errorMessage =
+                errorData['error'] ??
+                errorData['message'] ??
+                'Failed to send data. Please try again.';
+          } catch (e) {
+            errorMessage =
+                'Failed to send data. Server returned non-JSON: ${response.body}';
+            print(
+              'Failed to decode error JSON from server: $e, Raw body: ${response.body}',
+            );
+          }
+        } else {
+          errorMessage =
+              'Server error: No response body (Status: ${response.statusCode})';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to send data: ${response.statusCode}'),
+            backgroundColor: const Color(0xffF44336),
+            content: Text(errorMessage),
           ),
         );
       }
     } catch (e) {
       // Handle network or other errors
       print('Error sending data: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error or an error occurred: $e')),
+      );
     }
   }
 
@@ -105,7 +152,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
           },
         ),
         title: const Text(
-          '9:41',
+          '9:41', // هذا النص ثابت في التصميم، يمكنك إزالته أو تغييره
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
         centerTitle: true,
@@ -168,16 +215,17 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
               ),
               const SizedBox(height: 16),
               Container(
-                width: 343,
-                height: 280,
+                width: 343, // عرض ثابت كما في الصورة
+                height: 280, // ارتفاع ثابت كما في الصورة
                 decoration: BoxDecoration(
                   color: const Color(0xFF001F3F),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: TextField(
                   controller: _descriptionController,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
+                  maxLines: null, // يسمح بعدد غير محدود من الأسطر
+                  keyboardType:
+                      TextInputType.multiline, // لوحة مفاتيح متعددة الأسطر
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'Enter your description...',
@@ -186,7 +234,8 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
                       horizontal: 20,
                       vertical: 15,
                     ),
-                    border: InputBorder.none,
+                    border:
+                        InputBorder.none, // إزالة حدود الـ TextField الافتراضية
                   ),
                 ),
               ),

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'chat_bot_view.dart';
-import 'package:http/http.dart' as http; // استيراد مكتبة HTTP
-import 'dart:convert'; // استيراد لتحويل JSON
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// استيراد الشاشات الفرعية اللي هتفتح من BottomNavigationBar
+import 'package:investa4/nasar/founder_community.dart';
+import 'package:investa4/nasar/founder_reels.dart';
+import 'package:investa4/nasar/founder_dashboard.dart';
+import 'package:investa4/nasar/founder_profile.dart';
 
 class FounderHomeScreen extends StatefulWidget {
-  final String projectId; // هذا المتغير سيستقبل الـ Project ID
+  final String projectId;
 
-  const FounderHomeScreen({
-    super.key,
-    required this.projectId,
-  });
+  const FounderHomeScreen({super.key, required this.projectId});
 
   @override
   State<FounderHomeScreen> createState() => _FounderHomeScreenState();
@@ -19,9 +22,8 @@ class FounderHomeScreen extends StatefulWidget {
 class _FounderHomeScreenState extends State<FounderHomeScreen> {
   final Color textColor = const Color(0xFF082347);
 
-  // متغيرات لتخزين البيانات المجلوبة من الباك إند
   String _userName = "Guest";
-  String _userProfilePicUrl = 'assets/fakhr.png'; // الصورة الافتراضية
+  String _userProfilePicUrl = 'assets/fakhr.png';
   String _projectStatus = "Loading...";
   String _progressPercentage = "Loading...";
   String _numInvestors = "Loading...";
@@ -33,27 +35,29 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
 
   bool _isLoading = true;
   String _errorMessage = "";
+  int _selectedIndex = 0; // 0 for Home tab
 
   @override
   void initState() {
     super.initState();
-    _fetchFounderData(); // استدعاء دالة جلب البيانات عند بدء الشاشة
+    // جلب البيانات عند فتح الشاشة الرئيسية
+    _fetchFounderData();
     _calculatePrediction();
   }
 
-  // ---
-  // دالة جلب البيانات من Django Backend
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> _fetchFounderData() async {
     setState(() {
       _isLoading = true;
       _errorMessage = "";
     });
 
-    // ***** هذا هو الـ URL الصحيح لجلب البيانات بناءً على الـ projectId *****
-    // هذا الـ URL يجب أن يحتوي على آخر رابط فعال لـ ngrok
     final String apiUrl =
         'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}';
-    // ----------------------------------------------------------------------
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -62,12 +66,10 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
         final Map<String, dynamic> data = jsonDecode(response.body);
 
         setState(() {
-          // تحديث بيانات المستخدم
           _userName = data['user_data']['name'] ?? "Guest";
           _userProfilePicUrl =
               data['user_data']['profile_picture'] ?? 'assets/fakhr.png';
 
-          // تحديث بيانات Quick Overview
           _projectStatus = data['overview_data']['project_status'] ?? "N/A";
           _progressPercentage =
               data['overview_data']['progress_percentage'] ?? "N/A";
@@ -95,7 +97,6 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
       print('Error fetching founder data: $e');
     }
   }
-  // ---
 
   Widget _buildInfoRow(String title, String value) {
     return Padding(
@@ -145,12 +146,366 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
     );
   }
 
+  // **[هذه هي الدالة التي تبني محتوى صفحة الـ Home الرئيسية للـ Founder]**
+  // هذا المحتوى هو ما سيظهر عندما يكون _selectedIndex = 0
+  Widget _buildHomeContent() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(34.5),
+                child:
+                    _userProfilePicUrl.startsWith('http')
+                        ? Image.network(
+                          _userProfilePicUrl,
+                          width: 69,
+                          height: 69,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (context, error, stackTrace) => Image.asset(
+                                'assets/fakhr.png',
+                                width: 69,
+                                height: 69,
+                                fit: BoxFit.cover,
+                              ),
+                        )
+                        : Image.asset(
+                          _userProfilePicUrl,
+                          width: 69,
+                          height: 69,
+                          fit: BoxFit.cover,
+                        ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Welcome, $_userName ",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Continue to Achieve your Goals",
+                      style: TextStyle(fontSize: 14, color: textColor),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.notifications_none,
+                color: Color(0xFF082347),
+                size: 24,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Quick Overview :",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildInfoRow("Project Status", _projectStatus),
+          _buildDivider(),
+          _buildInfoRow("Progress Percentage", _progressPercentage),
+          _buildDivider(),
+          _buildInfoRow("Number of investors", _numInvestors),
+          _buildDivider(),
+          _buildInfoRow("Total Funding", _totalFunding),
+          _buildDivider(),
+          _buildInfoRow("Overall Project Rating", _overallProjectRating),
+          _buildDivider(),
+          Text(
+            "AI prediction for future success",
+            style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Image.asset(
+                    'assets/fail.png',
+                    width: 90,
+                    height: 166,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    _failureRate ?? '-%',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Image.asset(
+                    'assets/suc.png',
+                    width: 90,
+                    height: 166,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    _successRate ?? '-%',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: _calculatePrediction,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.all(0),
+                  shape: const CircleBorder(),
+                  minimumSize: const Size(60, 60),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF434343),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -8,
+                      left: 12,
+                      child: Transform.rotate(
+                        angle: 45 * 3.1415926535 / 180,
+                        child: Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF42A5F5),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 4,
+                      child: Container(
+                        width: 28,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: Color(0xffD3D3D3),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(5),
+                            bottom: Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 2,
+                      top: 8,
+                      child: Container(
+                        width: 4,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Color(0xffD3D3D3),
+                          borderRadius: BorderRadius.horizontal(
+                            left: Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 2,
+                      top: 8,
+                      child: Container(
+                        width: 4,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Color(0xffD3D3D3),
+                          borderRadius: BorderRadius.horizontal(
+                            right: Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _buildDivider(),
+          Text(
+            "Information",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildInfoRow("Funding Goal", "500,000 L.E – 850,000 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Completed Funding", "0 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Expected Success Rate", "-%"),
+          _buildDivider(),
+          _buildInfoRow("Investment State", "Short –Long"),
+          _buildDivider(),
+          _buildInfoRow("Total Number of investors allowed", "35"),
+          _buildDivider(),
+          _buildInfoRow("Maximum no.in.short", "20"),
+          _buildDivider(),
+          _buildInfoRow("Maximum no.in.long", "15"),
+          _buildDivider(),
+          _buildInfoRow("Investment State", "Short –Long"),
+          _buildDivider(),
+          _buildInfoRow("Minimum investment", "7,000 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Maximum investment", "55,000 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Minimum Short term", "7,000 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Minimum Long term", "36,000 L.E"),
+          _buildDivider(),
+          _buildInfoRow("Deadline", "-"),
+          _buildDivider(),
+          _buildInfoRow("Store Type", "Warehouse – Physical Store"),
+          _buildDivider(),
+          _buildInfoRow("Location", "New Cairo – Nasr City"),
+          _buildDivider(),
+          _buildInfoRow("Website", "zerosugarbyetonista.com"),
+          _buildDivider(),
+          Text(
+            "Social",
+            style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+          ),
+          const SizedBox(height: 10),
+          const Row(
+            children: [
+              Icon(
+                FontAwesomeIcons.xTwitter,
+                size: 20,
+                color: Color(0xFF082347),
+              ),
+              SizedBox(width: 15),
+              Icon(
+                FontAwesomeIcons.facebook,
+                size: 20,
+                color: Color(0xFF082347),
+              ),
+              SizedBox(width: 15),
+              Icon(
+                FontAwesomeIcons.instagram,
+                size: 20,
+                color: Color(0xFF082347),
+              ),
+              SizedBox(width: 15),
+              Icon(
+                FontAwesomeIcons.linkedinIn,
+                size: 20,
+                color: Color(0xFF082347),
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // **[MODIFIED]** تحديد الشاشة بناءً على الـ _selectedIndex
+    final Widget currentScreen;
+    switch (_selectedIndex) {
+      case 0: // Home Tab: يعرض محتوى FounderHomeScreen نفسه
+        currentScreen =
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage.isNotEmpty
+                ? Center(
+                  child: Text(
+                    _errorMessage,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+                : _buildHomeContent();
+        break;
+      case 1: // Community Tab
+        currentScreen = FounderCommunityScreen(projectId: widget.projectId);
+        break;
+      case 2: // Reels Tab
+        currentScreen = FounderReelsScreen(projectId: widget.projectId);
+        break;
+      case 3: // Dashboard Tab
+        currentScreen = FounderDashboardScreen(projectId: widget.projectId);
+        break;
+      case 4: // Profile Tab
+        currentScreen = FounderProfileScreen(projectId: widget.projectId);
+        break;
+      default:
+        currentScreen = const Center(child: Text("Unknown Screen"));
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // هذا AppBar يمكن التحكم في ظهوره أو إخفائه حسب الـ selectedIndex
+        // أو إزالته تماماً لو الشاشة الرئيسية لا تحتاج AppBar.
+        // حالياً هو ظاهر دايماً، ويمكن إزالته لو تريد UI متطابق 100% مع الصورة الأصلية
+        // التي لا تظهر App Bar في الـ Home Tab.
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF082347)),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SafeArea(child: currentScreen), // عرض الشاشة المختارة
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            // لو رجعت للـ Home Tab (index 0)، اعمل refresh للبيانات
+            // هذا لضمان تحديث البيانات عند العودة للـ Home tab.
+            if (index == 0) {
+              _fetchFounderData();
+              _calculatePrediction();
+            }
+          });
+        },
         selectedItemColor: Colors.blue.shade900,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
@@ -159,364 +514,18 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.groups), label: "Community"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.play_circle), label: "Reels"),
+            icon: Icon(Icons.play_circle),
+            label: "Reels",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), label: "Dashboard"),
+            icon: Icon(Icons.dashboard),
+            label: "Dashboard",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline), label: "Profile"),
+            icon: Icon(Icons.person_outline),
+            label: "Profile",
+          ),
         ],
-      ),
-      body: SafeArea(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage.isNotEmpty
-                ? Center(
-                    child: Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red, fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(34.5),
-                              child: _userProfilePicUrl.startsWith('http')
-                                  ? Image.network(
-                                      _userProfilePicUrl,
-                                      width: 69,
-                                      height: 69,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Image.asset(
-                                        'assets/fakhr.png',
-                                        width: 69,
-                                        height: 69,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : Image.asset(
-                                      _userProfilePicUrl,
-                                      width: 69,
-                                      height: 69,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: "Welcome, $_userName ",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: textColor),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "Continue to Achieve your Goals",
-                                    style: TextStyle(
-                                        fontSize: 14, color: textColor),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.notifications_none,
-                              color: Color(0xFF082347),
-                              size: 24,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Text("Quick Overview :",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: textColor)),
-                        const SizedBox(height: 10),
-                        _buildInfoRow("Project Status", _projectStatus),
-                        _buildDivider(),
-                        _buildInfoRow(
-                            "Progress Percentage", _progressPercentage),
-                        _buildDivider(),
-                        _buildInfoRow("Number of investors", _numInvestors),
-                        _buildDivider(),
-                        _buildInfoRow("Total Funding", _totalFunding),
-                        _buildDivider(),
-                        _buildInfoRow(
-                            "Overall Project Rating", _overallProjectRating),
-                        _buildDivider(),
-                        Text("AI prediction for future success",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: textColor)),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Image.asset(
-                                  'assets/fail.png',
-                                  width: 90,
-                                  height: 166,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  _failureRate ?? '-%',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: textColor),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Image.asset(
-                                  'assets/suc.png',
-                                  width: 90,
-                                  height: 166,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  _successRate ?? '-%',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: textColor),
-                                ),
-                              ],
-                            ),
-                            ElevatedButton(
-                              onPressed: _calculatePrediction,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                padding: const EdgeInsets.all(0),
-                                shape: const CircleBorder(),
-                                minimumSize: const Size(60, 60),
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF434343),
-                                      borderRadius: BorderRadius.circular(28),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: -8,
-                                    left: 12,
-                                    child: Transform.rotate(
-                                      angle: 45 * 3.1415926535 / 180,
-                                      child: Container(
-                                        width: 16,
-                                        height: 16,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFF42A5F5),
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 36,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: const BorderRadius.vertical(
-                                          top: Radius.circular(8),
-                                          bottom: Radius.circular(4)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 2,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                width: 6,
-                                                height: 6,
-                                                decoration: const BoxDecoration(
-                                                  color: Color(0xFF19376D),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 6,
-                                                height: 6,
-                                                decoration: const BoxDecoration(
-                                                  color: Color(0xFF19376D),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 2,
-                                          width: 12,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF19376D),
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 4,
-                                    child: Container(
-                                      width: 28,
-                                      height: 10,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xffD3D3D3),
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(5),
-                                            bottom: Radius.circular(2)),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: -2,
-                                    child: Container(
-                                      width: 2,
-                                      height: 6,
-                                      color: const Color(0xffD3D3D3),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 2,
-                                    top: 8,
-                                    child: Container(
-                                      width: 4,
-                                      height: 6,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xffD3D3D3),
-                                        borderRadius: BorderRadius.horizontal(
-                                            left: Radius.circular(2)),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 2,
-                                    top: 8,
-                                    child: Container(
-                                      width: 4,
-                                      height: 6,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xffD3D3D3),
-                                        borderRadius: BorderRadius.horizontal(
-                                            right: Radius.circular(2)),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        _buildDivider(),
-                        Text("Information",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: textColor)),
-                        const SizedBox(height: 10),
-                        _buildInfoRow(
-                            "Funding Goal", "500,000 L.E – 850,000 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Completed Funding", "0 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Expected Success Rate", "-%"),
-                        _buildDivider(),
-                        _buildInfoRow("Investment State", "Short –Long"),
-                        _buildDivider(),
-                        _buildInfoRow(
-                            "Total Number of investors allowed", "35"),
-                        _buildDivider(),
-                        _buildInfoRow("Maximum no.in.short", "20"),
-                        _buildDivider(),
-                        _buildInfoRow("Maximum no.in.long", "15"),
-                        _buildDivider(),
-                        _buildInfoRow("Investment State", "Short –Long"),
-                        _buildDivider(),
-                        _buildInfoRow("Minimum investment", "7,000 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Maximum investment", "55,000 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Minimum Short term", "7,000 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Minimum Long term", "36,000 L.E"),
-                        _buildDivider(),
-                        _buildInfoRow("Deadline", "-"),
-                        _buildDivider(),
-                        _buildInfoRow(
-                            "Store Type", "Warehouse – Physical Store"),
-                        _buildDivider(),
-                        _buildInfoRow("Location", "New Cairo – Nasr City"),
-                        _buildDivider(),
-                        _buildInfoRow("Website", "zerosugarbyetonista.com"),
-                        _buildDivider(),
-                        Text("Social",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: textColor)),
-                        const SizedBox(height: 10),
-                        const Row(
-                          children: [
-                            Icon(FontAwesomeIcons.xTwitter,
-                                size: 20, color: Color(0xFF082347)),
-                            SizedBox(width: 15),
-                            Icon(FontAwesomeIcons.facebook,
-                                size: 20, color: Color(0xFF082347)),
-                            SizedBox(width: 15),
-                            Icon(FontAwesomeIcons.instagram,
-                                size: 20, color: Color(0xFF082347)),
-                            SizedBox(width: 15),
-                            Icon(FontAwesomeIcons.linkedinIn,
-                                size: 20, color: Color(0xFF082347)),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
-                  ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -525,8 +534,11 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
         backgroundColor: const Color(0xFF082347),
         mini: false,
         shape: const CircleBorder(),
-        child: const Icon(Icons.chat_bubble_outline,
-            color: Colors.white, size: 28),
+        child: const Icon(
+          Icons.chat_bubble_outline,
+          color: Colors.white,
+          size: 28,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

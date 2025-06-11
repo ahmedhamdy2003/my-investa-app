@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:typed_data';
-
-// Make sure this import points to the correct file where NationalIDBScreen is defined.
+// Needed for MultipartRequest in case ApiHelper is not used directly
 import 'package:investa4/nasar/nationalIDB_screen.dart';
+// import 'package:investa4/core/network/api_helper.dart'; // Uncomment if you are using ApiHelper for uploads
 
 class NationalIDScreen extends StatefulWidget {
   const NationalIDScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _NationalIDScreenState createState() => _NationalIDScreenState();
 }
 
@@ -74,13 +75,13 @@ class _NationalIDScreenState extends State<NationalIDScreen> {
   // This function will now navigate to NationalIDBScreen, passing the front ID image
   void _navigateToNationalIDBScreen() {
     if (_nationalIDFrontImageBytes != null) {
+      // **[MODIFIED]** Pass the image bytes to the next screen
       Navigator.push(
         context,
         MaterialPageRoute(
           builder:
               (context) => NationalIDBScreen(
-                nationalIDFrontImageBytes:
-                    _nationalIDFrontImageBytes!, // Pass the front ID image
+                nationalIDFrontImageBytes: _nationalIDFrontImageBytes!,
               ),
         ),
       );
@@ -221,6 +222,21 @@ class _NationalIDScreenState extends State<NationalIDScreen> {
             const SizedBox(height: 20),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTipBox(String imagePath) {
+    return Container(
+      width: 130,
+      height: 84,
+      decoration: BoxDecoration(
+        color: const Color(0xffD9E4FF),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.asset(imagePath, fit: BoxFit.cover),
       ),
     );
   }

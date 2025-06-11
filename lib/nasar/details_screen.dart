@@ -1,7 +1,7 @@
-// details_screen.dart
 import 'package:investa4/nasar/amount_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // لاستخدام أيقونات Font Awesome
+// لا يوجد http أو dart:convert هنا.
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({super.key});
@@ -41,6 +41,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
         centerTitle: true,
         actions: const [
           // أيقونات الشبكة والبطارية، ممكن تضيفها هنا لو عايز
+          // Icon(Icons.signal_cellular_alt, color: Colors.black, size: 20),
+          // SizedBox(width: 8),
+          // Icon(Icons.wifi, color: Colors.black, size: 20),
+          // SizedBox(width: 8),
+          // Icon(Icons.battery_full, color: Colors.black, size: 20),
+          // SizedBox(width: 16),
         ],
       ),
       body: Padding(
@@ -106,9 +112,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     const SizedBox(width: 10),
                     _buildEmploymentStatusChip('Unemployed'),
                     const SizedBox(width: 10),
-                    _buildEmploymentStatusChip(
-                      'Student',
-                    ), // مثال لإضافة خيارات أخرى
+                    _buildEmploymentStatusChip('Student'),
                   ],
                 ),
               ),
@@ -133,32 +137,31 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   crossAxisCount: 2, // عمودين
                   crossAxisSpacing: 16, // المسافة الأفقية بين البطاقات
                   mainAxisSpacing: 16, // المسافة الرأسية بين البطاقات
-                  childAspectRatio:
-                      1.8, // نسبة العرض للارتفاع، تم تعديلها لتناسب الارتفاع 64px
+                  childAspectRatio: 1.8, // نسبة العرض للارتفاع
                 ),
                 itemCount: 4, // عدد البطاقات
                 itemBuilder: (context, index) {
                   List<Map<String, dynamic>> fundSources = [
                     {
-                      'icon': FontAwesomeIcons.moneyBillWave, // أيقونة شبيهة
+                      'icon': FontAwesomeIcons.moneyBillWave,
                       'title': 'Salary',
                       'subtitle': 'I got paid monthly',
                       'value': 'salary',
                     },
                     {
-                      'icon': FontAwesomeIcons.piggyBank, // أيقونة شبيهة
+                      'icon': FontAwesomeIcons.piggyBank,
                       'title': 'Savings',
                       'subtitle': 'I earn interest',
                       'value': 'savings',
                     },
                     {
-                      'icon': FontAwesomeIcons.chartLine, // أيقونة شبيهة
+                      'icon': FontAwesomeIcons.chartLine,
                       'title': 'Passive Income',
                       'subtitle': 'From business',
                       'value': 'passive_income',
                     },
                     {
-                      'icon': FontAwesomeIcons.users, // أيقونة شبيهة
+                      'icon': FontAwesomeIcons.users,
                       'title': 'Other',
                       'subtitle': 'Other methods',
                       'value': 'other',
@@ -190,7 +193,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ],
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
-        // هنا يتم التغيير: نستخدم Align لوضع الزرار على اليمين
         child: Align(
           alignment: Alignment.centerRight, // محاذاة الزرار لليمين
           child: ElevatedButton(
@@ -198,6 +200,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed:
                 _isAllSelectionsMade
                     ? () {
+                      // **[MODIFIED]** تمرير البيانات إلى AmountScreen بدون API Call هنا
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -332,8 +335,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? const Color(0xFF001F3F) // لون مختار
-                  : const Color(0xFF293950), // لون غير مختار
+                  ? const Color(0xFF001F3F)
+                  : const Color(0xFF293950), // لون مختار
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -384,12 +387,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? const Color(0xFF001F3F) // لون مختار
-                  : const Color(0xFF293950), // لون غير مختار
+                  ? const Color(0xFF001F3F)
+                  : const Color(0xFF293950), // لون مختار
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
-          // تغيير Column إلى Row
           children: [
             FaIcon(
               icon,

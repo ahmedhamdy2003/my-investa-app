@@ -1,5 +1,5 @@
-package com.example.graduation_project
+package com.example.graduation_project // السطر ده سيبه زي ما هو بالظبط
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity 
 
-class MainActivity : FlutterActivity()
+class MainActivity : FlutterFragmentActivity() 

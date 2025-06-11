@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/core/apis/login.dart';
 import 'package:investa4/core/model/user.dart';
-import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/core/utils/manage_current_user.dart' as current_user;
 import 'package:investa4/nasar/setup_screen.dart';
 // import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 
@@ -43,7 +43,7 @@ UserModel checkAndSaveUser(SignResult result) {
   if (userinDb != null) {
     userinDb.signedUp = true;
     UserMethods.updateUser(userinDb);
-    ManageCurrentUser.currentUser = userinDb;
+    current_user.ManageCurrentUser.currentUser = userinDb;
     return userinDb;
   }
   UserModel user = UserModel(
@@ -55,7 +55,7 @@ UserModel checkAndSaveUser(SignResult result) {
     birthdate: result.dateOffBirth,
   );
   UserMethods.saveUser(user);
-  ManageCurrentUser.currentUser = user;
+  current_user.ManageCurrentUser.currentUser = user;
   return user;
 }
 

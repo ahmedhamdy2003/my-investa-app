@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:typed_data';
-import 'package:http/http.dart' as http; // استيراد مكتبة http
-import 'nationalID_screen.dart'; // تأكد أن nationalID_screen.dart في نفس المجلد
+import 'package:http/http.dart' as http;
+import 'nationalID_screen.dart';
+// استيراد ملف إدارة المستخدمين
+import 'package:investa4/core/utils/manage_current_user.dart'; // تأكد أن المسار ده صح عندك
 
 class SecurityCheckScreen extends StatefulWidget {
   const SecurityCheckScreen({super.key});
@@ -31,16 +33,38 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
     if (cameras.isNotEmpty) {
+      // **[التعديل هنا]**: البحث عن الكاميرا الأمامية
+      final CameraDescription frontCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.front,
+        orElse:
+            () =>
+                cameras
+                    .first, // fallback to the first available camera if front camera not found
+      );
+
       _cameraController = CameraController(
-        cameras.first,
+        frontCamera, // **[التعديل هنا]**: استخدام الكاميرا الأمامية
         ResolutionPreset.medium,
         enableAudio: false,
       );
 
-      await _cameraController!.initialize();
-      setState(() {
-        _isCameraInitialized = true;
-      });
+      try {
+        await _cameraController!.initialize();
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      } catch (e) {
+        print("Error initializing camera: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error initializing camera: ${e.toString()}")),
+        );
+      }
+    } else {
+      // لو مفيش كاميرات متاحة خالص
+      print("No cameras available.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No cameras available on this device.")),
+      );
     }
   }
 
@@ -54,9 +78,9 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
         });
       } catch (e) {
         print("Error taking photo: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error taking photo: $e")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error taking photo: $e")));
       }
     }
   }
@@ -73,25 +97,48 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
   // هذه الدالة تم تعديلها لإرسال الصورة للباك إند ثم الانتقال للصفحة التالية
   void _uploadPhotoAndNavigate() async {
     if (_imageBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No image taken yet!")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("No image taken yet!")));
       return;
     }
 
+    // جلب user_id من ManageCurrentUser
+    String? userId = ManageCurrentUser.currentUser.guid;
+
+    // التحقق لو user_id مش موجود
+    if (userId.isEmpty) {
+      // تحقق فقط إذا كان userId فارغًا
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xffF44336),
+          content: Text("Error: User ID not found. Please log in again."),
+        ),
+      );
+      print('Error: User ID is empty. Cannot upload image.');
+      return; // Stop the upload process
+    }
+
     const String uploadUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/life-picture/'; //
+        'https://4ae0-156-215-229-89.ngrok-free.app/life-picture/'; // تأكد أن الـ URL ده هو بتاع الـ backend اللي بيستقبل الصورة
+
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
-      request.files.add(http.MultipartFile.fromBytes(
-        'image',
-        _imageBytes!,
-        filename: 'user_face_capture.jpg',
-      ));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Uploading image...")),
+      // إضافة user_id كحقل في الـ request
+      request.fields['user_id'] = userId; // الباك إند بيطلب user_id
+
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          _imageBytes!,
+          filename: 'user_face_capture.jpg',
+        ),
       );
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Uploading image...")));
 
       var response = await request.send();
 
@@ -115,7 +162,9 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: const Color(0xffF44336),
-            content: Text("Failed to upload image: ${response.statusCode}"),
+            content: Text(
+              "Failed to upload image: ${response.statusCode} - $responseBody",
+            ),
           ),
         );
       }
@@ -179,22 +228,15 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
                 width: double.infinity,
                 height: 230,
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color(0xff082347),
-                    width: 2,
-                  ),
+                  border: Border.all(color: const Color(0xff082347), width: 2),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: _imageBytes != null
-                    ? Image.memory(
-                        _imageBytes!,
-                        fit: BoxFit.cover,
-                      )
-                    : _isCameraInitialized && _cameraController != null
+                child:
+                    _imageBytes != null
+                        ? Image.memory(_imageBytes!, fit: BoxFit.cover)
+                        : _isCameraInitialized && _cameraController != null
                         ? CameraPreview(_cameraController!)
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                        : const Center(child: CircularProgressIndicator()),
               ),
             ),
             const Spacer(),
@@ -222,84 +264,93 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 28),
-                  child: Text('Not cropped',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold)),
+                  child: Text(
+                    'Not cropped',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 105),
-                  child: Text('No reflections',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold)),
+                  child: Text(
+                    'No reflections',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
             const Spacer(),
             _imageBytes == null
                 ? ElevatedButton.icon(
-                    onPressed: _takePhoto,
-                    icon: const Icon(Icons.camera_alt, color: Colors.white),
-                    label: const Text(
-                      'Take a photo',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff001F3F),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 55),
-                      minimumSize: const Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton(
-                        onPressed: _retakePhoto,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16.0, horizontal: 32),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          side: const BorderSide(color: Color(0xff001F3F)),
-                        ),
-                        child: const Text(
-                          'Retake',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xff001F3F),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed:
-                            _uploadPhotoAndNavigate, // تم ربط هذا الزر بالدالة المعدلة
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff001F3F),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16.0, horizontal: 32),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: const Text(
-                          'Looks Good !',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+                  onPressed: _takePhoto,
+                  icon: const Icon(Icons.camera_alt, color: Colors.white),
+                  label: const Text(
+                    'Take a photo',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff001F3F),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 55,
+                    ),
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                )
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: _retakePhoto,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 32,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        side: const BorderSide(color: Color(0xff001F3F)),
+                      ),
+                      child: const Text(
+                        'Retake',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xff001F3F),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed:
+                          _uploadPhotoAndNavigate, // تم ربط هذا الزر بالدالة المعدلة
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff001F3F),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 32,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Looks Good !',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
             const SizedBox(height: 20),
           ],
         ),
@@ -317,10 +368,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-        ),
+        child: Image.asset(imagePath, fit: BoxFit.cover),
       ),
     );
   }

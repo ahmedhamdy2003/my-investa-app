@@ -2,11 +2,10 @@
 import 'package:investa4/nasar/great_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// **ألغينا استيراد http لأنه مش هنستخدمه لإرسال الـ PIN للباك إند**
-// import 'package:http/http.dart' as http;
-// **ألغينا استيراد dart:convert لأنه مش هنستخدم jsonEncode**
-// import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart'; // <--- استيراد مكتبة shared_preferences
+// **[MODIFIED]** استيراد مكتبة flutter_secure_storage
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// ألغينا استيراد shared_preferences لأنه لم يعد يستخدم لحفظ الـ PIN
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfirmPinScreen extends StatefulWidget {
   final String initialPin; // الرقم السري اللي جاي من شاشة الإنشاء
@@ -27,8 +26,11 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
   bool _showConfirmButton =
       false; // New state to control confirm button visibility
 
-  // مفتاح لحفظ الـ PIN في الـ shared_preferences
-  static const String _pinKey = 'user_pin';
+  // **[MODIFIED]** تعريف FlutterSecureStorage
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  // مفتاح لحفظ الـ PIN في الـ secure storage
+  static const String _pinKey = 'user_pin_secure';
 
   @override
   void initState() {
@@ -70,14 +72,14 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
     } else {
       setState(() {
         _showError = true;
-        _errorMessage = 'The numbers dont match. Try again,';
+        _errorMessage = 'The numbers don\'t match. Try again,';
         _showConfirmButton = false; // إخفاء الزر عند عدم التطابق
       });
       _pinController.clear(); // مسح حقل الإدخال ليعيد المستخدم المحاولة
     }
   }
 
-  // دالة لحفظ الـ PIN في الموبايل والانتقال للصفحة التالية
+  // دالة لحفظ الـ PIN في الموبايل بشكل آمن والانتقال للصفحة التالية
   void _savePinLocallyAndNavigate() async {
     // <--- تم تغيير اسم الدالة هنا
     // ممكن هنا تضيف مؤشر تحميل (Loading indicator) لو حبيت
@@ -86,11 +88,12 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
     );
 
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      // هنا بنحفظ الـ PIN في الـ Shared Preferences
-      // الـ 'user_pin' ده هو المفتاح اللي هنستخدمه عشان نجيب الـ PIN ده تاني
-      await prefs.setString(_pinKey, widget.initialPin); // <--- ده سطر الحفظ
+      // **[MODIFIED]** هنا بنحفظ الـ PIN في الـ secure storage
+      // الـ 'user_pin_secure' ده هو المفتاح اللي هنستخدمه عشان نجيب الـ PIN ده تاني
+      await _secureStorage.write(
+        key: _pinKey,
+        value: widget.initialPin,
+      ); // <--- ده سطر الحفظ الآمن
 
       // تم حفظ الـ PIN بنجاح
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,20 +1,16 @@
 import 'dart:convert';
 
 import 'package:investa4/nasar/SecurityCheck_Screen.dart';
-
 import 'package:investa4/nasar/loading.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
-
 import 'package:http/http.dart' as http;
-
 import 'package:flutter_map/flutter_map.dart';
-
 import 'package:latlong2/latlong.dart';
 // ignore: depend_on_referenced_packages
 import 'package:geolocator/geolocator.dart';
+// **[مهم]** استيراد ملف إدارة المستخدمين الذي يحتوي على ManageCurrentUser
+import 'package:investa4/core/utils/manage_current_user.dart'; // تأكد أن هذا المسار صحيح تمامًا
 
 // قائمة المحافظات المصرية
 const List<String> governorates = [
@@ -121,8 +117,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         MaterialPageRoute(builder: (_) => const LoadingScreen()),
       );
 
+      // **[هنا يتم جلب user_id]**
+      String? userId = ManageCurrentUser.currentUser.guid;
+
+      // **[تحقق من وجود user_id]**
+      if (userId.isEmpty) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context); // Pop loading screen
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Color(0xffF44336),
+            content: Text("Error: User ID not found. Please log in again."),
+          ),
+        );
+        print(
+          'Error: User ID is null or empty. Cannot proceed with registration.',
+        );
+        return; // Stop the submission process
+      }
+
       // Prepare data for API
       final Map<String, dynamic> registrationData = {
+        'user_id': userId, // **[تم إضافة user_id هنا]**
         'full_name': fullNameController.text,
         'national_number': nationalNumberController.text,
         'phone_number': phoneController.text,
@@ -134,7 +151,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       };
 
       const String apiUrl =
-          'https://2859-41-44-137-9.ngrok-free.app/personal-data/';
+          'https://4ae0-156-215-229-89.ngrok-free.app/personal-data/';
       try {
         final http.Response response = await http.post(
           Uri.parse(apiUrl),
@@ -166,7 +183,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           // Registration failed
           final Map<String, dynamic> errorData = json.decode(response.body);
           String errorMessage =
-              errorData['message'] ?? 'Registration failed. Please try again.';
+              errorData['error'] ??
+              errorData['message'] ??
+              'Registration failed. Please try again.';
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: const Color(0xffF44336), // Red for error

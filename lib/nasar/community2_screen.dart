@@ -1,14 +1,10 @@
-import 'package:investa4/nasar/investment_item.dart';
+import 'package:investa4/nasar/investment_card.dart';
+import 'package:investa4/nasar/investment_item.dart'; // تأكد أن هذا هو المسار الوحيد لـ InvestmentItem
 import 'package:flutter/material.dart';
-// Removed: Duplicate InvestmentItem definition from here
-// Make sure InvestmentItem is defined ONLY in 'package:helloworld/investment_item.dart'
+// **[NEW]** استيراد ChatBotView (لو هي شاشة منفصلة)
+// تأكد من المسار الصحيح
 
-// Still needed if you intend to use API in the future
-// Still needed if you intend to use JSON conversion in the future
-
-/// ————————————————————————————
-///  Fixed values for easy modification ↓
-/// ————————————————————————————
+// Constants for styling (نقلتها من هنا عشان ما تتكررش)
 const Color kScreenBackgroundColor = Colors.white;
 const Color kMetricTextColor = Color(0xFF001F3F);
 const double kCardDividerThickness = 1.0;
@@ -17,155 +13,10 @@ const double kInvestBtnWidth = 114.0;
 const double kInvestBtnHeight = 32.0;
 const Color kInvestBtnColor = Color(0xFF001F3F);
 const Color kInvestBtnTextColor = Colors.white;
-
-const Color kSearchBarFillColor = Color(0xFFF5F5F5);
+const Color kSearchBarFillColor = Color(0xFFF5F7FA); // كانت F5F5F5
 const Color kSearchBarHintTextColor = Color(0xFF7E9ACF);
 const Color kSearchBarIconColor = Color(0xFF7E9ACF);
 
-/// ————————————————————————————
-///  End of editable values
-/// ————————————————————————————
-
-// InvestmentCardB class (assuming it's intentionally separate from InvestmentCard, though generally one is preferred)
-class InvestmentCardB extends StatelessWidget {
-  final String assetImage, title, description, investedAmount, investors;
-  final VoidCallback onTap, onBookmarkPressed;
-  final bool isSaved;
-
-  const InvestmentCardB({
-    super.key,
-    required this.assetImage,
-    required this.title,
-    required this.description,
-    required this.investedAmount,
-    required this.investors,
-    required this.onTap,
-    required this.onBookmarkPressed,
-    required this.isSaved,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Cover + overlay title
-            Stack(
-              children: [
-                Image.asset(
-                  assetImage,
-                  width: double.infinity,
-                  height: 140,
-                  fit: BoxFit.cover,
-                ),
-                Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      title.toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(blurRadius: 4, color: Colors.black45)],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            // Title, description & bookmark
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF082347),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: const Color(0xFF082347),
-                        ),
-                        onPressed: onBookmarkPressed,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 12, color: Colors.black87),
-                  ),
-                ],
-              ),
-            ),
-
-            const Divider(thickness: kCardDividerThickness),
-
-            // Invested & investors
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        investedAmount,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        'invested',
-                        style: TextStyle(fontSize: 12, color: kMetricTextColor),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        investors,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        'investors',
-                        style: TextStyle(fontSize: 12, color: kMetricTextColor),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Community2Screen with FAKHR details
 class Community2Screen extends StatefulWidget {
   const Community2Screen({super.key});
 
@@ -178,69 +29,74 @@ class _Community2ScreenState extends State<Community2Screen> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // IMPORTANT FIX: Added the 'category' field to each InvestmentItem.
-  // Ensure these categories match the exact strings used in HomeScreen
-  // and in your InvestmentItem.fromJson method if you're fetching from API.
+  // **[MODIFIED]** إضافة 'id' فريد لكل InvestmentItem هنا
+  // تأكد أن الـ IDs دي فريدة وأنها تتطابق مع الـ IDs اللي ممكن تجيلك من الـ backend لو هتعمل مزامنة.
   final List<InvestmentItem> allItems = [
     InvestmentItem(
+      id: "project_001", // **[NEW]**
       assetImage: "assets/image (36).png",
       title: "FAKHR",
       description:
           "Our mission is to inspire and empower individuals to embrace their unique journey, celebrate their achievements, and strive for greatness.",
       investedAmount: "300,000 LE",
       investors: "33",
-      category: "Fashion", // Assumed category based on common sense
+      category: "Fashion",
     ),
     InvestmentItem(
+      id: "project_002", // **[NEW]**
       assetImage: "assets/image (56).png",
       title: "Mother Naked",
       description:
           "Flipping the script on beauty: all about clean, glow-boosting products.",
       investedAmount: "270,000 LE",
       investors: "25",
-      category: "Beauty", // Assumed category
+      category: "Beauty",
     ),
     InvestmentItem(
+      id: "project_003", // **[NEW]**
       assetImage: "assets/image (23).png",
       title: "Zero Sugar By Ketonista",
       description:
           "We are specialized in Healthy, Keto, Sugar Free, Gluten Free Products",
       investedAmount: "450,000 LE",
       investors: "43",
-      category: "Food & Beverage", // Assumed category
+      category: "Food & Beverage",
     ),
     InvestmentItem(
+      id: "project_004", // **[NEW]**
       assetImage: "assets/image (35).png",
       title: "Seemly",
       description: "Seemly brings simplicity and comfort to your wardrobe.",
       investedAmount: "260,000 LE",
       investors: "32",
-      category: "Fashion", // Assumed category
+      category: "Fashion",
     ),
     InvestmentItem(
+      id: "project_005", // **[NEW]**
       assetImage: "assets/image (40).png",
       title: "Beyond",
       description: "Empowering individuals through innovative tech solutions.",
       investedAmount: "320,000 LE",
       investors: "30",
-      category:
-          "Technology", // Assumed category (if not in your list, pick an existing one)
+      category: "Technology", // تأكد لو دي category موجودة في InterestsScreen
     ),
     InvestmentItem(
+      id: "project_006", // **[NEW]**
       assetImage: "assets/image (22).png",
       title: "Infuse",
       description: "Revolutionizing aromatherapy with cutting-edge blends.",
       investedAmount: "280,000 LE",
       investors: "27",
-      category: "Health & Fitness", // Assumed category
+      category: "Health & Fitness",
     ),
     InvestmentItem(
+      id: "project_007", // **[NEW]**
       assetImage: "assets/image (30).png",
       title: "Eros",
       description: "Bringing artisanal coffee experiences to your doorstep.",
       investedAmount: "500,000 LE",
       investors: "45",
-      category: "Food & Beverage", // Assumed category
+      category: "Food & Beverage",
     ),
   ];
 
@@ -344,6 +200,12 @@ class _Community2ScreenState extends State<Community2Screen> {
   ];
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const Color primaryBlue = Color(0xFF003366);
     const Color dividerColor = Color(0xFFDDDDDD);
@@ -415,8 +277,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    child: InvestmentCardB(
-                      // Assuming InvestmentCardB is the desired card here
+                    child: InvestmentCard(
                       assetImage: it.assetImage,
                       title: it.title,
                       description: it.description,
@@ -618,6 +479,7 @@ class _Community2ScreenState extends State<Community2Screen> {
                               p['subtitle']!,
                               style: const TextStyle(
                                 fontSize: 14,
+                                fontWeight: FontWeight.bold,
                                 color: primaryBlue,
                               ),
                             ),

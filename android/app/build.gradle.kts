@@ -14,8 +14,8 @@ android {
 
     compileOptions {
         // *** تم التعديل هنا: تحديد إصدار Java 17 للتوافق مع Java 21 ***
-        sourceCompatibility = JavaVersion.VERSION_17 
-        targetCompatibility = JavaVersion.VERSION_17 
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -28,7 +28,7 @@ android {
         applicationId = "com.example.graduation_project"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23 // تم تحديد minSdk إلى 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -45,4 +45,27 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// **[MODIFIED - التعديل الرئيسي هنا]** هذا القسم تم تعديله ليتناسب مع صيغة Kotlin DSL
+dependencies { // هذا البلوك بتاع الـ dependencies
+
+    // **[مهم جداً]** الأسطر الأصلية الموجودة في قسم الـ dependencies بتاعك لازم تكون موجودة هنا.
+    // عادةً بتكون أسطر زي:
+    // implementation(project(":some_plugin_name"))
+    // implementation("com.google.android.material:material:x.y.z")
+    // لا تحذف أي شيء من الأسطر الأصلية هنا!
+
+    // **[التصحيح الرئيسي]**
+    // إضافة هذه الأسطر لتحديد إصدارات ثابتة وموثوقة لمكتبات AndroidX
+    // **تأكد أن الأقواس "( )" موجودة حول كل dependency وأنها داخل بلوك الـ dependencies.**
+    implementation("androidx.annotation:annotation:1.6.0") // << صيغة Kotlin DSL الصحيحة
+    implementation("androidx.core:core-ktx:1.10.1")       // << صيغة Kotlin DSL الصحيحة
+    implementation("androidx.concurrent:concurrent-futures:1.1.0") // << صيغة Kotlin DSL الصحيحة
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2") // << صيغة Kotlin DSL الصحيحة
+
+    // لو احتجت تضيف دول في المستقبل، لازم بنفس الصيغة:
+    // implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    // implementation("androidx.biometric:biometric:1.1.0")
+    // implementation("androidx.fragment:fragment:1.3.6")
 }

@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:investa4/nasar/welcome_screen.dart';
-
-// import '../welcome_screen.dart'; // تأكد من المسار الصحيح لشاشة الترحيب
-// تأكد من المسار الصحيح لشاشة الـ Home
+import 'package:investa4/nasar/welcome_screen.dart'; // دي صفحة WelcomeScreen اللي ممكن نرجع ليها لو لسه مفيش دور
+// **[NEW]** استيراد ملف إدارة المستخدمين
+import 'package:investa4/core/utils/manage_current_user.dart'; // تأكد أن المسار ده صح عندك
+// **[NEW]** استيراد شاشة Home النهائية للمستثمر
+import 'package:investa4/nasar/home_screen.dart'; // تأكد أن المسار ده صح لشاشة الـ Home الخاصة بالـ Investor
 
 class InterestsScreen extends StatefulWidget {
   const InterestsScreen({super.key});
@@ -41,7 +42,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
   // **مهم:** Base URL بتاع الباك إند بتاعك.
   // لازم تغير 'http://10.0.2.2:8000/api/' بالـ URL الفعلي للـ API بتاعك.
-  static const String _baseUrl = 'https://aed7-102-190-139-157.ngrok-free.app/';
+  static const String _baseUrl = 'https://4ae0-156-215-229-89.ngrok-free.app/';
 
   // دالة إرسال الاهتمامات للباك إند
   Future<void> _sendInterestsToBackend() async {
@@ -49,6 +50,21 @@ class _InterestsScreenState extends State<InterestsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select at least one interest.')),
       );
+      return;
+    }
+
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+
+    // **[NEW]** التحقق لو user_id مش موجود
+    if (userId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xffF44336),
+          content: Text("Error: User ID not found. Please log in again."),
+        ),
+      );
+      print('Error: User ID is null or empty. Cannot submit interests.');
       return;
     }
 
@@ -60,32 +76,71 @@ class _InterestsScreenState extends State<InterestsScreen> {
     List<String> selectedInterests =
         selectedIndices.map((index) => interestLabels[index]).toList();
 
+    // **[MODIFIED]** تجهيز البيانات لإرسالها، بما في ذلك user_id
+    final Map<String, dynamic> dataToSend = {
+      'user_id': userId, // **[NEW]** إضافة user_id
+      'interests': selectedInterests,
+    };
+
     try {
+      print(
+        'Sending interests data to backend: ${jsonEncode(dataToSend)}',
+      ); // [DEBUGGING]
+
       final response = await http.post(
         Uri.parse('${_baseUrl}interests/'), // ده API إرسال الاهتمامات
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           // 'Authorization': 'Bearer YOUR_AUTH_TOKEN', // لو محتاج توكن للاستيثاق
         },
-        body: jsonEncode(<String, List<String>>{
-          'interests': selectedInterests,
-        }),
+        body: jsonEncode(
+          dataToSend,
+        ), // **[MODIFIED]** إرسال الـ Map الكاملة مع user_id
       );
 
+      print('API Response Status Code: ${response.statusCode}'); // [DEBUGGING]
+      print('API Response Body: ${response.body}'); // [DEBUGGING]
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Interests sent successfully: ${response.body}');
-        // الانتقال لصفحة الـ Home بعد النجاح
-        Navigator.pushReplacementNamed(context, '/investor_home');
+        print('Interests sent successfully to Django backend!');
+
+        // **[MODIFIED]** الانتقال لـ HomeScreen (شاشة Investor Home) بعد النجاح
+        // استخدم pushReplacement لمنع الرجوع لـ InterestsScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
       } else {
+        String errorMessage;
+        if (response.body.isNotEmpty) {
+          try {
+            final Map<String, dynamic> errorData = json.decode(response.body);
+            errorMessage =
+                errorData['error'] ??
+                errorData['message'] ??
+                'Failed to save interests. Please try again.';
+          } catch (e) {
+            errorMessage =
+                'Failed to save interests. Server returned non-JSON: ${response.body}';
+            print(
+              'Failed to decode error JSON from server: $e, Raw body: ${response.body}',
+            );
+          }
+        } else {
+          errorMessage =
+              'Server error: No response body (Status: ${response.statusCode})';
+        }
         setState(() {
-          _errorMessage = 'Failed to save interests: ${response.statusCode}';
+          _errorMessage = errorMessage;
         });
-        print('Failed to send interests: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        print(
+          'Failed to send interests: ${response.statusCode} - ${response.body}',
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content:
-                  Text('Failed to save interests: ${response.statusCode}')),
+            backgroundColor: const Color(0xffF44336),
+            content: Text(errorMessage),
+          ),
         );
       }
     } catch (e) {
@@ -94,7 +149,10 @@ class _InterestsScreenState extends State<InterestsScreen> {
       });
       print('Error sending interests: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Network error: $e')),
+        SnackBar(
+          backgroundColor: const Color(0xffF44336),
+          content: Text('Network error: $e'),
+        ),
       );
     } finally {
       setState(() {
@@ -123,10 +181,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
           Positioned(
             top: 0,
             left: 0,
-            child: Image.asset(
-              'assets/bubble.png',
-              width: 230,
-            ),
+            child: Image.asset('assets/bubble.png', width: 230),
           ),
           Positioned(
             top: 60,
@@ -184,21 +239,24 @@ class _InterestsScreenState extends State<InterestsScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: isSelected
-                                ? const Color(0xff001F3F)
-                                : const Color(0xffD9E4FF),
+                            color:
+                                isSelected
+                                    ? const Color(0xff001F3F)
+                                    : const Color(0xffD9E4FF),
                             width: isSelected ? 1 : 2,
                           ),
-                          boxShadow: isSelected
-                              ? [
-                                  BoxShadow(
-                                    color: const Color(0xff001F3F)
-                                        .withOpacity(0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ]
-                              : [],
+                          boxShadow:
+                              isSelected
+                                  ? [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xff001F3F,
+                                      ).withOpacity(0.2),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(14),
@@ -246,10 +304,13 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
+                        // **[MODIFIED]** هنا سننتقل إلى WelcomeScreen (لأنك ترجع للشاشة التي تختار الدور)
+                        // ولكن الأفضل أن تنتقل مباشرة إلى Investor Home (HomeScreen)
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const WelcomeScreen()),
+                            builder: (context) => const WelcomeScreen(),
+                          ), // أو الأفضل HomeScreen()
                           (Route<dynamic> route) => false,
                         );
                       },

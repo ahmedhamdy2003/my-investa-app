@@ -12,6 +12,7 @@ class DatePickerTextField extends StatefulWidget {
   final String hint;
   final Function(DateTime?)? onDateSelected;
   final String? Function(String?)? validator;
+
   @override
   State<DatePickerTextField> createState() => _DatePickerTextFieldState();
 }
@@ -27,22 +28,19 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       lastDate: DateTime(2100),
     );
 
-    // *** هنا هو الحل ***
+    // **[FIXED]** هذا هو الجزء الذي تم تعديله لضمان التحقق من picked
     if (picked != null) {
-      // لو المستخدم اختار تاريخ (مش null)
+      // **[الشرط الصحيح هنا]** : الكود كله اللي بيستخدم picked بقى جواه
       setState(() {
+        // تنسيق التاريخ لـ YYYY-MM-DD
+        // تأكد من استخدام toLocal() لأن picked غالبًا بيكون UTC
         controller.text =
-            "${picked.toLocal()}".split(' ')[0]; // استخدم toLocal عادي
+            "${picked.toLocal().year}-${picked.toLocal().month.toString().padLeft(2, '0')}-${picked.toLocal().day.toString().padLeft(2, '0')}";
       });
       if (widget.onDateSelected != null) {
-        widget.onDateSelected!(picked); // ابعت التاريخ للدالة لو موجودة
+        widget.onDateSelected!(picked); // تمرير كائن الـ DateTime المختار
       }
-    } else {
-      // لو المستخدم لم يختار تاريخ (يعني قفل الـ picker)
-      // ممكن تسيب الـ TextField فاضي أو تعمل أي حاجة تانية
-      // controller.text = ""; // مثلاً امسح التاريخ القديم لو كان موجود
     }
-    // *** نهاية الحل ***
   }
 
   @override
@@ -50,7 +48,11 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
     return TextFormField(
       controller: controller,
       validator: widget.validator,
+      readOnly:
+          true, // اجعل الحقل للقراءة فقط ليختار المستخدم التاريخ من الـ picker
+      onTap: () => _selectDate(context), // لفتح الـ date picker عند الضغط
       decoration: textFieldDecoration(
+        // assuming textFieldDecoration is defined in text_field_style.dart
         widget.hint,
         isPassword: false,
         togglePassword: null,
@@ -61,8 +63,6 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
           onPressed: () => _selectDate(context),
         ),
       ),
-      readOnly: true,
-      onTap: () => _selectDate(context),
     );
   }
 }

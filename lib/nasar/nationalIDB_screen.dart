@@ -3,6 +3,9 @@ import 'package:camera/camera.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http; // Import http
 import 'package:investa4/nasar/fingerORface_screen.dart'; // Import the next screen
+// **[NEW]** Import ManageCurrentUser
+import 'package:investa4/core/utils/manage_current_user.dart';
+// import 'package:investa4/core/network/api_helper.dart'; // Uncomment if you are using ApiHelper for uploads
 
 class NationalIDBScreen extends StatefulWidget {
   // Receive the front ID image from NationalIDScreen
@@ -83,11 +86,30 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
       return;
     }
 
+    // **[NEW]** Get user_id from ManageCurrentUser
+    String? userId = ManageCurrentUser.currentUser.guid;
+
+    // **[NEW]** Check if user_id is available
+    if (userId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xffF44336),
+          content: Text("Error: User ID not found. Please log in again."),
+        ),
+      );
+      print('Error: User ID is null or empty. Cannot upload ID images.');
+      return; // Stop the upload process
+    }
+
     const String uploadUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/upload-national-card/';
+        'https://4ae0-156-215-229-89.ngrok-free.app/upload-national-card/'; // Ensure this is your backend URL
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
+
+      // **[NEW]** Add user_id as a field in the MultipartRequest
+      request.fields['user_id'] =
+          userId; // Backend expects this field for user_id
 
       // Add the national ID front image
       request.files.add(

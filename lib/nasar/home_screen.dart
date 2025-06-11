@@ -1,5 +1,3 @@
-// home_screen.dart
-
 import 'package:investa4/nasar/categories_pages.dart';
 import 'package:investa4/nasar/community_screen.dart';
 import 'package:investa4/nasar/dashboard_screen.dart';
@@ -13,6 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// **[NEW]** استيراد manage_current_user لتمرير user_id في الـ API calls لو الباك إند بيطلبه
+import 'package:investa4/core/utils/manage_current_user.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -22,14 +23,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool showFilterBar = false;
-  String? selectedFilter;
-  String? selectedSortOption;
+  bool showFilterBar = false; // لم يتم استخدامه حاليا في الـ UI
+  String? selectedFilter; // لم يتم استخدامه حاليا في الـ UI
+  String? selectedSortOption; // لم يتم استخدامه حاليا في الـ UI
 
-  // NEW: Default profile image is now an empty string or a generic network URL
-  // instead of a local asset path, as the image will come from the backend.
   String _userName = 'Guest';
-  String _userProfileImage = ''; // Changed default to empty string
+  String _userProfileImage = '';
 
   List<InvestmentItem> allProjects = [];
   List<InvestmentItem> _savedItems = [];
@@ -38,47 +37,102 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
-  static const String _baseUrl = 'https://aed7-102-190-139-157.ngrok-free.app/';
+  static const String _baseUrl =
+      'https://4ae0-156-215-229-89.ngrok-free.app/'; // تأكد أن هذا الـ URL محدّث وفعّال
+
+  // **[NEW]** تعريف الـ Futures لتجنب استدعاء API متكرر في FutureBuilder
+  late Future<void> _userDataFuture;
+  late Future<void> _homeDataFuture;
+  late Future<void> _savedItemsFuture;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
-    _fetchHomeData();
-    _fetchSavedItems();
+    // **[MODIFIED]** استدعاء الـ APIs مرة واحدة وتخزين الـ Future
+    _userDataFuture = _fetchUserData();
+    _homeDataFuture = _fetchHomeData();
+    _savedItemsFuture =
+        _fetchSavedItems(); // هتستدعي دي لما تحتاج الـ saved items
+
+    // إضافة Listener لحقل البحث
+    _searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
 
+  // **[NEW]** دالة للتعامل مع تغييرات حقل البحث
+  void _onSearchChanged() {
+    final query = _searchController.text;
+    if (query.isNotEmpty) {
+      setState(() {
+        _isSearching = true; // Activate search mode
+      });
+      // لا تستدعي _searchProjects هنا مباشرة، سيتولى FutureBuilder الأمر
+      // ولكن تأكد من وجود Future خاص بالبحث في حالة _isSearching = true
+      // (الكود الحالي بيستدعيها في FutureBuilder وهي شغالة كده، لكن ممكن يكون Future منفصل أفضل)
+      // ممكن تعمل كده لو عايز تتحكم في الـ Future بتاع البحث:
+      // if (query != _lastSearchQuery) { // لتجنب عمليات بحث متكررة لنفس الـ query
+      //   _searchFuture = _searchProjects(query);
+      //   _lastSearchQuery = query;
+      // }
+    } else {
+      setState(() {
+        _isSearching = false; // Exit search mode
+        searchResults = []; // Clear search results
+      });
+    }
+  }
+
   /// Function to fetch user data (name and profile image) from API
   Future<void> _fetchUserData() async {
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+    if (userId.isEmpty) {
+      print('Error: User ID is null or empty. Cannot fetch user data.');
+      // ممكن تعرض رسالة للمستخدم أو توجيهه لصفحة تسجيل الدخول لو ده إجباري
+      if (mounted) {
+        setState(() {
+          _userName = 'Login Error';
+          _userProfileImage = '';
+        });
+      }
+      return;
+    }
+
     try {
-      final response = await http.get(Uri.parse('${_baseUrl}welcome/'));
+      final response = await http.get(
+        Uri.parse('${_baseUrl}welcome/$userId/'),
+      ); // **[MODIFIED]** إضافة user_id للـ URL
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _userName = data['name'] ?? 'Younis';
-          // Ensure 'profile_image_url' is the exact key from your backend's JSON response
-          _userProfileImage =
-              data['profile_image_url'] ?? ''; // Default to empty if not found
-        });
+        if (mounted) {
+          setState(() {
+            _userName = data['name'] ?? 'Younis';
+            _userProfileImage = data['profile_image_url'] ?? '';
+          });
+        }
       } else {
         print("Failed to load user data: ${response.statusCode}");
-        setState(() {
-          _userProfileImage = ''; // Clear image on failure
-          _userName = 'Error'; // Indicate error
-        });
+        if (mounted) {
+          setState(() {
+            _userProfileImage = '';
+            _userName = 'Error';
+          });
+        }
       }
     } catch (e) {
       print("Error fetching user data: $e");
-      setState(() {
-        _userProfileImage = ''; // Clear image on error
-        _userName = 'Error'; // Indicate error
-      });
+      if (mounted) {
+        setState(() {
+          _userProfileImage = '';
+          _userName = 'Error';
+        });
+      }
     }
   }
 
@@ -98,12 +152,19 @@ class _HomeScreenState extends State<HomeScreen> {
         '${_baseUrl}trending/',
       );
 
-      setState(() {
-        allProjects = [...interests, ...topRaised, ...closingSoon, ...trending];
-        // Optional: Remove duplicates if the same project appears in multiple sections.
-        // import 'dart:collection';
-        // allProjects = LinkedHashSet<InvestmentItem>.from(allProjects).toList();
-      });
+      if (mounted) {
+        setState(() {
+          allProjects = [
+            ...interests,
+            ...topRaised,
+            ...closingSoon,
+            ...trending,
+          ];
+          // Optional: Remove duplicates if the same project appears in multiple sections.
+          // import 'dart:collection';
+          // allProjects = LinkedHashSet<InvestmentItem>.from(allProjects).toList();
+        });
+      }
     } catch (e) {
       print("Error fetching home data: $e");
       // Handle error, maybe show a message to the user
@@ -112,77 +173,147 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Helper function to fetch a single project section
   Future<List<InvestmentItem>> _fetchProjectSection(String url) async {
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data
-          .map((json) => InvestmentItem.fromJson(json))
-          .cast<InvestmentItem>()
-          .toList();
-    } else {
-      throw Exception(
-        'Failed to load projects from $url: ${response.statusCode}',
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+    if (userId.isEmpty) {
+      print(
+        'Error: User ID is null or empty. Cannot fetch project section: $url',
       );
+      return []; // ارجع قائمة فارغة لو مفيش user ID
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+          // ممكن تضيف 'Authorization': 'Bearer YOUR_AUTH_TOKEN' لو الـ backend بيستخدم توكن
+        },
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data
+            .map((json) => InvestmentItem.fromJson(json))
+            .cast<InvestmentItem>()
+            .toList();
+      } else {
+        print(
+          'Failed to load projects from $url: ${response.statusCode} - ${response.body}',
+        );
+        throw Exception(
+          'Failed to load projects from $url: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('Error fetching project section $url: $e');
+      throw Exception('Error fetching project section $url: $e');
     }
   }
 
   /// Function to search projects from API (this remains the same as it searches globally)
   Future<void> _searchProjects(String query) async {
     if (query.isEmpty) {
-      setState(() {
-        _isSearching = false;
-        searchResults = [];
-      });
+      if (mounted) {
+        setState(() {
+          _isSearching = false;
+          searchResults = [];
+        });
+      }
       return;
     }
 
-    setState(() {
-      _isSearching = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isSearching = true;
+      });
+    }
 
-    try {
-      final response = await http.get(Uri.parse('${_baseUrl}search/?q=$query'));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          searchResults =
-              data
-                  .map((json) => InvestmentItem.fromJson(json))
-                  .cast<InvestmentItem>()
-                  .toList();
-        });
-      } else {
-        print("Failed to search projects: ${response.statusCode}");
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+    if (userId.isEmpty) {
+      print('Error: User ID is null or empty. Cannot search projects.');
+      if (mounted) {
         setState(() {
           searchResults = [];
         });
       }
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('${_baseUrl}search/?q=$query'),
+        headers: {
+          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        if (mounted) {
+          setState(() {
+            searchResults =
+                data
+                    .map((json) => InvestmentItem.fromJson(json))
+                    .cast<InvestmentItem>()
+                    .toList();
+          });
+        }
+      } else {
+        print(
+          "Failed to search projects: ${response.statusCode} - ${response.body}",
+        );
+        if (mounted) {
+          setState(() {
+            searchResults = [];
+          });
+        }
+      }
     } catch (e) {
       print("Error searching projects: $e");
-      setState(() {
-        searchResults = [];
-      });
+      if (mounted) {
+        setState(() {
+          searchResults = [];
+        });
+      }
     }
   }
 
   /// Function to fetch saved projects from API
-  /// NOTE: Assumes the backend still uses 'user/saved_projects/' endpoint for saved items.
   Future<void> _fetchSavedItems() async {
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+    if (userId.isEmpty) {
+      print('Error: User ID is null or empty. Cannot fetch saved items.');
+      if (mounted) {
+        setState(() {
+          _savedItems = [];
+        });
+      }
+      return;
+    }
+
     try {
       final response = await http.get(
         Uri.parse('${_baseUrl}user/saved_projects/'),
+        headers: {
+          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+        },
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _savedItems =
-              data
-                  .map((json) => InvestmentItem.fromJson(json))
-                  .cast<InvestmentItem>()
-                  .toList();
-        });
+        if (mounted) {
+          setState(() {
+            _savedItems =
+                data
+                    .map((json) => InvestmentItem.fromJson(json))
+                    .cast<InvestmentItem>()
+                    .toList();
+          });
+        }
       } else {
-        print("Failed to load saved items: ${response.statusCode}");
+        print(
+          "Failed to load saved items: ${response.statusCode} - ${response.body}",
+        );
       }
     } catch (e) {
       print("Error fetching saved items: $e");
@@ -190,11 +321,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Function to add/remove a project from saved items via API
-  /// NOTE: Assumes the backend still uses 'user/toggle_saved_project/' endpoint.
   Future<void> _toggleBookmark(InvestmentItem item) async {
+    // **[NEW]** جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+    if (userId.isEmpty) {
+      print('Error: User ID is null or empty. Cannot toggle bookmark.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error: User ID not found. Cannot save project."),
+        ),
+      );
+      return;
+    }
+
     final bool isCurrentlySaved = _savedItems.any(
       (savedItem) => savedItem.title == item.title,
-    ); // Prefer using item.id if available
+    ); // يفضل استخدام item.id
     final String action = isCurrentlySaved ? 'remove' : 'add';
 
     try {
@@ -202,20 +344,27 @@ class _HomeScreenState extends State<HomeScreen> {
         Uri.parse('${_baseUrl}user/toggle_saved_project/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
           // 'Authorization': 'Bearer YOUR_AUTH_TOKEN',
         },
         body: jsonEncode({
           'project_id':
-              item.title, // Prefer sending actual project ID instead of title
+              item.title, // يفضل إرسال project ID الفعلي بدلاً من title
           'action': action,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Bookmark toggled successfully for: ${item.title}");
-        _fetchSavedItems(); // Refresh saved items list after change
+        _savedItemsFuture =
+            _fetchSavedItems(); // **[MODIFIED]** إعادة تحميل الـ future للـ saved items
+        if (mounted) {
+          setState(() {}); // لعمل rebuild للـ UI اللي بيعتمد على _savedItems
+        }
       } else {
-        print("Failed to toggle bookmark: ${response.statusCode}");
+        print(
+          "Failed to toggle bookmark: ${response.statusCode} - ${response.body}",
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -264,7 +413,15 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(child: body),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (i) => setState(() => _selectedIndex = i),
+        onTap: (i) {
+          setState(() => _selectedIndex = i);
+          // هنا ممكن تعمل refresh لبيانات الـ home لو رجعت لـ tab 0
+          if (i == 0) {
+            _userDataFuture = _fetchUserData();
+            _homeDataFuture = _fetchHomeData();
+            _savedItemsFuture = _fetchSavedItems();
+          }
+        },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFF082347),
         unselectedItemColor: Colors.black54,
@@ -288,18 +445,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // **[MODIFIED]** استخدام _userDataFuture
           FutureBuilder<void>(
-            future: _fetchUserData(),
+            future: _userDataFuture, // استخدام الـ Future المخزن
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // Show a small circular progress indicator while loading profile data
                 return const SizedBox(
-                  width: 56, // Same as CircleAvatar radius * 2
+                  width: 56,
                   height: 56,
-                  child: CircularProgressIndicator(),
+                  child: Center(child: CircularProgressIndicator()),
                 );
               } else if (snapshot.hasError) {
-                // Show a default profile image or an error icon
                 return CircleAvatar(
                   radius: 28,
                   backgroundColor: Colors.grey[200],
@@ -316,7 +472,9 @@ class _HomeScreenState extends State<HomeScreen> {
           // Conditional display based on search mode
           _isSearching && _searchController.text.isNotEmpty
               ? FutureBuilder<void>(
-                future: _searchProjects(_searchController.text),
+                future: _searchProjects(
+                  _searchController.text,
+                ), // هنا الـ searchProjects بيتم استدعاؤه مباشرة لأنه بيعتمد على query متغير
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       searchResults.isEmpty) {
@@ -335,6 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           "No results found for your search.",
                           style: TextStyle(fontSize: 16, color: Colors.grey),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     );
@@ -344,7 +503,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               )
               : FutureBuilder<void>(
-                future: _fetchHomeData(), // This populates allProjects
+                future:
+                    _homeDataFuture, // **[MODIFIED]** استخدام الـ Future المخزن
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       allProjects.isEmpty) {
@@ -411,8 +571,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? NetworkImage(_userProfileImage) as ImageProvider
                   : const AssetImage('assets/profile.png')
                       as ImageProvider, // Fallback to local asset if URL is empty/failed
-          // To ensure the local 'assets/profile.png' is available, it must be in pubspec.yaml
-          // and physically in your assets folder.
         ),
         const SizedBox(width: 10),
         Expanded(
@@ -474,17 +632,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _searchController,
         onChanged: (query) {
-          setState(() {
-            if (query.isNotEmpty) {
-              _isSearching = true; // Activate search mode
-              _searchProjects(
-                query,
-              ); // Call API for search (if not already handled by FutureBuilder)
-            } else {
-              _isSearching = false; // Exit search mode
-              searchResults = []; // Clear search results
-            }
-          });
+          // **[MODIFIED]** استدعاء _onSearchChanged ليتولى المنطق
+          _onSearchChanged();
         },
         decoration: const InputDecoration(
           hintText: 'Search for a Business or Founder name',
@@ -498,43 +647,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Helper widget to display a list of investment cards (used for search and main sections)
   Widget _buildInvestmentList(List<InvestmentItem> list) {
-    if (list.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Center(
-          child: Text(
-            "No projects found in this section.",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        final item = list[index];
-        final isSaved = _savedItems.any(
-          (s) => s.title == item.title,
-        ); // Use item.id if available
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: InvestmentCard(
-            assetImage: item.assetImage,
-            title: item.title,
-            description: item.description,
-            investedAmount: item.investedAmount,
-            investors: item.investors,
-            isSaved: isSaved,
-            onBookmarkPressed: () => _toggleBookmark(item),
-            onTap: () {
-              print('Tapped on: ${item.title}');
-              // Navigate to project details page
+    // **[NEW]** استخدام FutureBuilder لـ _savedItemsFuture هنا لضمان تحديث الـ savedItems
+    return FutureBuilder<void>(
+      future: _savedItemsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // يمكن عرض مؤشر تحميل بسيط هنا لو الـ saved items لسه بتتحمل
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error loading saved items: ${snapshot.error}'),
+          );
+        } else {
+          if (list.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Center(
+                child: Text(
+                  "No projects found in this section.",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              final item = list[index];
+              // **[MODIFIED]** التأكد من أن _savedItems تم تحميلها قبل استخدامها
+              final isSaved = _savedItems.any(
+                (s) =>
+                    s.id == item.id, // يفضل استخدام item.id للتحقق من التوفير
+              );
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: InvestmentCard(
+                  assetImage: item.assetImage,
+                  title: item.title,
+                  description: item.description,
+                  investedAmount: item.investedAmount,
+                  investors: item.investors,
+                  isSaved: isSaved,
+                  onBookmarkPressed: () => _toggleBookmark(item),
+                  onTap: () {
+                    print('Tapped on: ${item.title}');
+                    // Navigate to project details page
+                  },
+                ),
+              );
             },
-          ),
-        );
+          );
+        }
       },
     );
   }

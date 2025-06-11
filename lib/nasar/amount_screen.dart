@@ -1,9 +1,11 @@
-// amount_screen.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import http
+import 'package:http/http.dart' as http; // استيراد http
 import 'dart:convert';
 
 import 'package:investa4/nasar/typeINvest_screen.dart'; // Import for jsonEncode
+// **[NEW]** استيراد ملف إدارة المستخدمين
+import 'package:investa4/core/utils/manage_current_user.dart';
+// import 'package:investa4/core/network/api_helper.dart'; // Uncomment if you are using ApiHelper
 
 class AmountScreen extends StatefulWidget {
   // استقبال البيانات من DetailsScreen
@@ -60,44 +62,64 @@ class _AmountScreenState extends State<AmountScreen> {
     return '${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')},00 LE';
   }
 
-  // دالة لإرسال جميع البيانات إلى الباك إند
-  void _sendDetailsToBackendAndNavigate() async {
-    // يمكنك عرض مؤشر تحميل هنا
+  // **[MODIFIED]** دالة لإرسال جميع البيانات إلى الباك إند
+  void _sendAllDetailsToBackendAndNavigate() async {
+    // جلب user_id
+    String? userId = ManageCurrentUser.currentUser.guid;
+
+    // التحقق لو user_id مش موجود
+    if (userId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xffF44336),
+          content: Text("Error: User ID not found. Please log in again."),
+        ),
+      );
+      print('Error: User ID is null or empty. Cannot submit details.');
+      return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Sending details to server...")),
+      const SnackBar(content: Text("Sending financial details to server...")),
     );
 
-    // تعريف رابط الـ API الخاص بالباك إند
-    // **مهم جداً: استبدل هذا بالرابط الفعلي لنقطة نهاية الـ API في Django**
+    // **[مهم]** هذا هو الـ URL النهائي الذي يستقبل كل بيانات التقييم المالي
     const String apiUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/account-verificiation/'; // مثال على الرابط
+        'https://4ae0-156-215-229-89.ngrok-free.app/account-verificiation/'; // **عدّل هذا الرابط للـ API الفعلي في الـ Backend بتاعك**
 
     try {
       final Map<String, dynamic> dataToSend = {
-        'gender': widget.selectedGender,
-        'employment_status': widget.selectedEmploymentStatus,
-        'primary_source_of_fund': widget.selectedFundSource,
-        'monthly_income': _monthlyIncome,
-        'monthly_save': _monthlySave,
-        // يمكنك إضافة أي بيانات أخرى للمستخدم هنا (مثل user_id)
+        'user_id': userId, // إضافة user_id
+        'gender': widget.selectedGender, // من DetailsScreen
+        'employment_status':
+            widget.selectedEmploymentStatus, // من DetailsScreen
+        'primary_source_of_fund': widget.selectedFundSource, // من DetailsScreen
+        'monthly_income': _monthlyIncome, // من AmountScreen
+        'monthly_save': _monthlySave, // من AmountScreen
       };
+
+      // [DEBUGGING] اطبع البيانات المرسلة للمراجعة
+      print('Sending data to backend: ${jsonEncode(dataToSend)}');
 
       final http.Response response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          // إذا كان الـ API يتطلب توثيق (مثل توكن JWT)، أضف هنا:
-          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN_HERE',
+          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN_HERE', // أضف التوثيق إذا لزم الأمر
         },
         body: jsonEncode(dataToSend),
       );
+
+      // [DEBUGGING] اطبع استجابة الـ API الخامة
+      print('API Response Status Code: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // تم إرسال البيانات بنجاح
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Color(0xff4CAF50), // أخضر للنجاح
-            content: Text("Details submitted successfully!"),
+            content: Text("All financial details submitted successfully!"),
           ),
         );
         // الانتقال للصفحة التالية بعد نجاح الاتصال بالـ API
@@ -107,10 +129,26 @@ class _AmountScreenState extends State<AmountScreen> {
         );
       } else {
         // فشل اتصال الـ API
-        final Map<String, dynamic> errorData = json.decode(response.body);
-        String errorMessage =
-            errorData['message'] ??
-            'Failed to submit details. Please try again.';
+        String errorMessage;
+        if (response.body.isNotEmpty) {
+          try {
+            final Map<String, dynamic> errorData = json.decode(response.body);
+            errorMessage =
+                errorData['error'] ??
+                errorData['message'] ??
+                'Failed to submit details. Please try again.';
+          } catch (e) {
+            errorMessage =
+                'Failed to submit details. Server returned non-JSON or empty response: ${response.body}';
+            print(
+              'Failed to decode error JSON from server: $e, Raw body: ${response.body}',
+            );
+          }
+        } else {
+          errorMessage =
+              'Server error: No response body (Status: ${response.statusCode})';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: const Color(0xffF44336), // أحمر للخطأ
@@ -122,7 +160,7 @@ class _AmountScreenState extends State<AmountScreen> {
         );
       }
     } catch (e) {
-      // خطأ في الشبكة
+      // خطأ في الشبكة (مثلاً: لا يوجد اتصال إنترنت)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xffF44336), // أحمر للخطأ
@@ -151,7 +189,6 @@ class _AmountScreenState extends State<AmountScreen> {
         ),
 
         centerTitle: true,
-        // يمكنك إضافة أيقونات الشبكة والبطارية هنا إذا أردت
         actions: const [
           Icon(Icons.signal_cellular_alt, color: Colors.black, size: 20),
           SizedBox(width: 8),
@@ -218,7 +255,6 @@ class _AmountScreenState extends State<AmountScreen> {
             ),
             const SizedBox(height: 8),
 
-            // لا يوجد نص توضيحي هنا في الصورة، ولكن يمكن إضافته إذا لزم الأمر
             const Spacer(), // يدفع باقي العناصر للأسفل
             // أزرار Confirm و Back
             SizedBox(
@@ -226,7 +262,7 @@ class _AmountScreenState extends State<AmountScreen> {
               height: 55,
               child: ElevatedButton(
                 onPressed:
-                    _sendDetailsToBackendAndNavigate, // استدعاء الدالة الجديدة
+                    _sendAllDetailsToBackendAndNavigate, // استدعاء الدالة الجديدة
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(
                     0xff001F3F,

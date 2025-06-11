@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/nasar/Registration_screen.dart';
+// import 'package:investa4/home_screen.dart'; // افترض ان شاشة Home Screen هنا
+// import 'package:investa4/user_management.dart'; // افترض ان ManageCurrentUser موجود هنا
+
+// افتراض وجود كلاس ManageCurrentUser و HomeScreen لغرض الكود
+class ManageCurrentUser {
+  static final ManageCurrentUser _instance = ManageCurrentUser._internal();
+  factory ManageCurrentUser() => _instance;
+  ManageCurrentUser._internal();
+
+  // مثال مبسط جداً لـ current user
+  var currentUser = CurrentUser(guid: 'user_123');
+}
+
+class CurrentUser {
+  final String guid;
+  CurrentUser({required this.guid});
+}
+
+// افترض ان شاشة Home Screen موجودة هنا
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Screen')),
+      body: const Center(child: Text('Welcome to the Home Screen!')),
+    );
+  }
+}
+// نهاية الافتراضات
 
 class SetupScreen extends StatefulWidget {
-  // It's good practice to make the constructor const if the widget is stateless and its properties are final
   const SetupScreen({super.key});
 
   @override
@@ -10,25 +40,45 @@ class SetupScreen extends StatefulWidget {
 }
 
 class _SetupScreenState extends State<SetupScreen> {
-  bool isInitFinih = true; // Variable to track if it's the first step
+  // تم تغيير القيمة الأولية إلى false عشان تظهر شاشة التحميل في البداية
+  bool isInitFinih = false;
+
   @override
   void initState() {
-    initMethod();
     super.initState();
+    initMethod();
   }
 
   initMethod() async {
-    // ManageCurrentUser.currentUser.guid; ------  to get user id ------
-    // // check user setup screen in backend %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    // // after that call setState to update the UI with isInitFinih = true;
-    // bool userHasData = false; // Replace with actual check for user data
-    //   if (userHasData) {
-    //     navigate to home screen;
-    //   } else {
-    //     setState(() {
-    //   isInitFinih = true;
-    // });
-    //   }
+    // 1. الحصول على user id
+    String? userId = ManageCurrentUser().currentUser.guid;
+    print("User ID: $userId"); // لطباعة الـ user ID في الـ debug console
+
+    // 2. محاكاة التحقق من الـ backend
+    // في الكود الحقيقي، هتحتاج تعمل هنا HTTP request للـ backend
+    // وتنتظر الاستجابة عشان تعرف userHasData
+    await Future.delayed(
+      const Duration(seconds: 3),
+    ); // محاكاة لتاخير الـ network request
+
+    // 3. هنا المفروض تيجي استجابة الـ backend اللي بتقولك userHasData
+    // لغرض التجربة، هنفترض أن المستخدم ليس لديه بيانات (لم يكمل الـ setup)
+    bool userHasData =
+        false; // ***** غيّر القيمة دي لـ `true` عشان تجرب حالة الانتقال للـ Home Screen *****
+
+    if (userHasData) {
+      // 4. لو المستخدم كمل الـ setup: الانتقال لشاشة Home Screen
+      // استخدم pushReplacement عشان متقدرش ترجع لشاشة الـ Setup بالـ back button
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } else {
+      // 5. لو المستخدم لم يكمل الـ setup: عرض شاشة Setup (تحديث isInitFinih)
+      setState(() {
+        isInitFinih = true;
+      });
+    }
   }
 
   @override
@@ -89,7 +139,7 @@ class _SetupScreenState extends State<SetupScreen> {
                         ),
                       ),
                       onPressed: () {
-                        // **هنا تم التعديل**: الانتقال لشاشة RegistrationScreen
+                        // هنا تم التعديل: الانتقال لشاشة RegistrationScreen
                         Navigator.push(
                           context,
                           MaterialPageRoute(

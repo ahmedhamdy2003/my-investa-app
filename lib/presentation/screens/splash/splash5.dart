@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/core/assets_managers.dart';
 import 'package:investa4/core/model/user.dart';
-import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/core/utils/manage_current_user.dart' as core_utils;
 import 'package:investa4/nasar/setup_screen.dart';
 
 import '../../../core/routes_manager/routes.dart';
@@ -23,7 +23,7 @@ class _Splash5State extends State<Splash5> {
     Future.delayed(const Duration(seconds: 2), () {
       UserModel? signedUser = UserMethods.getSignedUser();
       if (signedUser != null) {
-        ManageCurrentUser.currentUser = signedUser;
+        core_utils.ManageCurrentUser.currentUser = signedUser;
       }
       if (signedUser != null) {
         Navigator.pushReplacement(
