@@ -79,12 +79,12 @@ final chartData = [
 ];
 
 List<CustomLineChartData> mockData = [
-  CustomLineChartData(year: 2016, value: 10000),
-  CustomLineChartData(year: 2017, value: 20000),
-  CustomLineChartData(year: 2018, value: 10000),
-  CustomLineChartData(year: 2019, value: 40000),
-  CustomLineChartData(year: 2020, value: 30000),
-  CustomLineChartData(year: 2021, value: 35000),
+  CustomLineChartData(label: '2016', value: 10000),
+  CustomLineChartData(label: '2017', value: 20000),
+  CustomLineChartData(label: '2018', value: 10000),
+  CustomLineChartData(label: '2019', value: 40000),
+  CustomLineChartData(label: '2020', value: 30000),
+  CustomLineChartData(label: '2021', value: 35000),
 ];
 
 // In your widget tree
