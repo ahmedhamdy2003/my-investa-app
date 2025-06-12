@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 class FounderDashboardScreen extends StatelessWidget {
   final String projectId; // لاستقبال Project ID لو محتاجاه الشاشة دي
 
-  const FounderDashboardScreen({super.key, required this.projectId});
+  const FounderDashboardScreen({
+    super.key,
+    required this.projectId,
+    String? userId,
+  });
 
   @override
   Widget build(BuildContext context) {

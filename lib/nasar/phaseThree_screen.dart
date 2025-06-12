@@ -6,8 +6,14 @@ import 'package:investa4/nasar/founderHome_screen.dart'; // تأكد أن الم
 class phaseThree_screen extends StatefulWidget {
   // 1. إضافة projectId كـ parameter مطلوب في constructor
   final String projectId;
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
 
-  const phaseThree_screen({super.key, required this.projectId});
+  const phaseThree_screen({
+    super.key,
+    required this.projectId,
+    this.userId,
+  }); // <--- هنا تم استقبال الـ userId
 
   @override
   State<phaseThree_screen> createState() => _PhaseThreeScreenState();
@@ -24,10 +30,11 @@ class _PhaseThreeScreenState extends State<phaseThree_screen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        // 2. تمرير الـ projectId المستلم إلى FounderHomeScreen
+        // 2. تمرير الـ projectId والـ userId المستلم إلى FounderHomeScreen
         builder:
             (context) => FounderHomeScreen(
               projectId: widget.projectId,
+              userId: widget.userId, // <--- هنا تم تمرير الـ userId
             ), // تمرير projectId
       ),
     );
@@ -36,11 +43,19 @@ class _PhaseThreeScreenState extends State<phaseThree_screen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      const _PageOne(), // لا حاجة لتمرير onPickFile أو selectedFile
-      const _PageTwo(), // لا حاجة لتمرير onPickFile أو selectedFile
+      _PageOne(
+        projectId: widget.projectId,
+        userId: widget.userId,
+      ), // لا حاجة لتمرير onPickFile أو selectedFile
+      _PageTwo(
+        projectId: widget.projectId,
+        userId: widget.userId,
+      ), // لا حاجة لتمرير onPickFile أو selectedFile
       _PageThree(
         onGotIt: _navigateToFounderHome, // استدعاء دالة الانتقال مباشرة
         isUploading: false, // دائمًا false بما أنه لا يوجد رفع ملفات
+        projectId: widget.projectId, // تمرير projectId
+        userId: widget.userId, // تمرير userId
       ),
     ];
 
@@ -83,21 +98,54 @@ class BackgroundHeader extends StatelessWidget {
 }
 
 class _PageOne extends StatelessWidget {
-  // تمت إزالة onPickFile و selectedFile لأنهما لم يعدا مستخدمين
-  const _PageOne();
+  // 1. أضف خاصية userId و projectId هنا
+  final String? userId;
+  final String projectId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId و projectId
+  const _PageOne({this.userId, required this.projectId});
 
   @override
   Widget build(BuildContext context) {
-    return const Stack(
+    return Stack(
       children: [
-        BackgroundHeader(),
+        const BackgroundHeader(),
         Padding(
-          padding: EdgeInsets.fromLTRB(20, 270, 20, 20),
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            270,
+            20,
+            20,
+          ), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
               children: [
-                Text(
+                // [DEBUG] لعرض الـ userId والـ projectId للتأكد من وصولهما
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    "Project ID: $projectId",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                const Text(
                   'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (physical store):',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -106,8 +154,8 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   '1. Commercial registration: To prove that the project is officially registered with the state.\n\n'
                   '2. Even home-based projects can now register themselves as "small or micro projects".\n\n'
                   '3. Tax card: To verify that the project pays taxes and is recognized by the tax authority.\n\n'
@@ -122,9 +170,7 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                SizedBox(height: 20),
-                // تمت إزالة ElevatedButton لـ "drag the file"
-                // والنص الخاص بالملف المحدد
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -135,59 +181,12 @@ class _PageOne extends StatelessWidget {
 }
 
 class _PageTwo extends StatelessWidget {
-  // تمت إزالة onPickFile و selectedFile لأنهما لم يعدا مستخدمين
-  const _PageTwo();
+  // 1. أضف خاصية userId و projectId هنا
+  final String? userId;
+  final String projectId;
 
-  @override
-  Widget build(BuildContext context) {
-    return const Stack(
-      children: [
-        BackgroundHeader(),
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, 270, 20, 20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (home-based projects):',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color(0xFF082347),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '1. A declaration from the owner that they are conducting the activity from a specific location, along with photos of that place.\n\n'
-                  '2. Invoices for raw material purchases or product sales in the last 3 months.\n\n'
-                  '3. Active social media links + the number of orders/customers over the past months.\n\n'
-                  '4. A certificate from the Micro, Small, and Medium Enterprises Development Agency (MSME) if applying for government support or training there.',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 17,
-                    height: 1.5,
-                    color: Color(0xFF082347),
-                  ),
-                ),
-                SizedBox(height: 20),
-                // تمت إزالة ElevatedButton لـ "drag the file"
-                // والنص الخاص بالملف المحدد
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PageThree extends StatelessWidget {
-  final VoidCallback onGotIt;
-  final bool isUploading;
-
-  const _PageThree({required this.onGotIt, required this.isUploading});
+  // 2. عدّل الـ constructor لاستقبال الـ userId و projectId
+  const _PageTwo({this.userId, required this.projectId});
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +199,112 @@ class _PageThree extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // [DEBUG] لعرض الـ userId والـ projectId للتأكد من وصولهما
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    "Project ID: $projectId",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                const Text(
+                  'Phase3: \n\n✅ Basic legal documents required to prove the existence of a project in Egypt (home-based projects):',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color(0xFF082347),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  '1. A declaration from the owner that they are conducting the activity from a specific location, along with photos of that place.\n\n'
+                  '2. Invoices for raw material purchases or product sales in the last 3 months.\n\n'
+                  '3. Active social media links + the number of orders/customers over the past months.\n\n'
+                  '4. A certificate from the Micro, Small, and Medium Enterprises Development Agency (MSME) if applying for government support or training there.',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 17,
+                    height: 1.5,
+                    color: Color(0xFF082347),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PageThree extends StatelessWidget {
+  final VoidCallback onGotIt;
+  final bool isUploading;
+  // 1. أضف خاصية userId و projectId هنا
+  final String? userId;
+  final String projectId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId و projectId
+  const _PageThree({
+    required this.onGotIt,
+    required this.isUploading,
+    this.userId, // يمكن أن تكون null
+    required this.projectId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        const BackgroundHeader(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 270, 20, 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // [DEBUG] لعرض الـ userId والـ projectId للتأكد من وصولهما
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    "Project ID: $projectId",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
                 const Text(
                   '📊 Monthly audit: How to learn it?',
                   textAlign: TextAlign.start,

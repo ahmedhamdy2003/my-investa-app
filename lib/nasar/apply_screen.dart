@@ -8,7 +8,11 @@ import 'dart:typed_data'; // لإضافة Uint8List
 import 'apply_screenB.dart';
 
 class ApplyScreen extends StatefulWidget {
-  const ApplyScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const ApplyScreen({super.key, this.userId});
 
   @override
   State<ApplyScreen> createState() => _ApplyScreenState();
@@ -46,7 +50,6 @@ class _ApplyScreenState extends State<ApplyScreen> {
   String? gender;
 
   String? _pickedFileName;
-  // String? _pickedFilePath; // لم نعد نستخدم هذا لـ Web
   Uint8List? _pickedFileBytes; // لتخزين بايتات الملف لـ Web
   bool _isFilePicked = false;
   bool _isPickingFile = false;
@@ -153,7 +156,6 @@ class _ApplyScreenState extends State<ApplyScreen> {
       _isPickingFile = true;
       _pickedFileName = null;
       _isFilePicked = false;
-      // _pickedFilePath = null; // لم نعد نستخدم هذا
       _pickedFileBytes = null; // إعادة تعيين بايتات الملف
     });
 
@@ -167,12 +169,10 @@ class _ApplyScreenState extends State<ApplyScreen> {
         PlatformFile file = result.files.first;
         setState(() {
           _pickedFileName = file.name;
-          // على الويب، نستخدم `bytes` بدلاً من `path`
           _pickedFileBytes = file.bytes;
           _isFilePicked = true;
         });
         print('Selected file: ${file.name}');
-        // يمكنك طباعة طول البايتات للتحقق (اختياري)
         if (file.bytes != null) {
           print('File bytes length: ${file.bytes!.length}');
         }
@@ -180,7 +180,6 @@ class _ApplyScreenState extends State<ApplyScreen> {
         print('File picking cancelled or no file selected.');
         setState(() {
           _pickedFileName = null;
-          // _pickedFilePath = null;
           _pickedFileBytes = null;
           _isFilePicked = false;
         });
@@ -192,7 +191,6 @@ class _ApplyScreenState extends State<ApplyScreen> {
       ).showSnackBar(SnackBar(content: Text("Error picking file: $e")));
       setState(() {
         _pickedFileName = null;
-        // _pickedFilePath = null;
         _pickedFileBytes = null;
         _isFilePicked = false;
       });
@@ -220,16 +218,25 @@ class _ApplyScreenState extends State<ApplyScreen> {
       return;
     }
 
+    // تأكد من وجود الـ userId قبل إرسال البيانات
+    if (widget.userId == null || widget.userId!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User ID is missing. Cannot submit form.'),
+        ),
+      );
+      print('Error: User ID is null or empty. Cannot send assign data.');
+      return;
+    }
+
     const String assignUrl =
         'https://2859-41-44-137-9.ngrok-free.app/insert-project/';
 
-    // لاحظ هنا: كيفية إرسال الملف المختار إلى Django
-    // على الويب، ليس لدينا "مسار" ملف تقليدي.
-    // سنقوم بإرسال الملف كـ base64 String إذا كان HTTP POST عادي
-    // أو كـ multipart/form-data إذا كان API يتوقع ذلك.
-    // الطريقة الأسهل للتعامل معها هي إرسالها كـ multipart/form-data.
-
     var request = http.MultipartRequest('POST', Uri.parse(assignUrl));
+
+    // 3. أضف الـ userId إلى البيانات المرسلة
+    request.fields['user_id'] =
+        widget.userId!; // استخدم ! للتأكيد أنه ليس null بعد التحقق أعلاه
 
     // إضافة باقي البيانات النصية
     request.fields['first_name'] = firstNameController.text;
@@ -281,7 +288,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
             builder:
                 (context) => ApplyScreenB(
                   firstPageData: json.decode(responseBody),
-                ), // قد تحتاج لتعديل هذا ليتناسب مع استجابة Django
+                  userId: widget.userId, // تمرير الـ userId إلى ApplyScreenB
+                ),
           ),
         );
       } else {
@@ -339,6 +347,19 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   color: Color(0xFF0A1F44),
                 ),
               ),
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID: ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 16),
               _buildLabel('First name'),
               _buildTextField(

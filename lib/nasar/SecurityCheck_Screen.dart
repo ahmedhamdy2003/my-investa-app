@@ -120,7 +120,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
     }
 
     const String uploadUrl =
-        'https://4ae0-156-215-229-89.ngrok-free.app/life-picture/'; // تأكد أن الـ URL ده هو بتاع الـ backend اللي بيستقبل الصورة
+        'https://7226-197-134-76-183.ngrok-free.app/life-picture/'; // تأكد أن الـ URL ده هو بتاع الـ backend اللي بيستقبل الصورة
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));

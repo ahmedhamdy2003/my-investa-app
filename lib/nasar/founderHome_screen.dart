@@ -12,8 +12,14 @@ import 'package:investa4/nasar/founder_profile.dart';
 
 class FounderHomeScreen extends StatefulWidget {
   final String projectId;
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
 
-  const FounderHomeScreen({super.key, required this.projectId});
+  const FounderHomeScreen({
+    super.key,
+    required this.projectId,
+    this.userId,
+  }); // <--- هنا تم استقبال الـ userId
 
   @override
   State<FounderHomeScreen> createState() => _FounderHomeScreenState();
@@ -56,6 +62,8 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
       _errorMessage = "";
     });
 
+    // يمكنك استخدام widget.userId هنا إذا كان الـ API يحتاجه
+    // مثال: final String apiUrl = 'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}?userId=${widget.userId ?? ''}';
     final String apiUrl =
         'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}';
 
@@ -213,6 +221,31 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
                 size: 24,
               ),
             ],
+          ),
+          // [DEBUG] لعرض الـ userId للتأكد من وصوله
+          if (widget.userId != null && widget.userId!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              child: Text(
+                "User ID: ${widget.userId}",
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.blueGrey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          // [DEBUG] لعرض الـ projectId للتأكد من وصوله
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              "Project ID: ${widget.projectId}",
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.blueGrey,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           Text(
@@ -463,16 +496,32 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
                 : _buildHomeContent();
         break;
       case 1: // Community Tab
-        currentScreen = FounderCommunityScreen(projectId: widget.projectId);
+        // 2. تمرير الـ userId إلى FounderCommunityScreen
+        currentScreen = FounderCommunityScreen(
+          projectId: widget.projectId,
+          userId: widget.userId,
+        );
         break;
       case 2: // Reels Tab
-        currentScreen = FounderReelsScreen(projectId: widget.projectId);
+        // 2. تمرير الـ userId إلى FounderReelsScreen
+        currentScreen = FounderReelsScreen(
+          projectId: widget.projectId,
+          userId: widget.userId,
+        );
         break;
       case 3: // Dashboard Tab
-        currentScreen = FounderDashboardScreen(projectId: widget.projectId);
+        // 2. تمرير الـ userId إلى FounderDashboardScreen
+        currentScreen = FounderDashboardScreen(
+          projectId: widget.projectId,
+          userId: widget.userId,
+        );
         break;
       case 4: // Profile Tab
-        currentScreen = FounderProfileScreen(projectId: widget.projectId);
+        // 2. تمرير الـ userId إلى FounderProfileScreen
+        currentScreen = FounderProfileScreen(
+          projectId: widget.projectId,
+          userId: widget.userId,
+        );
         break;
       default:
         currentScreen = const Center(child: Text("Unknown Screen"));

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'details_screen.dart'; // **أضف هذا السطر لاستيراد صفحة DetailsScreen**
 
 class GreatScreen extends StatelessWidget {
-  const GreatScreen({super.key});
+  const GreatScreen({super.key, String? userId});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,6 @@ class GreatScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40), // مسافة قبل الخطوات
-
             // خطوات الـ setup
             _buildSetupStep(
               number: 1,
@@ -75,7 +74,6 @@ class GreatScreen extends StatelessWidget {
             ),
 
             const Spacer(), // يدفع باقي العناصر للأسفل
-
             // زرار Confirm
             SizedBox(
               width: double.infinity,
@@ -86,13 +84,15 @@ class GreatScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DetailsScreen()),
+                      builder: (context) => const DetailsScreen(),
+                    ),
                   );
                   print('Confirm button pressed. Navigate to DetailsScreen.');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xff001F3F), // اللون الأزرق الداكن
+                  backgroundColor: const Color(
+                    0xff001F3F,
+                  ), // اللون الأزرق الداكن
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -109,7 +109,6 @@ class GreatScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20), // مسافة بعد الزرار
-
             // Frame 8 - Secured Data
             Container(
               alignment: Alignment.center,
@@ -129,15 +128,15 @@ class GreatScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.laptop_mac,
-                          color: Colors.grey, size: 20), // أيقونة الكمبيوتر
+                      Icon(
+                        Icons.laptop_mac,
+                        color: Colors.grey,
+                        size: 20,
+                      ), // أيقونة الكمبيوتر
                       SizedBox(width: 8),
                       Text(
                         'Secured Data, Assured Future',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -167,31 +166,43 @@ class GreatScreen extends StatelessWidget {
           height: isCurrent ? 45 : 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDone
-                ? const Color(0xFF53D258) // لون أخضر للدائرة المكتملة
-                : const Color(0xFF738395), // لون الخلفية للدائرة غير المكتملة
-            border: isCurrent
-                ? Border.all(
-                    color: const Color(0xFFAEB7C1), // لون الحدود للخطوة الحالية
-                    width: 3.0, // سمك الحدود، تم زيادته ليظهر بوضوح
-                  )
-                : null, // لا يوجد حدود للخطوات الأخرى (بما في ذلك الدائرة الثالثة)
+            color:
+                isDone
+                    ? const Color(0xFF53D258) // لون أخضر للدائرة المكتملة
+                    : const Color(
+                      0xFF738395,
+                    ), // لون الخلفية للدائرة غير المكتملة
+            border:
+                isCurrent
+                    ? Border.all(
+                      color: const Color(
+                        0xFFAEB7C1,
+                      ), // لون الحدود للخطوة الحالية
+                      width: 3.0, // سمك الحدود، تم زيادته ليظهر بوضوح
+                    )
+                    : null, // لا يوجد حدود للخطوات الأخرى (بما في ذلك الدائرة الثالثة)
           ),
           child: Center(
-            child: isDone
-                ? const Icon(Icons.check,
-                    color: Colors.black, size: 24) // علامة صح سوداء
-                : Text(
-                    number.toString(),
-                    style: TextStyle(
-                      color:
-                          const Color(0xFF001F3F), // لون الرقم ثابت للغير مكتمل
-                      fontSize: isCurrent
-                          ? 22
-                          : 20, // حجم أكبر للرقم في الخطوة الحالية
-                      fontWeight: FontWeight.bold,
+            child:
+                isDone
+                    ? const Icon(
+                      Icons.check,
+                      color: Colors.black,
+                      size: 24,
+                    ) // علامة صح سوداء
+                    : Text(
+                      number.toString(),
+                      style: TextStyle(
+                        color: const Color(
+                          0xFF001F3F,
+                        ), // لون الرقم ثابت للغير مكتمل
+                        fontSize:
+                            isCurrent
+                                ? 22
+                                : 20, // حجم أكبر للرقم في الخطوة الحالية
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
           ),
         ),
         const SizedBox(width: 16),

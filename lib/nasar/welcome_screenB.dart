@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'tips_screen.dart'; // تأكد من وجود الملف والمسار الصحيح
 
 class WelcomeScreenB extends StatelessWidget {
-  const WelcomeScreenB({super.key});
+  // 1. أضف خاصية userId
+  final String? userId; // يمكن أن تكون null لو لم يتم تسجيل الدخول
+
+  // 2. أضفها في الـ constructor
+  const WelcomeScreenB({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -25,32 +29,27 @@ class WelcomeScreenB extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: Image.asset(
-              'assets/shape.png',
-              width: 240,
-            ),
+            child: Image.asset('assets/shape.png', width: 240),
           ),
 
           // الفقاعة اليمين
           Positioned(
             top: 38,
             right: -10,
-            child: Image.asset(
-              'assets/dark_shape.png',
-              width: 80,
-            ),
+            child: Image.asset('assets/dark_shape.png', width: 80),
           ),
 
           // المحتوى في منتصف الشاشة رأسيًا
-          const Center(
+          Center(
+            // Make this Center a non-const to allow child modification
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment:
                     CrossAxisAlignment.start, // الكلام يبدأ من الشمال
                 children: [
-                  Text(
+                  const Text(
                     "🚀 Welcome to Investa, a platform\nsupporting local entrepreneurs in Egypt!",
                     style: TextStyle(
                       fontSize: 18,
@@ -58,8 +57,8 @@ class WelcomeScreenB extends StatelessWidget {
                       color: Color(0xFF0A2640),
                     ),
                   ),
-                  SizedBox(height: 11),
-                  Text(
+                  const SizedBox(height: 11),
+                  const Text(
                     "Our platform is seeking the best emerging startups and local brands in the fields of food & beverages, beauty, fashion, fitness, and health & food projects—especially those operating in the Egyptian market for more than 12 months.",
                     style: TextStyle(
                       fontSize: 15,
@@ -68,8 +67,8 @@ class WelcomeScreenB extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
-                  SizedBox(height: 24),
-                  Text(
+                  const SizedBox(height: 24),
+                  const Text(
                     "Do you have a genuine & successful project seeking funding & expansion opportunities?",
                     style: TextStyle(
                       fontSize: 20,
@@ -77,6 +76,18 @@ class WelcomeScreenB extends StatelessWidget {
                       color: Color(0xFF0A2640),
                     ),
                   ),
+                  // **[NEW]** لإظهار الـ userId (للتأكد أنه يتم تمريره بشكل صحيح)
+                  if (userId != null && userId!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "User ID: $userId",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -106,9 +117,12 @@ class WelcomeScreenB extends StatelessWidget {
             right: 24,
             child: ElevatedButton(
               onPressed: () {
+                // يمكنك الآن تمرير الـ userId إلى TipsScreen إذا كانت تحتاج إليه
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const TipsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => TipsScreen(userId: userId),
+                  ),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -116,9 +130,7 @@ class WelcomeScreenB extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 30,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 30),
               ),
               child: const Text(
                 "Yes, Sure let's start the journey",

@@ -35,7 +35,7 @@ class WelcomeScreen extends StatelessWidget {
     // **[IMPORTANT]** هذا هو الـ URL الذي يجب أن يستقبل user_id والدور
     // تأكد أن هذا الرابط هو الصحيح للـ backend الخاص بك.
     const String apiUrl =
-        'https://4ae0-156-215-229-89.ngrok-free.app/role/'; // **غير هذا الرابط للـ API الفعلي**
+        'https://7226-197-134-76-183.ngrok-free.app/role/'; // **غير هذا الرابط للـ API الفعلي**
 
     try {
       final Map<String, dynamic> dataToSend = {'user_id': userId, 'role': role};

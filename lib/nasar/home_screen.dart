@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
 
   static const String _baseUrl =
-      'https://4ae0-156-215-229-89.ngrok-free.app/'; // تأكد أن هذا الـ URL محدّث وفعّال
+      'https://7226-197-134-76-183.ngrok-free.app/'; // **[MODIFIED]** تأكد أن هذا الـ URL محدّث وفعّال
 
   // **[NEW]** تعريف الـ Futures لتجنب استدعاء API متكرر في FutureBuilder
   late Future<void> _userDataFuture;
@@ -69,9 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onSearchChanged() {
     final query = _searchController.text;
     if (query.isNotEmpty) {
-      setState(() {
-        _isSearching = true; // Activate search mode
-      });
+      if (mounted) {
+        // **[FIXED]** فحص mounted
+        setState(() {
+          _isSearching = true; // Activate search mode
+        });
+      }
       // لا تستدعي _searchProjects هنا مباشرة، سيتولى FutureBuilder الأمر
       // ولكن تأكد من وجود Future خاص بالبحث في حالة _isSearching = true
       // (الكود الحالي بيستدعيها في FutureBuilder وهي شغالة كده، لكن ممكن يكون Future منفصل أفضل)
@@ -81,18 +84,23 @@ class _HomeScreenState extends State<HomeScreen> {
       //   _lastSearchQuery = query;
       // }
     } else {
-      setState(() {
-        _isSearching = false; // Exit search mode
-        searchResults = []; // Clear search results
-      });
+      if (mounted) {
+        // **[FIXED]** فحص mounted
+        setState(() {
+          _isSearching = false; // Exit search mode
+          searchResults = []; // Clear search results
+        });
+      }
     }
   }
 
   /// Function to fetch user data (name and profile image) from API
   Future<void> _fetchUserData() async {
     // **[NEW]** جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    if (userId.isEmpty) {
+    String? userId =
+        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    if (userId == null || userId.isEmpty) {
+      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot fetch user data.');
       // ممكن تعرض رسالة للمستخدم أو توجيهه لصفحة تسجيل الدخول لو ده إجباري
       if (mounted) {
@@ -174,8 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Helper function to fetch a single project section
   Future<List<InvestmentItem>> _fetchProjectSection(String url) async {
     // **[NEW]** جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    if (userId.isEmpty) {
+    String? userId =
+        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    if (userId == null || userId.isEmpty) {
+      // **[FIXED]** استخدام null check
       print(
         'Error: User ID is null or empty. Cannot fetch project section: $url',
       );
@@ -187,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Uri.parse(url),
         headers: {
           'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
-          // ممكن تضيف 'Authorization': 'Bearer YOUR_AUTH_TOKEN' لو الـ backend بيستخدم توكن
+          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN'
         },
       );
       if (response.statusCode == 200) {
@@ -214,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _searchProjects(String query) async {
     if (query.isEmpty) {
       if (mounted) {
+        // **[FIXED]** فحص mounted
         setState(() {
           _isSearching = false;
           searchResults = [];
@@ -223,14 +234,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (mounted) {
+      // **[FIXED]** فحص mounted
       setState(() {
         _isSearching = true;
       });
     }
 
     // **[NEW]** جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    if (userId.isEmpty) {
+    String? userId =
+        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    if (userId == null || userId.isEmpty) {
+      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot search projects.');
       if (mounted) {
         setState(() {
@@ -279,10 +293,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Function to fetch saved projects from API
+  /// NOTE: Assumes the backend still uses 'user/saved_projects/' endpoint for saved items.
   Future<void> _fetchSavedItems() async {
     // **[NEW]** جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    if (userId.isEmpty) {
+    String? userId =
+        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    if (userId == null || userId.isEmpty) {
+      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot fetch saved items.');
       if (mounted) {
         setState(() {
@@ -321,16 +338,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Function to add/remove a project from saved items via API
+  /// NOTE: Assumes the backend still uses 'user/toggle_saved_project/' endpoint.
   Future<void> _toggleBookmark(InvestmentItem item) async {
     // **[NEW]** جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    if (userId.isEmpty) {
+    String? userId =
+        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    if (userId == null || userId.isEmpty) {
+      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot toggle bookmark.');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error: User ID not found. Cannot save project."),
-        ),
-      );
+      if (mounted) {
+        // **[FIXED]** فحص mounted
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Error: User ID not found. Cannot save project."),
+          ),
+        );
+      }
       return;
     }
 
@@ -365,19 +388,23 @@ class _HomeScreenState extends State<HomeScreen> {
         print(
           "Failed to toggle bookmark: ${response.statusCode} - ${response.body}",
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Failed to save/unsave project. Status: ${response.statusCode}",
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Failed to save/unsave project. Status: ${response.statusCode}",
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       print("Error toggling bookmark: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Network error: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Network error: $e")));
+      }
     }
   }
 
@@ -414,12 +441,15 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (i) {
-          setState(() => _selectedIndex = i);
-          // هنا ممكن تعمل refresh لبيانات الـ home لو رجعت لـ tab 0
-          if (i == 0) {
-            _userDataFuture = _fetchUserData();
-            _homeDataFuture = _fetchHomeData();
-            _savedItemsFuture = _fetchSavedItems();
+          if (mounted) {
+            // **[FIXED]** فحص mounted
+            setState(() => _selectedIndex = i);
+            // هنا ممكن تعمل refresh لبيانات الـ home لو رجعت لـ tab 0
+            if (i == 0) {
+              _userDataFuture = _fetchUserData();
+              _homeDataFuture = _fetchHomeData();
+              _savedItemsFuture = _fetchSavedItems();
+            }
           }
         },
         type: BottomNavigationBarType.fixed,
@@ -653,7 +683,11 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // يمكن عرض مؤشر تحميل بسيط هنا لو الـ saved items لسه بتتحمل
-          return const Center(child: CircularProgressIndicator());
+          return const SizedBox(
+            width: 56,
+            height: 56,
+            child: Center(child: CircularProgressIndicator()),
+          );
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error loading saved items: ${snapshot.error}'),
@@ -717,7 +751,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCategorySection() {
     const images = [
-      'assets/Health.png',
+      'assets/Health.png', // **[Image Asset causing error]**
       'assets/Food Truck.png',
       'assets/Fashion.png',
       'assets/Beauty.png',
@@ -844,10 +878,13 @@ class _HomeScreenState extends State<HomeScreen> {
         if (isSortBy) {
           _showSortByBottomSheet();
         } else {
-          setState(() {
-            selectedFilter = isSelected ? null : label;
-            // Filter 'allProjects' locally based on this selection.
-          });
+          if (mounted) {
+            // **[FIXED]** فحص mounted
+            setState(() {
+              selectedFilter = isSelected ? null : label;
+              // Filter 'allProjects' locally based on this selection.
+            });
+          }
         }
       },
       child: Container(
@@ -878,44 +915,53 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showSortByBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder:
-          (_) => Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Type of your investing',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'How would you like to invest, and get your return?',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                const SizedBox(height: 16),
-                _buildSortOption('Long Term'),
-                _buildSortOption('Short Term'),
-              ],
+    if (mounted) {
+      // **[FIXED]** فحص mounted
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        builder:
+            (_) => Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Type of your investing',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'How would you like to invest, and get your return?',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSortOption('Long Term'),
+                  _buildSortOption('Short Term'),
+                ],
+              ),
             ),
-          ),
-    );
+      );
+    }
   }
 
   Widget _buildSortOption(String option) {
     final isSelected = selectedSortOption == option;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedSortOption = isSelected ? null : option;
-          // Apply sort to 'allProjects' locally.
-        });
-        Navigator.pop(context);
+        if (mounted) {
+          // **[FIXED]** فحص mounted
+          setState(() {
+            selectedSortOption = isSelected ? null : option;
+            // Apply sort to 'allProjects' locally.
+          });
+        }
+        if (mounted) {
+          // **[FIXED]** فحص mounted
+          Navigator.pop(context);
+        }
       },
       child: Container(
         width: double.infinity,

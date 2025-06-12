@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'phaseTwo_screen.dart'; // متأكد إن الملف موجود عندك
 
 class AcceptScreen extends StatelessWidget {
-  const AcceptScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const AcceptScreen({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
+    // 3. تمرير الـ userId إلى الصفحات الفرعية
     final List<Widget> pages = [
-      _PageOne(),
-      _PageTwo(),
-      _PageThree(),
+      _PageOne(userId: userId),
+      _PageTwo(userId: userId),
+      _PageThree(userId: userId),
     ];
 
     return Scaffold(
@@ -33,27 +38,17 @@ class BackgroundHeader extends StatelessWidget {
         Positioned(
           top: -10,
           left: 30,
-          child: Image.asset(
-            'assets/blue_shape.png',
-            width: 240,
-            height: 250,
-          ),
+          child: Image.asset('assets/blue_shape.png', width: 240, height: 250),
         ),
         Positioned(
           top: 38,
           right: -10,
-          child: Image.asset(
-            'assets/dark_shape.png',
-            width: 80,
-          ),
+          child: Image.asset('assets/dark_shape.png', width: 80),
         ),
         Positioned(
           top: 0,
           left: 0,
-          child: Image.asset(
-            'assets/shape.png',
-            width: 240,
-          ),
+          child: Image.asset('assets/shape.png', width: 240),
         ),
       ],
     );
@@ -61,18 +56,29 @@ class BackgroundHeader extends StatelessWidget {
 }
 
 class _PageOne extends StatelessWidget {
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const _PageOne({super.key, this.userId});
+
   @override
   Widget build(BuildContext context) {
-    return const Stack(
+    return Stack(
       children: [
-        BackgroundHeader(),
+        const BackgroundHeader(),
         Padding(
-          padding: EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            270,
+            20,
+            20,
+          ), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
               children: [
-                Text(
+                const Text(
                   'Subject: Congratulations! Your project has been accepted on our platform 🚀',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -81,9 +87,23 @@ class _PageOne extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
-                  'Dear Norhan Salah,\n\nThank you for submitting your project, zerosugar by ketonista, through our platform.\n\nAfter reviewing and evaluating your data using our AI and analysis team, we are pleased to inform you that your project has been accepted.\n\n✅ Next steps:\nPlease log into your account to confirm your acceptance and begin setting up your page for investors within 3 days.\n\nIf you do not confirm within this period, your application will be automatically suspended.\n\nBest wishes,\nInvesta Team',
+                const SizedBox(height: 10),
+                // 3. (اختياري) عرض الـ userId للتأكد من وصوله
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                const Text(
+                  // يمكنك استخدام userId هنا لتخصيص الرسالة
+                  'Dear Founder,\n\nThank you for submitting your project to our platform.\n\nAfter reviewing and evaluating your data using our AI and analysis team, we are pleased to inform you that your project has been accepted.\n\n✅ Next steps:\nPlease log into your account to confirm your acceptance and begin setting up your page for investors within 3 days.\n\nIf you do not confirm within this period, your application will be automatically suspended.\n\nBest wishes,\nInvesta Team',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 17,
@@ -102,18 +122,29 @@ class _PageOne extends StatelessWidget {
 }
 
 class _PageTwo extends StatelessWidget {
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const _PageTwo({super.key, this.userId});
+
   @override
   Widget build(BuildContext context) {
-    return const Stack(
+    return Stack(
       children: [
-        BackgroundHeader(),
+        const BackgroundHeader(),
         Padding(
-          padding: EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            270,
+            20,
+            20,
+          ), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
               children: [
-                Text(
+                const Text(
                   '🚀 Welcome to the first real step toward funding your project!',
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -122,14 +153,28 @@ class _PageTwo extends StatelessWidget {
                     color: Color(0xFF082347),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                // 3. (اختياري) عرض الـ userId للتأكد من وصوله
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                const Text(
                   'We know you’ve worked hard and put in a lot of effort to build your project from the ground up. That’s why this platform exists—to open doors to opportunities and connect you with interested investors who want to support you.\n\nBut before we reach this stage, we need you to go through 3 key phases. Each phase is designed to help you clarify the full picture of your project—not only to convince investors but also to protect yourself, safeguard the platform, and start strong with transparency.\n\n✍️ The information you provide isn’t just numbers—it’s about building trust and qualifying you for real funding opportunities.\n\n💕 Take your time, prepare your answers.',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 17,
                     height: 1.5,
                     color: Color(0xFF082347),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -142,18 +187,41 @@ class _PageTwo extends StatelessWidget {
 }
 
 class _PageThree extends StatelessWidget {
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const _PageThree({super.key, this.userId});
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         const BackgroundHeader(),
         Padding(
-          padding:
-              const EdgeInsets.fromLTRB(20, 270, 20, 20), // تحت الصور على طول
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            270,
+            20,
+            20,
+          ), // تحت الصور على طول
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // بادئ من الشمال
               children: [
+                // 3. (اختياري) عرض الـ userId للتأكد من وصوله
+                if (userId != null && userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      "User ID: $userId",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
                 const Text(
                   'Phase 1:\nSubmitting in the platform and getting your Acceptance.\n(you already done it)',
                   textAlign: TextAlign.start,
@@ -192,10 +260,12 @@ class _PageThree extends StatelessWidget {
                     height: 61,
                     child: ElevatedButton(
                       onPressed: () {
+                        // 4. تمرير الـ userId إلى PhaseTwoScreen
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const PhaseTwoScreen(),
+                            builder:
+                                (context) => PhaseTwoScreen(userId: userId),
                           ),
                         );
                       },

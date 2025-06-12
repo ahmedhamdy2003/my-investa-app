@@ -4,7 +4,11 @@ import 'accept_screen.dart';
 import 'reject_screen.dart';
 
 class SubmissionStatusScreen extends StatefulWidget {
-  const SubmissionStatusScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const SubmissionStatusScreen({super.key, this.userId});
 
   @override
   State<SubmissionStatusScreen> createState() => _SubmissionStatusScreenState();
@@ -21,8 +25,15 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                isAccepted ? const AcceptScreen() : const RejectScreen(),
+            builder:
+                (context) =>
+                    isAccepted
+                        ? AcceptScreen(
+                          userId: widget.userId,
+                        ) // 3. تمرير الـ userId
+                        : RejectScreen(
+                          userId: widget.userId,
+                        ), // 3. تمرير الـ userId
           ),
         );
       });
@@ -48,27 +59,21 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
             Positioned(
               top: 38,
               right: -10,
-              child: Image.asset(
-                'assets/dark_shape.png',
-                width: 80,
-              ),
+              child: Image.asset('assets/dark_shape.png', width: 80),
             ),
             Positioned(
               top: 0,
               left: 0,
-              child: Image.asset(
-                'assets/shape.png',
-                width: 240,
-              ),
+              child: Image.asset('assets/shape.png', width: 240),
             ),
-            const Center(
+            Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 160),
-                    Text(
+                    const SizedBox(height: 160),
+                    const Text(
                       "Here we’re there , After Assigning\nYour data and your Request , we’re\ngoing to send the response.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -78,8 +83,8 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
                         height: 1.5,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       "AFTER 48 TO 36 hour our team will\ncommunicate with you to announce you and\nguide you to start your journey with us either\nwith your own team, check your inbox.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -88,6 +93,19 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
                         height: 1.5,
                       ),
                     ),
+                    // [DEBUG] لعرض الـ userId للتأكد من وصوله
+                    if (widget.userId != null && widget.userId!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: Text(
+                          "User ID: ${widget.userId}",
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.blueGrey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

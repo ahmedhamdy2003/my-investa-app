@@ -7,8 +7,11 @@ import 'SubmissionStatus_Screen.dart'; // تأكد من المسار الصحي�
 class ApplyScreenD extends StatefulWidget {
   // استقبال كل البيانات المجمعة من الصفحات السابقة
   final Map<String, dynamic> allCollectedData;
+  // 1. أضف خاصية userId هنا
+  final String? userId;
 
-  const ApplyScreenD({super.key, required this.allCollectedData});
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const ApplyScreenD({super.key, required this.allCollectedData, this.userId});
 
   @override
   State<ApplyScreenD> createState() => _ApplyScreenDState();
@@ -43,7 +46,7 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
   // --- دالة إرسال كل البيانات المجمعة (Send) ---
   Future<void> _sendAllCollectedData() async {
     const String sendUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
+        'https://7226-197-134-76-183.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
 
     // جمع البيانات من الصفحة الحالية
     final Map<String, dynamic> currentPageData = {
@@ -58,14 +61,17 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
     };
 
     // دمج كل البيانات المجمعة من الصفحات السابقة مع بيانات الصفحة الحالية
+    // 3. أضف الـ userId إلى البيانات النهائية قبل الإرسال
     final Map<String, dynamic> finalDataToSend = {
       ...widget
           .allCollectedData, // البيانات اللي استقبلتها من الصفحات اللي فاتت
       ...currentPageData, // بيانات الصفحة الرابعة
+      'user_id': widget.userId, // <--- هنا تم إضافة الـ userId
     };
 
     print(
-        'Sending data: ${json.encode(finalDataToSend)}'); // طباعة البيانات المرسلة للتأكد
+      'Sending data: ${json.encode(finalDataToSend)}',
+    ); // طباعة البيانات المرسلة للتأكد
 
     try {
       final response = await http.post(
@@ -84,7 +90,8 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
           // استخدام pushReplacement لمنع العودة لهذه الصفحة بزر Back
           context,
           MaterialPageRoute(
-            builder: (context) => const SubmissionStatusScreen(),
+            // 4. (اختياري) تمرير الـ userId إلى SubmissionStatusScreen إذا كانت قد تحتاجه
+            builder: (context) => SubmissionStatusScreen(userId: widget.userId),
           ),
         );
       } else {
@@ -92,14 +99,15 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
         print('Response body: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Failed to submit all data: ${response.body}')),
+            content: Text('Failed to submit all data: ${response.body}'),
+          ),
         );
       }
     } catch (e) {
       print('Error sending all data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting all data: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error submitting all data: $e')));
     }
   }
 
@@ -109,6 +117,22 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          // أضف AppBar لإظهار زر الرجوع
+          title: const Text(
+            "Application Details",
+            style: TextStyle(color: Color(0xff082347)),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Color(0xff082347)),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF082347)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -116,6 +140,19 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
+                // [DEBUG] لعرض الـ userId للتأكد من وصوله
+                if (widget.userId != null && widget.userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      "User ID (from previous screen): ${widget.userId}",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
                 const Text(
                   '5. Market and Opportunity Data:',
                   style: TextStyle(
@@ -126,21 +163,29 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
                 ),
                 const SizedBox(height: 10),
                 _buildLabel('• Total market size (market_size_egp)'),
-                _buildDropdownField(context, [
-                  '500,000 - 600,000',
-                  '600,000 - 700,000',
-                  '700,000 - 800,000',
-                  '800,000 - 900,000',
-                  '900,000 - 1,000,000'
-                ], (value) {
-                  setState(() {
-                    marketSize = value;
-                  });
-                }, marketSize),
+                _buildDropdownField(
+                  context,
+                  [
+                    '500,000 - 600,000',
+                    '600,000 - 700,000',
+                    '700,000 - 800,000',
+                    '800,000 - 900,000',
+                    '900,000 - 1,000,000',
+                  ],
+                  (value) {
+                    setState(() {
+                      marketSize = value;
+                    });
+                  },
+                  marketSize,
+                ),
                 _buildLabel(
-                    '• Previous funding received, if any (funding_egp)'),
-                _buildTextField('type here',
-                    controller: previousFundingController),
+                  '• Previous funding received, if any (funding_egp)',
+                ),
+                _buildTextField(
+                  'type here',
+                  controller: previousFundingController,
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   '6. SWOT Analysis + Competitors:',
@@ -156,12 +201,15 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
                 _buildLabel('• Weaknesses'),
                 _buildTextField('type here', controller: weaknessesController),
                 _buildLabel('• Opportunities'),
-                _buildTextField('type here',
-                    controller: opportunitiesController),
+                _buildTextField(
+                  'type here',
+                  controller: opportunitiesController,
+                ),
                 _buildLabel('• Threats'),
                 _buildTextField('type here', controller: threatsController),
                 _buildLabel(
-                    '• Number of competitors and their competitive advantages'),
+                  '• Number of competitors and their competitive advantages',
+                ),
                 _buildTextField('type here', controller: competitorsController),
                 const SizedBox(height: 20),
                 const Text(
@@ -217,7 +265,7 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
                           fontSize: 24,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -242,10 +290,12 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
     );
   }
 
-  Widget _buildTextField(String hint,
-      {double height = 44,
-      bool isExpanded = false,
-      TextEditingController? controller}) {
+  Widget _buildTextField(
+    String hint, {
+    double height = 44,
+    bool isExpanded = false,
+    TextEditingController? controller,
+  }) {
     return Container(
       width: 328,
       height: height,
@@ -257,8 +307,10 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.grey),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: const BorderSide(color: Color(0xFF082347)),
@@ -272,10 +324,15 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
     );
   }
 
-  Widget _buildDropdownField(BuildContext context, List<String> options,
-      Function(String) onChanged, String? selectedValue) {
-    TextEditingController controller =
-        TextEditingController(text: selectedValue);
+  Widget _buildDropdownField(
+    BuildContext context,
+    List<String> options,
+    Function(String) onChanged,
+    String? selectedValue,
+  ) {
+    TextEditingController controller = TextEditingController(
+      text: selectedValue,
+    );
 
     return GestureDetector(
       onTap: () {
@@ -325,19 +382,25 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
             decoration: InputDecoration(
               hintText: 'Choose from list',
               hintStyle: const TextStyle(color: Colors.grey),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: Color(0xFF082347)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide:
-                    const BorderSide(color: Color(0xFF082347), width: 2),
+                borderSide: const BorderSide(
+                  color: Color(0xFF082347),
+                  width: 2,
+                ),
               ),
-              suffixIcon:
-                  const Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
+              suffixIcon: const Icon(
+                Icons.arrow_drop_down,
+                color: Color(0xFF082347),
+              ),
             ),
           ),
         ),

@@ -7,10 +7,14 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart'; // عشان PlatformException
 
-// *** أضف هذا السطر: ***
-
 class FingerOrFaceScreen extends StatefulWidget {
-  const FingerOrFaceScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
+
+  const FingerOrFaceScreen({
+    super.key,
+    this.userId,
+  }); // <--- هنا تم استقبال الـ userId
 
   @override
   State<FingerOrFaceScreen> createState() => _FingerOrFaceScreenState();
@@ -97,9 +101,6 @@ class _FingerOrFaceScreenState extends State<FingerOrFaceScreen> {
         ),
       );
 
-      // TODO: هنا ممكن تنقل العميل للصفحة اللي بعدها في الـ Flow بتاعك بعد تفعيل البصمة/الوجه
-      // حاليًا هننقل لـ CreatePinScreen (لو قررت إن تفعيل البصمة/الوجه إجباري قبل الـ PIN)
-      // لو عايز تنتقل لـ CreatePinScreen بغض النظر عن نجاح البصمة هنا (ممكن تخليها في زرار السهم)
       print(
         'Biometrics successfully enabled. Now navigate to CreatePinScreen.',
       );
@@ -154,6 +155,19 @@ class _FingerOrFaceScreenState extends State<FingerOrFaceScreen> {
                 style: TextStyle(fontSize: 16, color: Colors.grey, height: 1.5),
               ),
             ),
+            // [DEBUG] لعرض الـ userId للتأكد من وصوله
+            if (widget.userId != null && widget.userId!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Text(
+                  "User ID: ${widget.userId}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.blueGrey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
             const SizedBox(height: 60),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -259,7 +273,10 @@ class _FingerOrFaceScreenState extends State<FingerOrFaceScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CreatePinScreen(),
+                          builder:
+                              (context) => CreatePinScreen(
+                                userId: widget.userId,
+                              ), // <--- هنا تم تمرير الـ userId
                         ),
                       );
                     },

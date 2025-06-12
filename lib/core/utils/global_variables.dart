@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 ValueNotifier<bool> rebuildForgetPasswordWidget = ValueNotifier<bool>(true);
 bool debugging = true;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final String baseUrl = 'https://decc-102-190-139-157.ngrok-free.app';  
+const String baseUrl = 'https://7226-197-134-76-183.ngrok-free.app';  
 
 
 
@@ -24,6 +24,7 @@ final String baseUrl = 'https://decc-102-190-139-157.ngrok-free.app';
 // {
 //     "investment_return": {},
 //     "comparison_data": {}
+
 // }
 
 

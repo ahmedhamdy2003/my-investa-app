@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 class FounderCommunityScreen extends StatelessWidget {
   final String projectId; // استقبل الـ projectId هنا لو محتاجه
 
-  const FounderCommunityScreen({super.key, required this.projectId});
+  const FounderCommunityScreen({
+    super.key,
+    required this.projectId,
+    String? userId,
+  });
 
   @override
   Widget build(BuildContext context) {

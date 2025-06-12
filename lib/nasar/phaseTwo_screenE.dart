@@ -10,12 +10,15 @@ class PhaseTwoScreenE extends StatefulWidget {
   // 1. إضافة projectId كـ parameter مطلوب في constructor
   final String projectId;
   final Map<String, dynamic> allCollectedData;
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
 
-  // 2. تحديث الـ constructor ليطلب projectId
+  // 2. تحديث الـ constructor ليطلب projectId و userId
   const PhaseTwoScreenE({
     super.key,
     required this.allCollectedData,
     required this.projectId,
+    this.userId, // <--- هنا تم استقبال الـ userId
   });
 
   @override
@@ -38,6 +41,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
   @override
   void initState() {
     super.initState();
+    // Initialize controllers with any existing data if navigating back
     _commercialRegController.text =
         widget.allCollectedData['commercialRegFileName'] ?? '';
     _financialSummaryController.text =
@@ -117,8 +121,10 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
       }
     });
 
-    // 3. إضافة projectId إلى البيانات المرسلة
+    // 3. إضافة projectId و userId إلى البيانات المرسلة
     finalDataForFields['projectId'] = widget.projectId;
+    finalDataForFields['user_id'] =
+        widget.userId; // <--- هنا تم إضافة الـ userId
 
     print('All collected data for text fields submission:');
     finalDataForFields.forEach((key, value) {
@@ -126,7 +132,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
     });
 
     const String url =
-        'https://2859-41-44-137-9.ngrok-free.app/create-project/'; // <--- مهم جداً: تأكد من تحديث هذا الرابط بالرابط الجديد من ngrok
+        'https://7226-197-134-76-183.ngrok-free.app/create-project/'; // <--- مهم جداً: تأكد من تحديث هذا الرابط بالرابط الجديد من ngrok
     // (مثال: 'https://abcd-1234-efgh-5678.ngrok-free.app/create-project/')
 
     try {
@@ -246,6 +252,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
                     projectId:
                         receivedProjectId ??
                         'fallback_id_if_null', // <--- أهم تغيير: تمرير الـ ID المستلم أو قيمة احتياطية
+                    userId: widget.userId, // <--- هنا تم تمرير الـ userId
                   ),
             ),
           );
@@ -285,6 +292,22 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // أضف AppBar لإظهار زر الرجوع
+        title: const Text(
+          "Phase 2 - Attachments",
+          style: TextStyle(color: Color(0xff082347)),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xff082347)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF082347)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -292,6 +315,31 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID (from previous screen): ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              // [DEBUG] لعرض الـ projectId للتأكد من وصوله
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  "Project ID: ${widget.projectId}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.blueGrey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
               const Text(
                 'Attachments (recommended):',
                 style: TextStyle(

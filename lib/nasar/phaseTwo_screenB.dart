@@ -9,12 +9,15 @@ class PhaseTwoScreenB extends StatefulWidget {
   // 1. إضافة projectId كـ parameter مطلوب في constructor
   final String projectId;
   final Map<String, dynamic> allCollectedData; // Data from previous screens
+  // 1. أضف خاصية userId هنا
+  final String? userId;
 
-  // 2. تحديث الـ constructor ليطلب projectId
+  // 2. تحديث الـ constructor ليطلب projectId و userId
   const PhaseTwoScreenB({
     super.key,
     required this.allCollectedData,
     required this.projectId,
+    this.userId, // <--- هنا تم إضافة الـ userId
   });
 
   @override
@@ -129,6 +132,10 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
       'totalInvestorsAllowed': totalInvestorsAllowedController.text.trim(),
       'maxInvestorShort': maxInvestorShortController.text.trim(),
       'maxInvestorLong': maxInvestorLongController.text.trim(),
+      // The userId is already part of widget.allCollectedData if passed from PhaseTwoScreen,
+      // but explicitly adding it here ensures it's always included from this screen's perspective.
+      // If you're confident it's always in allCollectedData, you can omit this line.
+      'user_id': widget.userId,
     };
     return {...widget.allCollectedData, ...currentScreenData}; // Merge maps
   }
@@ -139,6 +146,22 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // أضف AppBar لإظهار زر الرجوع
+        title: const Text(
+          "Phase 2 - Financial & Marketing",
+          style: TextStyle(color: Color(0xff082347)),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xff082347)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF082347)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -146,6 +169,31 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID (from previous screen): ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              // [DEBUG] لعرض الـ projectId للتأكد من وصوله
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  "Project ID: ${widget.projectId}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.blueGrey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
               const Text(
                 'Financial and Marketing Information (Essential for Investors):',
                 style: TextStyle(
@@ -287,7 +335,7 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
                         Map<String, dynamic> mergedData =
                             _collectAndMergeData();
 
-                        // 3. تمرير الـ projectId المستلم إلى الشاشة التالية
+                        // 3. تمرير الـ projectId والـ userId المستلم إلى الشاشة التالية
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -295,7 +343,10 @@ class _PhaseTwoScreenBState extends State<PhaseTwoScreenB> {
                                 (context) => PhaseTwoScreenC(
                                   allCollectedData: mergedData,
                                   projectId: widget.projectId,
-                                ), // تمرير projectId
+                                  userId:
+                                      widget
+                                          .userId, // <--- هنا تم تمرير الـ userId
+                                ),
                           ),
                         );
                       },

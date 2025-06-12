@@ -2,22 +2,50 @@ import 'package:flutter/material.dart';
 import 'apply_screen.dart'; // تأكد إن الملف موجود في نفس المسار أو عدل المسار لو مختلف
 
 class TipsScreen extends StatelessWidget {
-  const TipsScreen({super.key});
+  // أضف هذه الخاصية لاستقبال الـ userId
+  final String? userId;
+
+  // عدّل الـ constructor لاستقبال الـ userId
+  const TipsScreen({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // أضف AppBar لإظهار زر الرجوع بسهولة
+        title: const Text(
+          "Application Guidelines",
+          style: TextStyle(color: Color(0xFF0A1F44)),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF0A1F44)),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // // [DEBUG] لعرض الـ userId للتأكد من وصوله
+                    // if (userId != null && userId!.isNotEmpty)
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(bottom: 10.0),
+                    //     child: Text(
+                    //       "User ID: $userId",
+                    //       style: const TextStyle(
+                    //         fontSize: 12,
+                    //         color: Colors.grey,
+                    //       ),
+                    //     ),
+                    //   ),
                     const Text(
                       "✅ Application Conditions & Eligibility:\nTo qualify for the platform showcase and to get support from investors, you must meet the following criteria:",
                       style: TextStyle(
@@ -28,23 +56,32 @@ class TipsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     _buildBulletPoint(
-                        "Be at least 18 years old at the time of application."),
+                      "Be at least 18 years old at the time of application.",
+                    ),
                     _buildBulletPoint(
-                        "If under 18, a legal guardian must apply and sign all documents on your behalf."),
+                      "If under 18, a legal guardian must apply and sign all documents on your behalf.",
+                    ),
                     _buildBulletPoint(
-                        "Legally reside within the Arab Republic of Egypt."),
+                      "Legally reside within the Arab Republic of Egypt.",
+                    ),
                     _buildBulletPoint(
-                        "Have the full legal right to manage your business and benefit from funding."),
+                      "Have the full legal right to manage your business and benefit from funding.",
+                    ),
                     _buildBulletPoint(
-                        "The project has been operational for at least 12 months, with actual financial data such as:\n   • Revenues, profits, number of customers,\n   • Growth rate, expenses, and others."),
+                      "The project has been operational for at least 12 months, with actual financial data such as:\n   • Revenues, profits, number of customers,\n   • Growth rate, expenses, and others.",
+                    ),
                     _buildBulletPoint(
-                        "Applications are not accepted from anyone:"),
+                      "Applications are not accepted from anyone:",
+                    ),
                     _buildBulletPoint(
-                        "    Currently working or employed in the last 12 months in any entity affiliated with the platform's development or management team."),
+                      "    Currently working or employed in the last 12 months in any entity affiliated with the platform's development or management team.",
+                    ),
                     _buildBulletPoint(
-                        "    Has a direct relation or first-degree kinship with anyone working currently in the platform or its technical partners."),
+                      "    Has a direct relation or first-degree kinship with anyone working currently in the platform or its technical partners.",
+                    ),
                     _buildBulletPoint(
-                        "    Has been convicted of a felony in the last 10 years, unless the record has been expunged or a formal pardon has been issued."),
+                      "    Has been convicted of a felony in the last 10 years, unless the record has been expunged or a formal pardon has been issued.",
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       "The platform's management reserves the right to:",
@@ -56,11 +93,14 @@ class TipsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     _buildBulletPoint(
-                        "Accept or reject any application based on their criteria."),
+                      "Accept or reject any application based on their criteria.",
+                    ),
                     _buildBulletPoint(
-                        "Conduct qualifying interviews or request additional supporting data."),
+                      "Conduct qualifying interviews or request additional supporting data.",
+                    ),
                     _buildBulletPoint(
-                        "Suspend or cancel participation at any time if the terms are violated or false data is provided."),
+                      "Suspend or cancel participation at any time if the terms are violated or false data is provided.",
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       "🎯 Our Goal:",
@@ -93,10 +133,12 @@ class TipsScreen extends StatelessWidget {
                 height: 61,
                 child: ElevatedButton(
                   onPressed: () {
+                    // قم بتمرير الـ userId إلى ApplyScreen
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ApplyScreen()),
+                        builder: (context) => ApplyScreen(userId: userId),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -115,7 +157,7 @@ class TipsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -128,7 +170,10 @@ class TipsScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("• ", style: TextStyle(fontSize: 16)),
+          const Text(
+            "• ",
+            style: TextStyle(fontSize: 16, color: Color(0xFF0A1F44)),
+          ),
           Expanded(
             child: Text(
               text,

@@ -9,8 +9,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ConfirmPinScreen extends StatefulWidget {
   final String initialPin; // الرقم السري اللي جاي من شاشة الإنشاء
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
 
-  const ConfirmPinScreen({super.key, required this.initialPin});
+  const ConfirmPinScreen({
+    super.key,
+    required this.initialPin,
+    this.userId,
+  }); // <--- هنا تم استقبال الـ userId
 
   @override
   State<ConfirmPinScreen> createState() => _ConfirmPinScreenState();
@@ -106,7 +112,9 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
       // الانتقال للصفحة التالية بعد الحفظ بنجاح
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const GreatScreen()),
+        MaterialPageRoute(
+          builder: (context) => GreatScreen(userId: widget.userId),
+        ), // <--- هنا تم تمرير الـ userId
       );
     } catch (e) {
       // لو حصل أي خطأ في الحفظ المحلي
@@ -207,6 +215,19 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
                     ),
                   ],
                 ),
+                // [DEBUG] لعرض الـ userId للتأكد من وصوله
+                if (widget.userId != null && widget.userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      "User ID: ${widget.userId}",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

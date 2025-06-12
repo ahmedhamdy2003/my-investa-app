@@ -4,8 +4,11 @@ import 'apply_screenC.dart';
 class ApplyScreenB extends StatefulWidget {
   // استقبال البيانات من الصفحة السابقة
   final Map<String, dynamic> firstPageData;
+  // 1. أضف خاصية userId هنا
+  final String? userId;
 
-  const ApplyScreenB({super.key, required this.firstPageData});
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const ApplyScreenB({super.key, required this.firstPageData, this.userId});
 
   @override
   State<ApplyScreenB> createState() => _ApplyScreenBState();
@@ -56,6 +59,19 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
                   color: Color(0xFF082347),
                 ),
               ),
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID (from previous screen): ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 20),
 
               // Section 1
@@ -72,13 +88,18 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
               _buildTextField('type here', controller: fundingEgpController),
 
               _buildLabel('• Ownership percentage (equity_percentage)'),
-              _buildTextField('type here',
-                  controller: equityPercentageController),
+              _buildTextField(
+                'type here',
+                controller: equityPercentageController,
+              ),
 
               _buildLabel(
-                  '• Desired investment duration in months (duration_months)'),
-              _buildTextField('type here',
-                  controller: durationMonthsController),
+                '• Desired investment duration in months (duration_months)',
+              ),
+              _buildTextField(
+                'type here',
+                controller: durationMonthsController,
+              ),
 
               const SizedBox(height: 20),
 
@@ -93,18 +114,25 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
               ),
               const SizedBox(height: 10),
               _buildLabel(
-                  '• Industry / Category (industry: Food, Fashion, Cosmetics, etc.)'),
+                '• Industry / Category (industry: Food, Fashion, Cosmetics, etc.)',
+              ),
               _buildTextField('type here', controller: industryController),
 
               _buildLabel(
-                  '• Target market (target_market: age groups, geographic location, consumer type)'),
-              _buildTextField('Global or Regional or local',
-                  controller: targetMarketController),
+                '• Target market (target_market: age groups, geographic location, consumer type)',
+              ),
+              _buildTextField(
+                'Global or Regional or local',
+                controller: targetMarketController,
+              ),
 
               _buildLabel(
-                  '• Business model (business_model: B2C, B2B, Subscription.)'),
-              _buildTextField('B2C Or B2B Or Subscription or Marketplace',
-                  controller: businessModelController),
+                '• Business model (business_model: B2C, B2B, Subscription.)',
+              ),
+              _buildTextField(
+                'B2C Or B2B Or Subscription or Marketplace',
+                controller: businessModelController,
+              ),
 
               const SizedBox(height: 20),
 
@@ -119,35 +147,32 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
               ),
               const SizedBox(height: 10),
               _buildLabel(
-                  '• Founder\'s years of experience (founder_experience_years)'),
-              _buildDropdownField(context, [
-                '1–3',
-                '4–6',
-                '7–9',
-                '10–12',
-                '13–15',
-              ], (value) {
-                // هنا الـ onChanged callback
-                setState(() {
-                  founderExperience = value;
-                });
-              }, founderExperience), // تمرير القيمة المختارة
+                '• Founder\'s years of experience (founder_experience_years)',
+              ),
+              _buildDropdownField(
+                context,
+                ['1–3', '4–6', '7–9', '10–12', '13–15'],
+                (value) {
+                  // هنا الـ onChanged callback
+                  setState(() {
+                    founderExperience = value;
+                  });
+                },
+                founderExperience,
+              ), // تمرير القيمة المختارة
 
               _buildLabel('• Team size (team_size)'),
-              _buildDropdownField(context, [
-                '1',
-                '2–5',
-                '6–9',
-                '10–14',
-                '15–18',
-                '19–22',
-                '23–25',
-              ], (value) {
-                // هنا الـ onChanged callback
-                setState(() {
-                  teamSize = value;
-                });
-              }, teamSize), // تمرير القيمة المختارة
+              _buildDropdownField(
+                context,
+                ['1', '2–5', '6–9', '10–14', '15–18', '19–22', '23–25'],
+                (value) {
+                  // هنا الـ onChanged callback
+                  setState(() {
+                    teamSize = value;
+                  });
+                },
+                teamSize,
+              ), // تمرير القيمة المختارة
 
               const SizedBox(height: 30),
 
@@ -161,10 +186,7 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
                     },
                     child: const Text(
                       'Back',
-                      style: TextStyle(
-                        color: Color(0xFF082347),
-                        fontSize: 24,
-                      ),
+                      style: TextStyle(color: Color(0xFF082347), fontSize: 24),
                     ),
                   ),
                   Container(
@@ -195,8 +217,13 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ApplyScreenC(allCollectedData: combinedData),
+                            builder:
+                                (context) => ApplyScreenC(
+                                  allCollectedData: combinedData,
+                                  userId:
+                                      widget
+                                          .userId, // 3. تمرير الـ userId إلى ApplyScreenC
+                                ),
                           ),
                         );
                       },
@@ -206,7 +233,7 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
                         size: 30,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -240,8 +267,10 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.grey),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: const BorderSide(color: Color(0xFF082347)),
@@ -255,10 +284,15 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
     );
   }
 
-  Widget _buildDropdownField(BuildContext context, List<String> options,
-      Function(String) onChanged, String? selectedValue) {
-    TextEditingController controller =
-        TextEditingController(text: selectedValue); // عرض القيمة المختارة
+  Widget _buildDropdownField(
+    BuildContext context,
+    List<String> options,
+    Function(String) onChanged,
+    String? selectedValue,
+  ) {
+    TextEditingController controller = TextEditingController(
+      text: selectedValue,
+    ); // عرض القيمة المختارة
 
     return GestureDetector(
       onTap: () {
@@ -273,25 +307,30 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: options.map((option) {
-                  return ListTile(
-                    dense: true,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    title: Text(
-                      option,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF082347),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    onTap: () {
-                      onChanged(option); // استدعاء الـ callback لتحديث القيمة
-                      Navigator.pop(context);
-                    },
-                  );
-                }).toList(),
+                children:
+                    options.map((option) {
+                      return ListTile(
+                        dense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 8,
+                        ),
+                        title: Text(
+                          option,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF082347),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onTap: () {
+                          onChanged(
+                            option,
+                          ); // استدعاء الـ callback لتحديث القيمة
+                          Navigator.pop(context);
+                        },
+                      );
+                    }).toList(),
               ),
             );
           },
@@ -308,19 +347,25 @@ class _ApplyScreenBState extends State<ApplyScreenB> {
             decoration: InputDecoration(
               hintText: 'Choose from list',
               hintStyle: const TextStyle(color: Colors.grey),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: Color(0xFF082347)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide:
-                    const BorderSide(color: Color(0xFF082347), width: 2),
+                borderSide: const BorderSide(
+                  color: Color(0xFF082347),
+                  width: 2,
+                ),
               ),
-              suffixIcon: const Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF082347)), // إضافة سهم لأسفل
+              suffixIcon: const Icon(
+                Icons.arrow_drop_down,
+                color: Color(0xFF082347),
+              ), // إضافة سهم لأسفل
             ),
           ),
         ),

@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 class ApplyScreenC extends StatefulWidget {
   // استقبال البيانات المجمعة من الصفحات السابقة
   final Map<String, dynamic> allCollectedData;
+  // 1. أضف خاصية userId هنا
+  final String? userId;
 
-  const ApplyScreenC({super.key, required this.allCollectedData});
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const ApplyScreenC({super.key, required this.allCollectedData, this.userId});
 
   @override
   State<ApplyScreenC> createState() => _ApplyScreenCState();
@@ -47,12 +50,35 @@ class _ApplyScreenCState extends State<ApplyScreenC> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // أضف AppBar لإظهار زر الرجوع
+        title: const Text(
+          "Application Details",
+          style: TextStyle(color: Color(0xff082347)),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xff082347)),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID (from previous screen): ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 20),
               const Text(
                 '4. Financial and Operational Indicators:',
@@ -150,6 +176,9 @@ class _ApplyScreenCState extends State<ApplyScreenC> {
                             builder:
                                 (context) => ApplyScreenD(
                                   allCollectedData: combinedData,
+                                  userId:
+                                      widget
+                                          .userId, // 3. تمرير الـ userId إلى ApplyScreenD
                                 ),
                           ),
                         );

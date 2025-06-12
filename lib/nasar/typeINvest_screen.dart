@@ -62,7 +62,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
     // 2. Define your Django API endpoint URL
     // IMPORTANT: Replace with your actual Django backend URL
     const String apiUrl =
-        'https://4ae0-156-215-229-89.ngrok-free.app/account-verificiation-2/'; // For Android emulator
+        'https://7226-197-134-76-183.ngrok-free.app/account-verificiation-2/'; // For Android emulator
     // const String apiUrl = 'http://127.0.0.1:8000/api/investments/'; // For iOS simulator or web
 
     // 3. Prepare the data to be sent in JSON format

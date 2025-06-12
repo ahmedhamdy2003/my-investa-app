@@ -5,7 +5,11 @@ import 'package:file_picker/file_picker.dart';
 import 'phaseTwo_screenB.dart'; // Navigation to the next screen
 
 class PhaseTwoScreen extends StatefulWidget {
-  const PhaseTwoScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId;
+
+  // 2. عدّل الـ constructor لاستقبال الـ userId
+  const PhaseTwoScreen({super.key, this.userId});
 
   @override
   State<PhaseTwoScreen> createState() => _PhaseTwoScreenState();
@@ -77,9 +81,9 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
       }
     } catch (e) {
       print('Error picking logo file: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking logo file: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error picking logo file: $e")));
       setState(() {
         _pickedLogoFileName = null;
         _pickedLogoFile = null;
@@ -95,6 +99,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
   // Helper to collect data from this screen
   Map<String, dynamic> _collectScreenAData() {
     return {
+      'user_id': widget.userId, // <--- أضف الـ userId هنا
       'projectName': projectNameController.text.trim(),
       'briefDescription': briefDescriptionController.text.trim(),
       'detailedDescription': detailedDescriptionController.text.trim(),
@@ -110,6 +115,22 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        // أضف AppBar لإظهار زر الرجوع
+        title: const Text(
+          "Phase 2 - Basic Info",
+          style: TextStyle(color: Color(0xff082347)),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xff082347)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF082347)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -126,6 +147,19 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                 ),
               ),
               const SizedBox(height: 10),
+              // [DEBUG] لعرض الـ userId للتأكد من وصوله
+              if (widget.userId != null && widget.userId!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    "User ID: ${widget.userId}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
               _buildLabel('• Project Name (in Arabic and English) '),
               _buildTextField('type here', controller: projectNameController),
               _buildLabel('• Project Logo'),
@@ -134,46 +168,52 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _isPickingLogoFile ? null : _handleLogoFilePicking,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: _isLogoFilePicked
-                        ? const Color(0xFF082347)
-                        : Colors.grey,
-                    side: BorderSide(
-                        color: _isLogoFilePicked
+                    foregroundColor:
+                        _isLogoFilePicked
                             ? const Color(0xFF082347)
-                            : Colors.black26),
+                            : Colors.grey,
+                    side: BorderSide(
+                      color:
+                          _isLogoFilePicked
+                              ? const Color(0xFF082347)
+                              : Colors.black26,
+                    ),
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  icon: _isPickingLogoFile
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Color(0xFF082347),
+                  icon:
+                      _isPickingLogoFile
+                          ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xFF082347),
+                            ),
+                          )
+                          : Icon(
+                            _isLogoFilePicked
+                                ? Icons.check_circle
+                                : Icons.attach_file,
+                            color:
+                                _isLogoFilePicked
+                                    ? Colors.green
+                                    : const Color(0xFF082347),
+                            size: 20,
                           ),
-                        )
-                      : Icon(
-                          _isLogoFilePicked
-                              ? Icons.check_circle
-                              : Icons.attach_file,
-                          color: _isLogoFilePicked
-                              ? Colors.green
-                              : const Color(0xFF082347),
-                          size: 20,
-                        ),
                   label: Text(
                     _isPickingLogoFile
                         ? 'Picking file...'
                         : _isLogoFilePicked
-                            ? 'Picked!'
-                            : 'Choose File',
+                        ? 'Picked!'
+                        : 'Choose File',
                     style: TextStyle(
-                      color: _isLogoFilePicked
-                          ? const Color(0xFF082347)
-                          : Colors.grey,
+                      color:
+                          _isLogoFilePicked
+                              ? const Color(0xFF082347)
+                              : Colors.grey,
                     ),
                   ),
                 ),
@@ -187,13 +227,21 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                   ),
                 ),
               _buildLabel(
-                  '• Brief Description (Short Pitch) – not exceeding 300 characters'),
-              _buildTextField('type here',
-                  controller: briefDescriptionController, maxLines: 3),
+                '• Brief Description (Short Pitch) – not exceeding 300 characters',
+              ),
+              _buildTextField(
+                'type here',
+                controller: briefDescriptionController,
+                maxLines: 3,
+              ),
               _buildLabel(
-                  '• Detailed Description of the Project (Who you are, what you do)'),
-              _buildTextField('type here',
-                  controller: detailedDescriptionController, maxLines: 5),
+                '• Detailed Description of the Project (Who you are, what you do)',
+              ),
+              _buildTextField(
+                'type here',
+                controller: detailedDescriptionController,
+                maxLines: 5,
+              ),
               const SizedBox(height: 10),
               _buildLabel('•Project Category (Food, Fashion, Fitness, etc.)'),
               _buildDropdownField(
@@ -202,15 +250,21 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                 controller: projectCategoryController, // Pass the controller
               ),
               _buildLabel('• Project Start Date'),
-              _buildTextField('type here',
-                  controller: projectStartDateController),
+              _buildTextField(
+                'type here',
+                controller: projectStartDateController,
+              ),
               _buildLabel('• Geographical Location (City/Province)'),
-              _buildTextField('type here',
-                  controller: geographicalLocationController),
+              _buildTextField(
+                'type here',
+                controller: geographicalLocationController,
+              ),
               _buildLabel('• Team size'),
-              _buildTextField('Enter team size',
-                  controller: teamSizeController,
-                  keyboardType: TextInputType.number),
+              _buildTextField(
+                'Enter team size',
+                controller: teamSizeController,
+                keyboardType: TextInputType.number,
+              ),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,10 +275,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                     },
                     child: const Text(
                       'Back',
-                      style: TextStyle(
-                        color: Color(0xFF082347),
-                        fontSize: 24,
-                      ),
+                      style: TextStyle(color: Color(0xFF082347), fontSize: 24),
                     ),
                   ),
                   Container(
@@ -238,15 +289,16 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                         Map<String, dynamic> currentScreenData =
                             _collectScreenAData();
 
-                        // Navigate to the next screen, passing collected data AND a projectId
+                        // Navigate to the next screen, passing collected data AND userId
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PhaseTwoScreenB(
-                                allCollectedData: currentScreenData,
-                                // هنا تم إضافة الـ projectId
-                                projectId:
-                                    'ProjectID_123'), // يمكنك تغيير هذه القيمة أو جلبها من مكان آخر
+                            builder:
+                                (context) => PhaseTwoScreenB(
+                                  allCollectedData: currentScreenData,
+                                  userId: widget.userId,
+                                  projectId: '', // <--- هنا تم تمرير الـ userId
+                                ),
                           ),
                         );
                       },
@@ -256,7 +308,7 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
                         size: 30,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -280,10 +332,12 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
     );
   }
 
-  Widget _buildTextField(String hint,
-      {TextEditingController? controller,
-      TextInputType keyboardType = TextInputType.text,
-      int maxLines = 1}) {
+  Widget _buildTextField(
+    String hint, {
+    TextEditingController? controller,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
     return Container(
       width: double.infinity,
       height: maxLines > 1 ? null : 44,
@@ -295,8 +349,10 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.grey),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: const BorderSide(color: Color(0xFF082347)),
@@ -310,8 +366,11 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
     );
   }
 
-  Widget _buildDropdownField(BuildContext context, List<String> options,
-      {TextEditingController? controller}) {
+  Widget _buildDropdownField(
+    BuildContext context,
+    List<String> options, {
+    TextEditingController? controller,
+  }) {
     controller ??= TextEditingController(); // Ensure controller is not null
 
     return GestureDetector(
@@ -327,27 +386,30 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: options.map((option) {
-                  return ListTile(
-                    dense: true,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    title: Text(
-                      option,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF082347),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        controller!.text = option;
-                      });
-                      Navigator.pop(context);
-                    },
-                  );
-                }).toList(),
+                children:
+                    options.map((option) {
+                      return ListTile(
+                        dense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 8,
+                        ),
+                        title: Text(
+                          option,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF082347),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            controller!.text = option;
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
+                    }).toList(),
               ),
             );
           },
@@ -364,19 +426,25 @@ class _PhaseTwoScreenState extends State<PhaseTwoScreen> {
             decoration: InputDecoration(
               hintText: 'Choose from list',
               hintStyle: const TextStyle(color: Colors.grey),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: Color(0xFF082347)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide:
-                    const BorderSide(color: Color(0xFF082347), width: 2),
+                borderSide: const BorderSide(
+                  color: Color(0xFF082347),
+                  width: 2,
+                ),
               ),
-              suffixIcon:
-                  const Icon(Icons.arrow_drop_down, color: Color(0xFF082347)),
+              suffixIcon: const Icon(
+                Icons.arrow_drop_down,
+                color: Color(0xFF082347),
+              ),
             ),
           ),
         ),

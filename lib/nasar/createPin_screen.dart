@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CreatePinScreen extends StatefulWidget {
-  const CreatePinScreen({super.key});
+  // 1. أضف خاصية userId هنا
+  final String? userId; // <--- هنا تم إضافة الـ userId
+
+  const CreatePinScreen({
+    super.key,
+    this.userId,
+  }); // <--- هنا تم استقبال الـ userId
 
   @override
   State<CreatePinScreen> createState() => _CreatePinScreenState();
@@ -46,7 +52,11 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ConfirmPinScreen(initialPin: createdPin),
+          builder:
+              (context) => ConfirmPinScreen(
+                initialPin: createdPin,
+                userId: widget.userId, // <--- هنا تم تمرير الـ userId
+              ),
         ),
       );
     }
@@ -93,6 +103,7 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
@@ -127,6 +138,19 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
                     ),
                   ],
                 ),
+                // [DEBUG] لعرض الـ userId للتأكد من وصوله
+                if (widget.userId != null && widget.userId!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      "User ID: ${widget.userId}",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
