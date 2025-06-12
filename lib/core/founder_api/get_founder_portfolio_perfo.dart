@@ -4,8 +4,9 @@ import 'package:investa4/core/utils/api_services.dart';
 import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/core/widgets/show_snackbar.dart';
+import 'package:investa4/core/widgets/single_line_chart.dart';
 
-Future<DounderPortfolioPerformance?> getFounderPortfolioPerformance() async {
+Future<List<CustomLineChartData>?> getFounderPortfolioPerformance() async {
   String url =
       '$baseUrl/founder/dashboard/portfolio-performance/${ManageCurrentUser.currentUser.guid}/';
   // late Reel reell;
@@ -23,7 +24,7 @@ Future<DounderPortfolioPerformance?> getFounderPortfolioPerformance() async {
             'Category percentages fetched',
             navigatorKey.currentContext!,
           );
-          return DounderPortfolioPerformance.fromMap(response);
+          return CustomLineChartData.fromApiMap(response);
         } else if (response is String) {
           Map<String, dynamic> categoryPercentages = {};
           try {
@@ -35,7 +36,8 @@ Future<DounderPortfolioPerformance?> getFounderPortfolioPerformance() async {
               'Category percentages fetched from string',
               navigatorKey.currentContext!,
             );
-            return DounderPortfolioPerformance.fromMap(categoryPercentages);
+            // return DounderPortfolioPerformance.fromMap(categoryPercentages);
+            return CustomLineChartData.fromApiMap(categoryPercentages);
           } catch (e) {
             showDebugSnackBar(
               'Error parsing JSON: $e',
@@ -68,12 +70,26 @@ Future<DounderPortfolioPerformance?> getFounderPortfolioPerformance() async {
   }
 }
 
-class DounderPortfolioPerformance {
-  final dynamic data;
+// class DounderPortfolioPerformance {
+//   final dynamic data;
 
-  DounderPortfolioPerformance({required this.data});
+//   DounderPortfolioPerformance({required this.data});
 
-  factory DounderPortfolioPerformance.fromMap(Map<dynamic, dynamic> map) {
-    return DounderPortfolioPerformance(data: map['data'] ?? []);
-  }
-}
+//   factory DounderPortfolioPerformance.fromMap(Map<dynamic, dynamic> map) {
+//     return DounderPortfolioPerformance(data: map['data'] ?? []);
+//   }
+// }
+
+
+// response
+// {
+//     "Jul": 1030.0,
+//     "Aug": 12520.0,
+//     "May": 1500.0,
+//     "Apr": 1500.0,
+//     "Jun": 2100.0,
+//     "Oct": 1100.0,
+//     "Sep": 10000.0,
+//     "Feb": 10000.0,
+//     "Mar": 10000.0
+// }
