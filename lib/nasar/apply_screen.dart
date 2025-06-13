@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:investa4/core/utils/global_variables.dart';
+import 'package:investa4/core/utils/manage_current_user.dart';
 import 'dart:convert';
 import 'dart:typed_data'; // لإضافة Uint8List
 
@@ -218,26 +219,25 @@ class _ApplyScreenState extends State<ApplyScreen> {
       );
       return;
     }
-
+    String userId = ManageCurrentUser.currentUser.guid;
     // تأكد من وجود الـ userId قبل إرسال البيانات
-    if (widget.userId == null || widget.userId!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User ID is missing. Cannot submit form.'),
-        ),
-      );
-      print('Error: User ID is null or empty. Cannot send assign data.');
-      return;
-    }
+    // if (widget.userId == null || widget.userId!.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('User ID is missing. Cannot submit form.'),
+    //     ),
+    //   );
+    //   print('Error: User ID is null or empty. Cannot send assign data.');
+    //   return;
+    // }
 
-    const String assignUrl =
-        '$baseUrl/insert-project/';
+    const String assignUrl = '$baseUrl/insert-project/';
 
     var request = http.MultipartRequest('POST', Uri.parse(assignUrl));
 
     // 3. أضف الـ userId إلى البيانات المرسلة
     request.fields['user_id'] =
-        widget.userId!; // استخدم ! للتأكيد أنه ليس null بعد التحقق أعلاه
+        userId; // استخدم ! للتأكيد أنه ليس null بعد التحقق أعلاه
 
     // إضافة باقي البيانات النصية
     request.fields['first_name'] = firstNameController.text;

@@ -3,17 +3,28 @@ import 'package:investa4/nasar/verified_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // For Cupertino (iOS-style) widgets
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _showNotificationDialog(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     // We will show the dialog automatically when the screen loads.
     // Using WidgetsBinding.instance.addPostFrameCallback ensures
     // the dialog is shown after the build method completes.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showNotificationDialog(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _showNotificationDialog(context);
+    // });
 
     return Scaffold(
       backgroundColor: const Color(
@@ -47,7 +58,7 @@ class NotificationScreen extends StatelessWidget {
   // دالة مساعدة للانتقال للصفحة المطلوبة بعد إغلاق الـ Dialog
   void _navigateToVerifiedScreen(BuildContext context) {
     Navigator.of(context).pop(); // أولاً: اغلاق الـ Dialog
-    Navigator.push(
+    Navigator.pushReplacement(
       // ثم: الانتقال لشاشة VerifiedScreen
       context,
       MaterialPageRoute(builder: (context) => const VerifiedScreen()),

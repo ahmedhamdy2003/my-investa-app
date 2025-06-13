@@ -1,106 +1,8 @@
-// import 'package:investa4/core/utils/object_box_manager.dart';
-// import 'package:investa4/objectbox.g.dart';
-
-// @Entity()
-// class UserModel {
-//   @Id()
-//   int id = 0; // ObjectBox ID, auto-incremented
-//   String guid; // Unique identifier for the user, can be used for syncing
-
-//   String username; // User's username
-//   String email; // User's email address
-//   DateTime? birthdate; // User's birthdate
-//   bool signedUp; // Flag to indicate if the user has signed up
-
-//   UserModel({
-//     this.id = 0,
-//     this.guid = '',
-//     required this.username,
-//     required this.email,
-//     this.birthdate,
-//     this.signedUp = false,
-//   });
-// }
-
-// class UserMethods {
-//   static UserModel? getSignedUser() {
-//     // Fetch the signed-up user from the database
-//     final query = ObjectBoxManager.userBox
-//         .query(UserModel_.signedUp.equals(true))
-//         .build();
-//     final user = query.findUnique();
-//     query.close();
-//     return user; // Return an empty UserModel if not found
-//   }
-
-//   static removeSignedUser(UserModel user) {
-//    user.signedUp = false; // Update signedUp status
-//     ObjectBoxManager.userBox.put(user); // Save the updated user
-//   }
-
-//   // Create or Update user
-//   static int saveUser(UserModel user) {
-//     return ObjectBoxManager.userBox.put(user); // returns inserted/updated ID
-//   }
-// static updateUser(UserModel user) {
-//     // Update user details
-//     return ObjectBoxManager.userBox.put(user); // returns updated ID
-//   }
-//   // Read all users
-//   static List<UserModel> getAllUsers() {
-//     return ObjectBoxManager.userBox.getAll();
-//   }
-
-//   // Get user by ID
-//   static UserModel? getUserById(int id) {
-//     return ObjectBoxManager.userBox.get(id);
-//   }
-
-//   // Get user by GUID
-//   static UserModel? getUserByGuid(String guid) {
-//     final query =
-//         ObjectBoxManager.userBox.query(UserModel_.guid.equals(guid)).build();
-//     final user = query.findFirst();
-//     query.close();
-//     return user;
-//   }
-
-//   // Delete user by ID
-//   static bool deleteUser(int id) {
-//     return ObjectBoxManager.userBox.remove(id);
-//   }
-
-//   // Delete all users
-//   static int deleteAllUsers() {
-//     return ObjectBoxManager.userBox.removeAll();
-//   }
-
-//   // Update signedUp status
-//   static bool updateSignUpStatus(int id, bool status) {
-//     final user = ObjectBoxManager.userBox.get(id);
-//     if (user != null) {
-//       user.signedUp = status;
-//       ObjectBoxManager.userBox.put(user);
-//       return true;
-//     }
-//     return false;
-//   }
-
-//   // Search users by username
-//   static List<UserModel> searchByUsername(String keyword) {
-//     final query = ObjectBoxManager.userBox
-//         .query(UserModel_.username.contains(keyword, caseSensitive: false))
-//         .build();
-//     final users = query.find();
-//     query.close();
-//     return users;
-//   }
-// }
-
 import 'dart:developer';
 
 import 'package:hive/hive.dart';
 import 'package:investa4/core/utils/hive_manage.dart';
+import 'package:investa4/core/utils/manage_current_user.dart';
 
 part 'user.g.dart'; // Generated adapter
 
@@ -130,6 +32,9 @@ class UserModel extends HiveObject {
   @HiveField(5)
   bool signedUp;
 
+  @HiveField(6)
+  bool? userIsFounder;
+
   UserModel({
     this.id = 0,
     required this.guid,
@@ -144,6 +49,21 @@ class UserModel extends HiveObject {
 
 class UserMethods {
   // static Box<UserModel> get userBox => Hive.box<UserModel>('users');
+  static bool? userIsFounder() {
+    final user = HiveManager.userBox.get(ManageCurrentUser.currentUser.guid);
+    if (user != null) {
+      return user.userIsFounder;
+    }
+    return null;
+  }
+
+  static Future<void> setUserisFounder(bool isFounder) async {
+    final user = HiveManager.userBox.get(ManageCurrentUser.currentUser.guid);
+    if (user != null) {
+      user.userIsFounder = isFounder;
+      await user.save();
+    }
+  }
 
   static UserModel? getSignedUser() {
     try {
@@ -214,69 +134,3 @@ class UserMethods {
         .toList();
   }
 }
-
-
-// overView dashboard section
-// https://bcb8-102-190-139-157.ngrok-free.app/dashboard/overview/4iVtZAbBbVXDdOdzhSniVDPJK5a2/
-
-// result:
-// {
-//     "total_investment": 4700.0,
-//     "total_current_net_profit": 0.0,
-//     "investment_types": [
-//         "short"
-//     ],
-//     "businesses_invested_in": [
-//         {
-//             "name": "Zero Sugar",
-//             "amount": 4700.0
-//         }
-//     ]
-// }
-
-
-//=====================================
-
-// next
-// https://bcb8-102-190-139-157.ngrok-free.app/dashboard/invested-projects/4iVtZAbBbVXDdOdzhSniVDPJK5a2/
-
-// [
-//     {
-//         "project_id": "2e16e81e-9942-44bd-b24f-95e4431d2428",
-//         "project_name": "Zero Sugar",
-//         "total_roi": 650.0,
-//         "next_roi": -100.0
-//     }
-// ]
-
-
-// categories chart
-// https://bcb8-102-190-139-157.ngrok-free.app/get-category-percentages/
-// {
-//     "Health 7 Fitness": 7.6923076923076925,
-//     "Food": 15.384615384615385,
-//     "Fashion": 61.53846153846154,
-//     "تقنية\t": 7.6923076923076925,
-//     "Fitness": 7.6923076923076925
-// }
-
-
-
-// reels
-// https://bcb8-102-190-139-157.ngrok-free.app/get-reels/
-
-// {
-//     "reels": [
-//         {
-//             "reel_id": "3SB8WbQqi9Xeq6ztKbv6ZWPGhM33",
-//             "-OS-v69-vtBG8Ucc9JHz": {
-//                 "timestamp": "2025-06-05T19:28:46.144756",
-//                 "video_url": "https://drive.google.com/uc?id=1Dedpltk9PrGyzZ6qrtvKyfrRXeQzhoOE"
-//             },
-//             "-OS-vFLIhJ9GZxI9zEqI": {
-//                 "timestamp": "2025-06-05T19:29:24.371709",
-//                 "video_url": "https://drive.google.com/uc?id=15mRDyscdYT6u3VwNbSxPPCS9D-Ac1vwI"
-//             }
-//         }
-//     ]
-// }

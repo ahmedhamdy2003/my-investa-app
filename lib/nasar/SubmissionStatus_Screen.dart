@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:investa4/core/utils/manage_current_user.dart';
 import 'accept_screen.dart';
 import 'reject_screen.dart';
 
@@ -19,24 +20,25 @@ class _SubmissionStatusScreenState extends State<SubmissionStatusScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      bool isAccepted = true; // 👈 غيرها على مزاجك (true or false)
+      // bool isAccepted = true; // 👈 غيرها على مزاجك (true or false)
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder:
                 (context) =>
-                    isAccepted
-                        ? AcceptScreen(
-                          userId: widget.userId,
-                        ) // 3. تمرير الـ userId
-                        : RejectScreen(
-                          userId: widget.userId,
-                        ), // 3. تمرير الـ userId
+                // isAccepted
+                //     ?
+                AcceptScreen(
+                  userId: ManageCurrentUser.currentUser.guid,
+                ), // 3. تمرير الـ userId
+            // : RejectScreen(
+            //   userId: widget.userId,
+            // ), // 3. تمرير الـ userId
           ),
         );
-      });
+      // });
     });
   }
 

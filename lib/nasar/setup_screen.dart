@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:investa4/core/model/user.dart';
+import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/nasar/Registration_screen.dart';
+import 'package:investa4/nasar/founderHome_screen.dart';
 // import 'package:investa4/home_screen.dart'; // افترض ان شاشة Home Screen هنا
 // import 'package:investa4/user_management.dart'; // افترض ان ManageCurrentUser موجود هنا
 
 // افتراض وجود كلاس ManageCurrentUser و HomeScreen لغرض الكود
-class ManageCurrentUser {
-  static final ManageCurrentUser _instance = ManageCurrentUser._internal();
-  factory ManageCurrentUser() => _instance;
-  ManageCurrentUser._internal();
+// class ManageCurrentUser {
+//   static final ManageCurrentUser _instance = ManageCurrentUser._internal();
+//   factory ManageCurrentUser() => _instance;
+//   ManageCurrentUser._internal();
 
-  // مثال مبسط جداً لـ current user
-  var currentUser = CurrentUser(guid: 'user_123');
-}
+//   // مثال مبسط جداً لـ current user
+//   var currentUser = CurrentUser(guid: 'user_123');
+// }
 
 class CurrentUser {
   final String guid;
@@ -51,7 +54,7 @@ class _SetupScreenState extends State<SetupScreen> {
 
   initMethod() async {
     // 1. الحصول على user id
-    String? userId = ManageCurrentUser().currentUser.guid;
+    String? userId = ManageCurrentUser.currentUser.guid;
     print("User ID: $userId"); // لطباعة الـ user ID في الـ debug console
 
     // 2. محاكاة التحقق من الـ backend
@@ -63,21 +66,29 @@ class _SetupScreenState extends State<SetupScreen> {
 
     // 3. هنا المفروض تيجي استجابة الـ backend اللي بتقولك userHasData
     // لغرض التجربة، هنفترض أن المستخدم ليس لديه بيانات (لم يكمل الـ setup)
-    bool userHasData =
-        false; // ***** غيّر القيمة دي لـ `true` عشان تجرب حالة الانتقال للـ Home Screen *****
-
-    if (userHasData) {
-      // 4. لو المستخدم كمل الـ setup: الانتقال لشاشة Home Screen
-      // استخدم pushReplacement عشان متقدرش ترجع لشاشة الـ Setup بالـ back button
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-    } else {
-      // 5. لو المستخدم لم يكمل الـ setup: عرض شاشة Setup (تحديث isInitFinih)
+    bool? userisFounder =
+        UserMethods.userIsFounder(); // ***** غيّر القيمة دي لـ `true` عشان تجرب حالة الانتقال للـ Home Screen *****
+    if (userisFounder == null) {
       setState(() {
         isInitFinih = true;
       });
+    } else {
+      if (userisFounder == true) {
+        // 4. لو المستخدم كمل الـ setup: الانتقال لشاشة Home Screen
+        // استخدم pushReplacement عشان متقدرش ترجع لشاشة الـ Setup بالـ back button
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => const FounderHomeScreen(projectId: 'asksiwwk'),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
     }
   }
 
