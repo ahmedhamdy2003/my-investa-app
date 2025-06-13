@@ -5,6 +5,8 @@ import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/core/widgets/show_snackbar.dart';
 
+
+// keep static
 Future<DounderProfitMarginTrend?> getFounderProfitMarginTrend() async {
   String url =
       '$baseUrl/founder/dashboard/profit-margin-trend/${ManageCurrentUser.currentUser.guid}/';

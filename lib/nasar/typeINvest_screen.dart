@@ -1,3 +1,4 @@
+import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/policy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -62,7 +63,7 @@ class _TypeInvestScreenState extends State<TypeInvestScreen> {
     // 2. Define your Django API endpoint URL
     // IMPORTANT: Replace with your actual Django backend URL
     const String apiUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/account-verificiation-2/'; // For Android emulator
+        '$baseUrl/account-verificiation-2/'; // For Android emulator
     // const String apiUrl = 'http://127.0.0.1:8000/api/investments/'; // For iOS simulator or web
 
     // 3. Prepare the data to be sent in JSON format

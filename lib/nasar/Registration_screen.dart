@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/SecurityCheck_Screen.dart';
 import 'package:investa4/nasar/loading.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       };
 
       const String apiUrl =
-          'https://54c2-154-238-249-140.ngrok-free.app/personal-data/';
+          '$baseUrl/personal-data/';
       try {
         final http.Response response = await http.post(
           Uri.parse(apiUrl),

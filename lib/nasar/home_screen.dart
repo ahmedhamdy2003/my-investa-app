@@ -1,3 +1,4 @@
+import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/categories_pages.dart';
 import 'package:investa4/nasar/community_screen.dart';
 import 'package:investa4/nasar/dashboard_screen.dart';
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
   // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
   static const String _baseUrl =
-      'https://54c2-154-238-249-140.ngrok-free.app/'; // تأكد أن هذا الـ URL محدّث وفعّال
+      '$baseUrl/'; // تأكد أن هذا الـ URL محدّث وفعّال
 
   // <--- تعديل هام: تعريف الـ Futures لتجنب استدعاء API متكرر في FutureBuilder
   // تم تهيئتها بقيم Future.value(null) لتجنب الأخطاء عند البداية

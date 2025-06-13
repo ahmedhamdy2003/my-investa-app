@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'package:investa4/core/utils/global_variables.dart';
 
 import 'package:investa4/nasar/phaseTwo_screenF.dart'; // تأكد من المسار الصحيح
 
@@ -132,7 +133,7 @@ class _PhaseTwoScreenEState extends State<PhaseTwoScreenE> {
     });
 
     const String url =
-        'https://7226-197-134-76-183.ngrok-free.app/create-project/'; // <--- مهم جداً: تأكد من تحديث هذا الرابط بالرابط الجديد من ngrok
+        '$baseUrl/create-project/'; // <--- مهم جداً: تأكد من تحديث هذا الرابط بالرابط الجديد من ngrok
     // (مثال: 'https://abcd-1234-efgh-5678.ngrok-free.app/create-project/')
 
     try {

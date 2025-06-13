@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:investa4/core/utils/global_variables.dart';
 import 'dart:convert';
 import 'dart:typed_data'; // لإضافة Uint8List
 
@@ -230,7 +231,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
     }
 
     const String assignUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/insert-project/';
+        '$baseUrl/insert-project/';
 
     var request = http.MultipartRequest('POST', Uri.parse(assignUrl));
 

@@ -1,3 +1,4 @@
+import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/interests_screen.dart'; // مسار شاشة Investor Home
 import 'package:flutter/material.dart';
 import 'welcome_screenB.dart'; // مسار شاشة Founder Welcome (غالباً بتودّي لـ FounderHomeScreen في النهاية)
@@ -43,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
     // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
     // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
     const String apiUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/role/'; // **غير هذا الرابط للـ API الفعلي**
+        '$baseUrl/role/'; // **غير هذا الرابط للـ API الفعلي**
 
     try {
       final Map<String, dynamic> dataToSend = {'user_id': userId, 'role': role};

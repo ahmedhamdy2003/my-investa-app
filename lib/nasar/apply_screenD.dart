@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // استيراد مكتبة http
+import 'package:investa4/core/utils/global_variables.dart';
 import 'dart:convert'; // لاستخدام json.encode
 
 import 'SubmissionStatus_Screen.dart'; // تأكد من المسار الصحيح
@@ -46,7 +47,7 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
   // --- دالة إرسال كل البيانات المجمعة (Send) ---
   Future<void> _sendAllCollectedData() async {
     const String sendUrl =
-        'https://7226-197-134-76-183.ngrok-free.app/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
+        '$baseUrl/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
 
     // جمع البيانات من الصفحة الحالية
     final Map<String, dynamic> currentPageData = {

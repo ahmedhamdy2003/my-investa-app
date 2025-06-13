@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:investa4/core/utils/global_variables.dart';
 import 'chat_bot_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -65,7 +66,7 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
     // يمكنك استخدام widget.userId هنا إذا كان الـ API يحتاجه
     // مثال: final String apiUrl = 'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}?userId=${widget.userId ?? ''}';
     final String apiUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}';
+        '$baseUrl/founder-home/${widget.projectId}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

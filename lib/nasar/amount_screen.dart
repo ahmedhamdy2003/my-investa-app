@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // استيراد http
+import 'package:investa4/core/utils/global_variables.dart';
 import 'dart:convert';
 
 import 'package:investa4/nasar/typeINvest_screen.dart'; // Import for jsonEncode
@@ -85,7 +86,7 @@ class _AmountScreenState extends State<AmountScreen> {
 
     // **[مهم]** هذا هو الـ URL النهائي الذي يستقبل كل بيانات التقييم المالي
     const String apiUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/account-verificiation/'; // **عدّل هذا الرابط للـ API الفعلي في الـ Backend بتاعك**
+        '$baseUrl/account-verificiation/'; // **عدّل هذا الرابط للـ API الفعلي في الـ Backend بتاعك**
 
     try {
       final Map<String, dynamic> dataToSend = {

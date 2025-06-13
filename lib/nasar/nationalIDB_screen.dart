@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http; // Import http
+import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/fingerORface_screen.dart'; // Import the next screen
 // **[NEW]** Import ManageCurrentUser
 import 'package:investa4/core/utils/manage_current_user.dart';
@@ -102,7 +103,7 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
     }
 
     const String uploadUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/upload-national-card/'; // Ensure this is your backend URL
+        '$baseUrl/upload-national-card/'; // Ensure this is your backend URL
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));

@@ -1,12 +1,15 @@
 // lib/nasar/interests_screen.dart
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:investa4/core/utils/global_variables.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:investa4/nasar/welcome_screen.dart';
-import 'package:investa4/core/utils/manage_current_user.dart' as current_user;
+import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/nasar/home_screen.dart';
 
 class InterestsScreen extends StatefulWidget {
@@ -42,7 +45,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
   // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
   // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
-  static const String _baseUrl = 'https://54c2-154-238-249-140.ngrok-free.app/';
+  // static const String _baseUrl = 'https://54c2-154-238-249-140.ngrok-free.app/';
 
   // دالة إرسال الاهتمامات للباك إند
   Future<void> _sendInterestsToBackend() async {
@@ -61,10 +64,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
     // جلب user_id من ManageCurrentUser
     // بما أن currentUser معرفة كـ `late`، نفترض أنها ليست null عند الوصول لهذه الشاشة.
     String? userId =
-        current_user
-            .ManageCurrentUser
+        ManageCurrentUser
             .currentUser
-            ?.guid; // <--- تعديل: استخدام `?.` للـ null-safety
+            .guid; // <--- تعديل: استخدام `?.` للـ null-safety
+
+    log('interests screen userId: $userId'); // [DEBUGGING]
 
     // التأكد من التحقق من user_id بشكل صحيح (null أو empty)
     if (userId == null || userId.isEmpty) {
@@ -103,7 +107,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
       ); // [DEBUGGING]
 
       final response = await http.post(
-        Uri.parse('${_baseUrl}interests/'), // ده API إرسال الاهتمامات
+        Uri.parse('$baseUrl/interests/'), // ده API إرسال الاهتمامات
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'user_id':

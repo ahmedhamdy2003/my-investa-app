@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:investa4/core/utils/global_variables.dart';
 import 'nationalID_screen.dart';
 // استيراد ملف إدارة المستخدمين
 import 'package:investa4/core/utils/manage_current_user.dart'; // تأكد أن المسار ده صح عندك
@@ -120,7 +121,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
     }
 
     const String uploadUrl =
-        'https://54c2-154-238-249-140.ngrok-free.app/life-picture/'; // تأكد أن الـ URL ده هو بتاع الـ backend اللي بيستقبل الصورة
+        '$baseUrl/life-picture/'; // تأكد أن الـ URL ده هو بتاع الـ backend اللي بيستقبل الصورة
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
