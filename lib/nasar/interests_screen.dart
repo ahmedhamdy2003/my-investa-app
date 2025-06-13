@@ -71,7 +71,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
     log('interests screen userId: $userId'); // [DEBUGGING]
 
     // التأكد من التحقق من user_id بشكل صحيح (null أو empty)
-    if (userId == null || userId.isEmpty) {
+    if (userId.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

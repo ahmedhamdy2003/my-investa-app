@@ -80,7 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         .validate()) {
                                       manageLogin.checkLoginVerification(
                                         context: context,
-                                        // isMounted: true,
                                       );
                                     }
                                   },

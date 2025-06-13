@@ -16,11 +16,11 @@ class WelcomeScreen extends StatelessWidget {
     // 1. جلب user_id
     // <--- تعديل هام جداً: إضافة `?.` هنا عشان يبقى null-safe.
     // ده بيضمن إن لو ManageCurrentUser.currentUser كان null، الـ `userId` ده هيبقى null ومش هيضرب Error.
-    String? userId = ManageCurrentUser.currentUser?.guid;
+    String? userId = ManageCurrentUser.currentUser.guid;
 
     // 2. التحقق لو user_id مش موجود (null أو Empty)
     // <--- تعديل: بنتحقق من الـ null الأول، وبعدين من إنه مش Empty
-    if (userId == null || userId.isEmpty) {
+    if (userId.isEmpty) {
       // بما أن WelcomeScreen ليست StatefulWidget، لا يوجد mounted property
       // ScaffoldMessenger.of(context) يمكن استخدامه بشكل عام حتى في StatelessWidget.
       ScaffoldMessenger.of(context).showSnackBar(
@@ -43,8 +43,7 @@ class WelcomeScreen extends StatelessWidget {
     // تأكد أن هذا الرابط هو الصحيح للـ backend الخاص بك.
     // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
     // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
-    const String apiUrl =
-        '$baseUrl/role/'; // **غير هذا الرابط للـ API الفعلي**
+    const String apiUrl = '$baseUrl/role/'; // **غير هذا الرابط للـ API الفعلي**
 
     try {
       final Map<String, dynamic> dataToSend = {'user_id': userId, 'role': role};

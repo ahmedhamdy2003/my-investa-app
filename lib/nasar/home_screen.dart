@@ -106,9 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
     // جلب user_id من ManageCurrentUser
     // <--- تعديل: استخدام `?.` للـ null-safety هنا.
     // ده بيضمن إن لو ManageCurrentUser.currentUser كان null، الـ `userId` ده هيبقى null ومش هيضرب Error.
-    String? userId = ManageCurrentUser.currentUser?.guid;
+    String? userId = ManageCurrentUser.currentUser.guid;
 
-    if (userId == null || userId.isEmpty) {
+    if (userId.isEmpty) {
       print('Error: User ID is null or empty. Cannot fetch user data.');
       if (mounted) {
         setState(() {
@@ -196,8 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Helper function to fetch a single project section
   Future<List<InvestmentItem>> _fetchProjectSection(String url) async {
     String? userId =
-        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
-    if (userId == null || userId.isEmpty) {
+        ManageCurrentUser.currentUser.guid; // استخدام ?. للتعامل مع null
+    if (userId.isEmpty) {
       print(
         'Error: User ID is null or empty. Cannot fetch project section: $url',
       );
@@ -241,8 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     String? userId =
-        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
-    if (userId == null || userId.isEmpty) {
+        ManageCurrentUser.currentUser.guid; // استخدام ?. للتعامل مع null
+    if (userId.isEmpty) {
       print('Error: User ID is null or empty. Cannot search projects.');
       if (mounted) {
         setState(() {
@@ -294,8 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
   /// NOTE: Assumes the backend still uses 'user/saved_projects/' endpoint for saved items.
   Future<void> _fetchSavedItems() async {
     String? userId =
-        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
-    if (userId == null || userId.isEmpty) {
+        ManageCurrentUser.currentUser.guid; // استخدام ?. للتعامل مع null
+    if (userId.isEmpty) {
       print('Error: User ID is null or empty. Cannot fetch saved items.');
       if (mounted) {
         setState(() {
@@ -337,8 +337,8 @@ class _HomeScreenState extends State<HomeScreen> {
   /// NOTE: Assumes the backend still uses 'user/toggle_saved_project/' endpoint.
   Future<void> _toggleBookmark(InvestmentItem item) async {
     String? userId =
-        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
-    if (userId == null || userId.isEmpty) {
+        ManageCurrentUser.currentUser.guid; // استخدام ?. للتعامل مع null
+    if (userId.isEmpty) {
       print('Error: User ID is null or empty. Cannot toggle bookmark.');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
