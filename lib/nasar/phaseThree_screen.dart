@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investa4/core/model/user.dart';
 
 // تأكد من أن هذا المسار صحيح لملف FounderHomeScreen
 import 'package:investa4/nasar/founderHome_screen.dart'; // تأكد أن المسار ده صح
@@ -27,6 +28,7 @@ class _PhaseThreeScreenState extends State<phaseThree_screen> {
 
   // دالة للانتقال إلى FounderHomeScreen
   void _navigateToFounderHome() {
+    UserMethods.setUserisFounder(true);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

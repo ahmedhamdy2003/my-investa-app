@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // استيراد مكتبة http
-import 'package:investa4/core/utils/global_variables.dart';
-import 'dart:convert'; // لاستخدام json.encode
+// استيراد مكتبة http
+// لاستخدام json.encode
 
 import 'SubmissionStatus_Screen.dart'; // تأكد من المسار الصحيح
 
@@ -46,70 +45,83 @@ class _ApplyScreenDState extends State<ApplyScreenD> {
 
   // --- دالة إرسال كل البيانات المجمعة (Send) ---
   Future<void> _sendAllCollectedData() async {
-    const String sendUrl =
-        '$baseUrl/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
+    Navigator.pushReplacement(
+      // استخدام pushReplacement لمنع العودة لهذه الصفحة بزر Back
+      context,
+      MaterialPageRoute(
+        // 4. (اختياري) تمرير الـ userId إلى SubmissionStatusScreen إذا كانت قد تحتاجه
+        builder: (context) => SubmissionStatusScreen(userId: widget.userId),
+      ),
+    );
 
-    // جمع البيانات من الصفحة الحالية
-    final Map<String, dynamic> currentPageData = {
-      'market_size_egp': marketSize,
-      'previous_funding_received': previousFundingController.text,
-      'strengths': strengthsController.text,
-      'weaknesses': weaknessesController.text,
-      'opportunities': opportunitiesController.text,
-      'threats': threatsController.text,
-      'competitors_info': competitorsController.text,
-      'four_pillars_description': fourPillarsController.text,
-    };
+    // real code
+    // const String sendUrl =
+    //     '$baseUrl/insert_business_details/'; // *** استبدل هذا بـ URL الـ Send الفعلي ***
 
-    // دمج كل البيانات المجمعة من الصفحات السابقة مع بيانات الصفحة الحالية
-    // 3. أضف الـ userId إلى البيانات النهائية قبل الإرسال
-    final Map<String, dynamic> finalDataToSend = {
-      ...widget
-          .allCollectedData, // البيانات اللي استقبلتها من الصفحات اللي فاتت
-      ...currentPageData, // بيانات الصفحة الرابعة
-      'user_id': widget.userId, // <--- هنا تم إضافة الـ userId
-    };
+    // // جمع البيانات من الصفحة الحالية
+    // final Map<String, dynamic> currentPageData = {
+    //   'market_size_egp': marketSize,
+    //   'previous_funding_received': previousFundingController.text,
+    //   'strengths': strengthsController.text,
+    //   'weaknesses': weaknessesController.text,
+    //   'opportunities': opportunitiesController.text,
+    //   'threats': threatsController.text,
+    //   'competitors_info': competitorsController.text,
+    //   'four_pillars_description': fourPillarsController.text,
+    // };
 
-    print(
-      'Sending data: ${json.encode(finalDataToSend)}',
-    ); // طباعة البيانات المرسلة للتأكد
+    // log('current user id ${ManageCurrentUser.currentUser.guid}');
 
-    try {
-      final response = await http.post(
-        Uri.parse(sendUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(finalDataToSend),
-      );
+    // // دمج كل البيانات المجمعة من الصفحات السابقة مع بيانات الصفحة الحالية
+    // // 3. أضف الـ userId إلى البيانات النهائية قبل الإرسال
+    // final Map<String, dynamic> finalDataToSend = {
+    //   ...widget
+    //       .allCollectedData, // البيانات اللي استقبلتها من الصفحات اللي فاتت
+    //   ...currentPageData, // بيانات الصفحة الرابعة
+    //   'user_id':
+    //       ManageCurrentUser.currentUser.guid, // <--- هنا تم إضافة الـ userId
+    // };
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('All data sent successfully: ${response.body}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('All data submitted successfully!')),
-        );
-        // الانتقال لصفحة تأكيد الإرسال
-        Navigator.pushReplacement(
-          // استخدام pushReplacement لمنع العودة لهذه الصفحة بزر Back
-          context,
-          MaterialPageRoute(
-            // 4. (اختياري) تمرير الـ userId إلى SubmissionStatusScreen إذا كانت قد تحتاجه
-            builder: (context) => SubmissionStatusScreen(userId: widget.userId),
-          ),
-        );
-      } else {
-        print('Failed to send all data. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to submit all data: ${response.body}'),
-          ),
-        );
-      }
-    } catch (e) {
-      print('Error sending all data: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error submitting all data: $e')));
-    }
+    // print(
+    //   'current user id Sending data: ${json.encode(finalDataToSend)}',
+    // ); // طباعة البيانات المرسلة للتأكد
+
+    // try {
+    //   final response = await http.post(
+    //     Uri.parse(sendUrl),
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: json.encode(finalDataToSend),
+    //   );
+
+    //   if (response.statusCode == 200 || response.statusCode == 201) {
+    //     print('All data sent successfully: ${response.body}');
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text('All data submitted successfully!')),
+    //     );
+    //     // الانتقال لصفحة تأكيد الإرسال
+    //     Navigator.pushReplacement(
+    //       // استخدام pushReplacement لمنع العودة لهذه الصفحة بزر Back
+    //       context,
+    //       MaterialPageRoute(
+    //         // 4. (اختياري) تمرير الـ userId إلى SubmissionStatusScreen إذا كانت قد تحتاجه
+    //         builder: (context) => SubmissionStatusScreen(userId: widget.userId),
+    //       ),
+    //     );
+    //   } else {
+    //     print('Failed to send all data. Status code: ${response.statusCode}');
+    //     print('Response body: ${response.body}');
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text('Failed to submit all data: ${response.body}'),
+    //       ),
+    //     );
+    //   }
+    // } catch (e) {
+    //   print('Error sending all data: $e');
+    //   ScaffoldMessenger.of(
+    //     context,
+    //   ).showSnackBar(SnackBar(content: Text('Error submitting all data: $e')));
+    // }
   }
 
   @override
