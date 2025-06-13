@@ -3,13 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart'; // **[NEW]** لحفظ flags
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:investa4/nasar/welcome_screen.dart';
-// **[NEW]** استيراد ملف إدارة المستخدمين
-import 'package:investa4/core/utils/manage_current_user.dart'
-    as current_user; // باستخدام alias
-// **[NEW]** استيراد شاشة Home النهائية للمستثمر
+import 'package:investa4/core/utils/manage_current_user.dart' as current_user;
 import 'package:investa4/nasar/home_screen.dart';
 
 class InterestsScreen extends StatefulWidget {
@@ -26,8 +23,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
     'assets/Health & Fitness.png',
     'assets/Food Truck (2).png',
     'assets/Beauty (2).png',
-    'assets/Food & Beverage.png',
-    'assets/Food & Beverage.png',
+    'assets/Food & Beverage.png', // <--- تأكد أن هذه الصورة موجودة في assets/
+    'assets/Food & Beverage.png', // <--- تأكد أن هذه الصورة موجودة في assets/
   ];
 
   List<String> interestLabels = [
@@ -35,27 +32,25 @@ class _InterestsScreenState extends State<InterestsScreen> {
     'Health & Fitness',
     'Food Truck',
     'Beauty',
-    'Food & Beverage 1',
-    'Food & Beverage 2',
+    'Food & Beverage 1', // <--- تأكد أن الباك إند بيتعرف على "Food & Beverage 1" و "Food & Beverage 2"
+    'Food & Beverage 2', // <--- قد تحتاج لتوحيدها إلى "Food & Beverage" فقط لو الباك إند بيتعامل معاها كنوع واحد
   ];
 
   Set<int> selectedIndices = {};
   bool _isLoading = false;
   String _errorMessage = '';
 
-  // **مهم:** Base URL بتاع الباك إند بتاعك.
-  // لازم تغير هذا الرابط بالـ URL الفعلي لـ ngrok الحالي.
-  static const String _baseUrl =
-      'https://7226-197-134-76-183.ngrok-free.app/'; // **[MODIFIED]** تأكد أن هذا الـ URL محدّث وفعّال
+  // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
+  // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
+  static const String _baseUrl = 'https://54c2-154-238-249-140.ngrok-free.app/';
 
   // دالة إرسال الاهتمامات للباك إند
   Future<void> _sendInterestsToBackend() async {
-    // **[FIXED]** فحص mounted في بداية الدالة
+    // <--- تعديل: فحص mounted في بداية الدالة لضمان أن الـ Widget مازال موجوداً
     if (!mounted) return;
 
     if (selectedIndices.isEmpty) {
       if (mounted) {
-        // **[FIXED]** فحص mounted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select at least one interest.')),
         );
@@ -63,12 +58,17 @@ class _InterestsScreenState extends State<InterestsScreen> {
       return;
     }
 
-    // **[NEW]** جلب user_id
-    String? userId = current_user.ManageCurrentUser.currentUser?.guid;
-    // **[FIXED]** تأكد من التحقق من user_id بشكل صحيح (null أو empty)
+    // جلب user_id من ManageCurrentUser
+    // بما أن currentUser معرفة كـ `late`، نفترض أنها ليست null عند الوصول لهذه الشاشة.
+    String? userId =
+        current_user
+            .ManageCurrentUser
+            .currentUser
+            ?.guid; // <--- تعديل: استخدام `?.` للـ null-safety
+
+    // التأكد من التحقق من user_id بشكل صحيح (null أو empty)
     if (userId == null || userId.isEmpty) {
       if (mounted) {
-        // **[FIXED]** فحص mounted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Color(0xffF44336),
@@ -81,7 +81,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
     }
 
     if (mounted) {
-      // **[FIXED]** فحص mounted
       setState(() {
         _isLoading = true;
         _errorMessage = '';
@@ -91,9 +90,10 @@ class _InterestsScreenState extends State<InterestsScreen> {
     List<String> selectedInterests =
         selectedIndices.map((index) => interestLabels[index]).toList();
 
-    // **[MODIFIED]** تجهيز البيانات لإرسالها، بما في ذلك user_id في الـ Body
+    // تجهيز البيانات لإرسالها، بما في ذلك user_id في الـ Body
     final Map<String, dynamic> dataToSend = {
-      'user_id': userId, // **[NEW]** إضافة user_id في الـ Body
+      'user_id':
+          userId, // <--- الـ user_id بيتحط جوه الـ Map اللي هتتبعت كـ Body للـ API
       'interests': selectedInterests,
     };
 
@@ -107,7 +107,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'user_id':
-              userId, // **[NEW]** أضف user_id للـ headers هنا كمان (لو الـ Backend بيطلبه في الـ headers)
+              userId, // <--- تعديل: تم فتح الكومنت هنا لإرسال الـ user_id في الـ headers
           // 'Authorization': 'Bearer YOUR_AUTH_TOKEN', // لو محتاج توكن للاستيثاق
         },
         body: jsonEncode(
@@ -121,13 +121,12 @@ class _InterestsScreenState extends State<InterestsScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Interests sent successfully to Django backend!');
 
-        // **[NEW LOGIC]** بما أن InterestsScreen هي آخر خطوة لـ Investor Setup،
+        // بما أن InterestsScreen هي آخر خطوة لـ Investor Setup،
         // نسجل is_initial_setup_complete هنا
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('is_initial_setup_complete', true); // **[NEW]**
+        await prefs.setBool('is_initial_setup_complete', true);
 
         if (mounted) {
-          // **[FIXED]** فحص mounted
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Color(0xff4CAF50),
@@ -161,10 +160,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
               'Server error: No response body (Status: ${response.statusCode})';
         }
         if (mounted) {
-          // **[FIXED]** فحص mounted
-          setState(() {
-            _errorMessage = errorMessage;
-          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: const Color(0xffF44336),
@@ -178,7 +173,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        // **[FIXED]** فحص mounted
         setState(() {
           _errorMessage = 'An error occurred: $e';
         });
@@ -192,7 +186,6 @@ class _InterestsScreenState extends State<InterestsScreen> {
       print('Error sending interests: $e');
     } finally {
       if (mounted) {
-        // **[FIXED]** فحص mounted
         setState(() {
           _isLoading = false;
         });
@@ -223,7 +216,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
       ),
       body: Stack(
         children: [
-          // (الفقاقيع Bubble images)
+          // (الفقاقيع Bubble images) - تأكد من وجود هذه الصور في assets/
           Positioned(
             top: 0,
             left: 0,
@@ -248,145 +241,153 @@ class _InterestsScreenState extends State<InterestsScreen> {
               fit: BoxFit.fill,
             ),
           ),
-          Column(
-            children: [
-              const Spacer(),
-              const SizedBox(height: 100),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: Text(
-                      "What’s your interest?",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff001F3F),
+          // <--- تعديل هام: وضع الـ Column الرئيسي داخل SingleChildScrollView
+          Positioned.fill(
+            // <--- عشان ياخد المساحة كلها ويبقى Scrolling
+            child: SingleChildScrollView(
+              // <--- هنا الحل عشان يعمل Scroll ويحل مشكلة الـ Overflow
+              child: Column(
+                children: [
+                  // تم استبدال الـ Spacers بـ SizedBox عشان نتحكم في المسافات بدقة ونمنع الـ Overflow
+                  const SizedBox(height: 100), // مسافة ثابتة من فوق
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 25),
+                        child: Text(
+                          "What’s your interest?",
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff001F3F),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: List.generate(imagePaths.length, (index) {
-                    bool isSelected = selectedIndices.contains(index);
-                    return GestureDetector(
-                      onTap: () {
-                        if (mounted) {
-                          // **[FIXED]** فحص mounted
-                          setState(() {
-                            if (isSelected) {
-                              selectedIndices.remove(index);
-                            } else {
-                              selectedIndices.add(index);
+                  const SizedBox(height: 50), // مسافة بين العنوان والصور
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: List.generate(imagePaths.length, (index) {
+                        bool isSelected = selectedIndices.contains(index);
+                        return GestureDetector(
+                          onTap: () {
+                            if (mounted) {
+                              setState(() {
+                                if (isSelected) {
+                                  selectedIndices.remove(index);
+                                } else {
+                                  selectedIndices.add(index);
+                                }
+                              });
                             }
-                          });
-                        }
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color:
-                                isSelected
-                                    ? const Color(0xff001F3F)
-                                    : const Color(0xffD9E4FF),
-                            width: isSelected ? 1 : 2,
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color:
+                                    isSelected
+                                        ? const Color(0xff001F3F)
+                                        : const Color(0xffD9E4FF),
+                                width: isSelected ? 1 : 2,
+                              ),
+                              boxShadow:
+                                  isSelected
+                                      ? [
+                                        BoxShadow(
+                                          color: const Color(
+                                            0xff001F3F,
+                                          ).withOpacity(0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ]
+                                      : [],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: Image.asset(
+                                imagePaths[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                          boxShadow:
-                              isSelected
-                                  ? [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xff001F3F,
-                                      ).withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ]
-                                  : [],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: Image.asset(
-                            imagePaths[index],
-                            fit: BoxFit.cover,
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        if (_isLoading)
+                          const CircularProgressIndicator(
+                            color: Color(0xff001F3F),
+                          ),
+                        if (_errorMessage.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              _errorMessage,
+                              style: const TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ElevatedButton(
+                          onPressed:
+                              _isLoading ? null : _sendInterestsToBackend,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff001F3F),
+                            padding: EdgeInsets.zero,
+                            fixedSize: const Size(164, 61),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: const Text(
+                            'Done',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    if (_isLoading)
-                      const CircularProgressIndicator(color: Color(0xff001F3F)),
-                    if (_errorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          _errorMessage,
-                          style: const TextStyle(color: Colors.red),
-                          textAlign: TextAlign.center,
+                        const SizedBox(height: 16),
+                        TextButton(
+                          onPressed: () {
+                            if (mounted) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const WelcomeScreen(),
+                                ), // للتأكد من ان المستخدم بيختار دوره صح
+                                (Route<dynamic> route) => false,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xff001F3F),
+                            ),
+                          ),
                         ),
-                      ),
-                    ElevatedButton(
-                      onPressed: _isLoading ? null : _sendInterestsToBackend,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff001F3F),
-                        padding: EdgeInsets.zero,
-                        fixedSize: const Size(164, 61),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                      child: const Text(
-                        'Done',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: () {
-                        if (mounted) {
-                          // **[FIXED]** فحص mounted
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WelcomeScreen(),
-                            ), // للتأكد من ان المستخدم بيختار دوره صح
-                            (Route<dynamic> route) => false,
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xff001F3F),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         ],
       ),

@@ -87,7 +87,7 @@ class _SetupScreenState extends State<SetupScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body:
-          isInitFinih == false
+          !isInitFinih
               ? const Center(child: CircularProgressIndicator())
               : Padding(
                 padding: const EdgeInsets.symmetric(

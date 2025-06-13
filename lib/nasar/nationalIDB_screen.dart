@@ -102,7 +102,7 @@ class _NationalIDBScreenState extends State<NationalIDBScreen> {
     }
 
     const String uploadUrl =
-        'https://7226-197-134-76-183.ngrok-free.app/upload-national-card/'; // Ensure this is your backend URL
+        'https://54c2-154-238-249-140.ngrok-free.app/upload-national-card/'; // Ensure this is your backend URL
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));

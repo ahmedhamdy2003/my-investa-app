@@ -230,7 +230,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
     }
 
     const String assignUrl =
-        'https://2859-41-44-137-9.ngrok-free.app/insert-project/';
+        'https://54c2-154-238-249-140.ngrok-free.app/insert-project/';
 
     var request = http.MultipartRequest('POST', Uri.parse(assignUrl));
 

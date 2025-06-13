@@ -151,7 +151,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       };
 
       const String apiUrl =
-          'https://7226-197-134-76-183.ngrok-free.app/personal-data/';
+          'https://54c2-154-238-249-140.ngrok-free.app/personal-data/';
       try {
         final http.Response response = await http.post(
           Uri.parse(apiUrl),

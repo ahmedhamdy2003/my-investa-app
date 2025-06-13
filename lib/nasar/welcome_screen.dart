@@ -13,10 +13,15 @@ class WelcomeScreen extends StatelessWidget {
   // دالة لحفظ الدور وإرساله للباك إند ثم التنقل
   Future<void> _saveRoleAndNavigate(BuildContext context, String role) async {
     // 1. جلب user_id
-    String? userId = ManageCurrentUser.currentUser.guid;
+    // <--- تعديل هام جداً: إضافة `?.` هنا عشان يبقى null-safe.
+    // ده بيضمن إن لو ManageCurrentUser.currentUser كان null، الـ `userId` ده هيبقى null ومش هيضرب Error.
+    String? userId = ManageCurrentUser.currentUser?.guid;
 
-    // 2. التحقق لو user_id مش موجود
-    if (userId.isEmpty) {
+    // 2. التحقق لو user_id مش موجود (null أو Empty)
+    // <--- تعديل: بنتحقق من الـ null الأول، وبعدين من إنه مش Empty
+    if (userId == null || userId.isEmpty) {
+      // بما أن WelcomeScreen ليست StatefulWidget، لا يوجد mounted property
+      // ScaffoldMessenger.of(context) يمكن استخدامه بشكل عام حتى في StatelessWidget.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xffF44336),
@@ -24,9 +29,10 @@ class WelcomeScreen extends StatelessWidget {
         ),
       );
       print('Error: User ID is null or empty. Cannot save role.');
-      return;
+      return; // توقف هنا لو مفيش user ID
     }
 
+    // عرض رسالة مؤقتة للمستخدم
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text("Saving role as $role...")));
@@ -34,8 +40,10 @@ class WelcomeScreen extends StatelessWidget {
     // 3. تعريف رابط الـ API لإرسال الدور
     // **[IMPORTANT]** هذا هو الـ URL الذي يجب أن يستقبل user_id والدور
     // تأكد أن هذا الرابط هو الصحيح للـ backend الخاص بك.
+    // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
+    // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
     const String apiUrl =
-        'https://7226-197-134-76-183.ngrok-free.app/role/'; // **غير هذا الرابط للـ API الفعلي**
+        'https://54c2-154-238-249-140.ngrok-free.app/role/'; // **غير هذا الرابط للـ API الفعلي**
 
     try {
       final Map<String, dynamic> dataToSend = {'user_id': userId, 'role': role};
@@ -48,9 +56,11 @@ class WelcomeScreen extends StatelessWidget {
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          // <--- أضف user_id في الـ headers هنا كمان لو الباك إند بيطلبه في الـ headers
+          // 'user_id': userId,
           // 'Authorization': 'Bearer YOUR_AUTH_TOKEN_HERE', // أضف التوثيق إذا لزم الأمر
         },
-        body: jsonEncode(dataToSend),
+        body: jsonEncode(dataToSend), // بيتم إرسال الـ JSON للباك إند
       );
 
       print('API Response Status Code: ${response.statusCode}'); // [DEBUGGING]
@@ -85,7 +95,7 @@ class WelcomeScreen extends StatelessWidget {
           );
         }
       } else {
-        // فشل إرسال الدور
+        // فشل إرسال الدور (الباك إند رد بحالة خطأ)
         String errorMessage;
         if (response.body.isNotEmpty) {
           try {
@@ -114,7 +124,7 @@ class WelcomeScreen extends StatelessWidget {
         print('Failed to send role: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      // خطأ في الشبكة
+      // خطأ في الشبكة (التطبيق مش قادر يتصل بالسيرفر أصلاً)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Color(0xffF44336),
@@ -135,7 +145,10 @@ class WelcomeScreen extends StatelessWidget {
           Positioned(
             top: 0,
             left: -15,
-            child: Image.asset('assets/blue_shape.png', width: 260),
+            child: Image.asset(
+              'assets/blue_shape.png',
+              width: 260,
+            ), // <--- تأكد من وجود ملف الصورة
           ),
 
           // الشكل الكحلي أعلى اليمين
@@ -143,7 +156,7 @@ class WelcomeScreen extends StatelessWidget {
             top: 100,
             right: -15,
             child: Image.asset(
-              'assets/dark_shape.png',
+              'assets/dark_shape.png', // <--- تأكد من وجود ملف الصورة
               width: 100,
               height: 170,
             ),
@@ -154,7 +167,11 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/Logo (2).png', width: 150, height: 150),
+                Image.asset(
+                  'assets/Logo (2).png',
+                  width: 150,
+                  height: 150,
+                ), // <--- تأكد من وجود ملف الصورة
                 const SizedBox(height: 16),
                 const Text(
                   "INVESTA",

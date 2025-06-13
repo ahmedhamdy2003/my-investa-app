@@ -5,8 +5,8 @@ import 'package:investa4/nasar/investment_item.dart';
 import 'package:investa4/nasar/save_screen.dart';
 import 'package:flutter/material.dart';
 
-// Removed: import 'package:http/http.dart' as http; // لا حاجة لـ http
-// Removed: import 'dart:convert'; // لا حاجة لـ json conversion
+// Removed: import 'package:http/http.dart' as http; // لا حاجة لـ http هنا
+// Removed: import 'dart:convert'; // لا حاجة لـ json conversion هنا
 
 /// قيم ثابتة قابلة للتعديل بسهولة
 const Color kScreenBackgroundColor = Colors.white;
@@ -18,7 +18,9 @@ const double kInvestBtnHeight = 32.0;
 const Color kInvestBtnColor = Color(0xFF001F3F);
 const Color kInvestBtnTextColor = Colors.white;
 
-const Color kSearchBarFillColor = Color(0xFFF5F5F5);
+const Color kSearchBarFillColor = Color(
+  0xFFF5F7FA,
+); // تم تعديلها لتطابق الألوان المشتركة
 const Color kSearchBarHintTextColor = Color(0xFF7E9ACF);
 const Color kSearchBarIconColor = Color(0xFF7E9ACF);
 
@@ -36,8 +38,8 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
       ''; // لمدخل البحث داخل صفحة التصنيف (يتم البحث محلياً في القائمة المعروضة)
 
   // New callback for toggling bookmark, passed from Home Screen
-  late void Function(InvestmentItem item)
-  onToggleBookmark; // <--- هام: تم إضافة هذا
+  // <--- هام: تم إضافة هذا الكول باك لتحديث الحالة في HomeScreen
+  late void Function(InvestmentItem item) onToggleBookmark;
 
   @override
   void initState() {
@@ -57,11 +59,14 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
       ),
       child: TextField(
         onChanged: (value) {
-          setState(() {
-            _searchQuery =
-                value
-                    .toLowerCase(); // تطبيق البحث على المشاريع المحلية في القائمة المعروضة
-          });
+          if (mounted) {
+            // <--- تعديل: فحص mounted
+            setState(() {
+              _searchQuery =
+                  value
+                      .toLowerCase(); // تطبيق البحث على المشاريع المحلية في القائمة المعروضة
+            });
+          }
         },
         decoration: const InputDecoration(
           hintText: "Search for a Business or Founder name",
@@ -100,15 +105,18 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
     bool isSelected = (selectedFilter == label);
     return GestureDetector(
       onTap: () {
-        setState(() {
-          if (isSortBy) {
-            showSortByBottomSheet();
-          } else {
-            selectedFilter = (selectedFilter == label) ? null : label;
-            // TODO: هنا يمكنك تطبيق الفلترة على قائمة allProjectsFromHome
-            // (مثلاً، إعادة فلترة `filteredCategoryProjects` بناءً على `selectedFilter`)
-          }
-        });
+        if (mounted) {
+          // <--- تعديل: فحص mounted
+          setState(() {
+            if (isSortBy) {
+              showSortByBottomSheet();
+            } else {
+              selectedFilter = (selectedFilter == label) ? null : label;
+              // TODO: هنا يمكنك تطبيق الفلترة على قائمة allProjectsFromHome
+              // (مثلاً، إعادة فلترة `filteredCategoryProjects` بناءً على `selectedFilter`)
+            }
+          });
+        }
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
@@ -138,45 +146,54 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
   }
 
   void showSortByBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Type of your investing",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "How would you like to invest, and get your return?",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 16),
-              buildSortOption("Long Term"),
-              buildSortOption("Short Term"),
-            ],
-          ),
-        );
-      },
-    );
+    if (mounted) {
+      // <--- تعديل: فحص mounted قبل showModalBottomSheet
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Type of your investing",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  "How would you like to invest, and get your return?",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+                buildSortOption("Long Term"),
+                buildSortOption("Short Term"),
+              ],
+            ),
+          );
+        },
+      );
+    }
   }
 
   Widget buildSortOption(String option) {
     bool isSelected = (option == selectedSortOption);
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedSortOption = (selectedSortOption == option) ? null : option;
-          // TODO: قم بتطبيق الترتيب هنا على قائمة allProjectsFromHome
-        });
-        Navigator.pop(context);
+        if (mounted) {
+          // <--- تعديل: فحص mounted
+          setState(() {
+            selectedSortOption = (selectedSortOption == option) ? null : option;
+            // TODO: قم بتطبيق الترتيب هنا على قائمة allProjectsFromHome
+          });
+        }
+        if (mounted) {
+          // <--- تعديل: فحص mounted قبل pop
+          Navigator.pop(context);
+        }
       },
       child: Container(
         width: double.infinity,
@@ -227,6 +244,9 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
     }
 
     return ListView.builder(
+      key: ValueKey(
+        'category_list_${finalFilteredAndSearchedData.hashCode}',
+      ), // <--- تعديل: إضافة Key
       itemCount: finalFilteredAndSearchedData.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -234,10 +254,11 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
         final item = finalFilteredAndSearchedData[index];
         // الآن، يتم التحقق من حالة الحفظ باستخدام savedItems التي يتم تمريرها من HomeScreen
         final bool isSaved = savedItems.any(
-          (elem) => elem.title == item.title,
-        ); // يفضل استخدام ID فريد
+          (elem) => elem.id == item.id, // <--- تعديل: استخدام ID فريد للمقارنة
+        );
 
         return Container(
+          key: ValueKey(item.id), // <--- تعديل: إضافة Key لكل InvestmentCard
           margin: const EdgeInsets.only(bottom: 10),
           child: InvestmentCard(
             assetImage: item.assetImage,
@@ -250,10 +271,12 @@ mixin CategoryPageMixin<T extends StatefulWidget> on State<T> {
               // استدعاء الكول باك الذي سيقوم بتشغيل _toggleBookmark في HomeScreen
               onBookmarkPressedCallback(item);
               // تحديث حالة savedItems محلياً فوراً لتعكس التغيير في الـ UI
-              // (لضمان أن أيقونة الحفظ تتغير فوراً بدون انتظار تحديث من HomeScreen)
               setState(() {
+                // يجب أن يكون داخل setState
                 if (isSaved) {
-                  savedItems.removeWhere((e) => e.title == item.title);
+                  savedItems.removeWhere(
+                    (e) => e.id == item.id,
+                  ); // <--- تعديل: استخدام ID
                 } else {
                   savedItems.add(item);
                 }
@@ -296,12 +319,11 @@ class _HealthFitnessPageState extends State<HealthFitnessPage>
 
   @override
   void initState() {
-    categoryName = widget.categoryName; // تعيين اسم التصنيف من الـ widget
-    allProjectsFromHome = widget.allProjects; // تعيين قائمة المشاريع الكاملة
-    savedItems =
-        widget.savedProjectsFromHome; // <-- هام: تعيين المشاريع المحفوظة
-    onToggleBookmark =
-        widget.onToggleBookmarkInHome; // <-- هام: تعيين الكول باك لدالة الحفظ
+    // تعيين المتغيرات في الـ Mixin قبل استدعاء super.initState()
+    categoryName = widget.categoryName;
+    allProjectsFromHome = widget.allProjects;
+    savedItems = widget.savedProjectsFromHome;
+    onToggleBookmark = widget.onToggleBookmarkInHome;
 
     super.initState(); // هذا سيقوم بتشغيل initState الخاص بالـ Mixin
 
@@ -366,16 +388,22 @@ class _HealthFitnessPageState extends State<HealthFitnessPage>
                   onBookmarkPressedCallback: (item) {
                     // استدعاء الدالة الممررة من Home Screen لتحديث حالة الحفظ
                     onToggleBookmark(item);
-                    // لا تنسَ تحديث savedItems المحلية هنا أيضاً بعد استدعاء onToggleBookmark
+                    // تحديث savedItems المحلية هنا أيضاً بعد استدعاء onToggleBookmark
                     // لتعكس التغيير في الـ UI فوراً.
-                    setState(() {
-                      // يجب أن يكون داخل setState
-                      if (savedItems.any((e) => e.title == item.title)) {
-                        savedItems.removeWhere((e) => e.title == item.title);
-                      } else {
-                        savedItems.add(item);
-                      }
-                    });
+                    if (mounted) {
+                      // <--- تعديل: فحص mounted
+                      setState(() {
+                        // يجب أن يكون داخل setState
+                        if (savedItems.any((e) => e.id == item.id)) {
+                          // <--- تعديل: استخدام ID
+                          savedItems.removeWhere(
+                            (e) => e.id == item.id,
+                          ); // <--- تعديل: استخدام ID
+                        } else {
+                          savedItems.add(item);
+                        }
+                      });
+                    }
                   },
                 ),
               ),
@@ -474,14 +502,19 @@ class _FoodTruckPageState extends State<FoodTruckPage> with CategoryPageMixin {
                   filteredCategoryProjects,
                   onBookmarkPressedCallback: (item) {
                     onToggleBookmark(item);
-                    setState(() {
-                      // يجب أن يكون داخل setState
-                      if (savedItems.any((e) => e.title == item.title)) {
-                        savedItems.removeWhere((e) => e.title == item.title);
-                      } else {
-                        savedItems.add(item);
-                      }
-                    });
+                    if (mounted) {
+                      // <--- تعديل: فحص mounted
+                      setState(() {
+                        if (savedItems.any((e) => e.id == item.id)) {
+                          // <--- تعديل: استخدام ID
+                          savedItems.removeWhere(
+                            (e) => e.id == item.id,
+                          ); // <--- تعديل: استخدام ID
+                        } else {
+                          savedItems.add(item);
+                        }
+                      });
+                    }
                   },
                 ),
               ),
@@ -580,14 +613,19 @@ class _FashionPageState extends State<FashionPage> with CategoryPageMixin {
                   filteredCategoryProjects,
                   onBookmarkPressedCallback: (item) {
                     onToggleBookmark(item);
-                    setState(() {
-                      // يجب أن يكون داخل setState
-                      if (savedItems.any((e) => e.title == item.title)) {
-                        savedItems.removeWhere((e) => e.title == item.title);
-                      } else {
-                        savedItems.add(item);
-                      }
-                    });
+                    if (mounted) {
+                      // <--- تعديل: فحص mounted
+                      setState(() {
+                        if (savedItems.any((e) => e.id == item.id)) {
+                          // <--- تعديل: استخدام ID
+                          savedItems.removeWhere(
+                            (e) => e.id == item.id,
+                          ); // <--- تعديل: استخدام ID
+                        } else {
+                          savedItems.add(item);
+                        }
+                      });
+                    }
                   },
                 ),
               ),
@@ -686,14 +724,19 @@ class _BeautyPageState extends State<BeautyPage> with CategoryPageMixin {
                   filteredCategoryProjects,
                   onBookmarkPressedCallback: (item) {
                     onToggleBookmark(item);
-                    setState(() {
-                      // يجب أن يكون داخل setState
-                      if (savedItems.any((e) => e.title == item.title)) {
-                        savedItems.removeWhere((e) => e.title == item.title);
-                      } else {
-                        savedItems.add(item);
-                      }
-                    });
+                    if (mounted) {
+                      // <--- تعديل: فحص mounted
+                      setState(() {
+                        if (savedItems.any((e) => e.id == item.id)) {
+                          // <--- تعديل: استخدام ID
+                          savedItems.removeWhere(
+                            (e) => e.id == item.id,
+                          ); // <--- تعديل: استخدام ID
+                        } else {
+                          savedItems.add(item);
+                        }
+                      });
+                    }
                   },
                 ),
               ),
@@ -793,14 +836,19 @@ class _FoodAndBeveragePageState extends State<FoodAndBeveragePage>
                   filteredCategoryProjects,
                   onBookmarkPressedCallback: (item) {
                     onToggleBookmark(item);
-                    setState(() {
-                      // يجب أن يكون داخل setState
-                      if (savedItems.any((e) => e.title == item.title)) {
-                        savedItems.removeWhere((e) => e.title == item.title);
-                      } else {
-                        savedItems.add(item);
-                      }
-                    });
+                    if (mounted) {
+                      // <--- تعديل: فحص mounted
+                      setState(() {
+                        if (savedItems.any((e) => e.id == item.id)) {
+                          // <--- تعديل: استخدام ID
+                          savedItems.removeWhere(
+                            (e) => e.id == item.id,
+                          ); // <--- تعديل: استخدام ID
+                        } else {
+                          savedItems.add(item);
+                        }
+                      });
+                    }
                   },
                 ),
               ),

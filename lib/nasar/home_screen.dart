@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// **[NEW]** استيراد manage_current_user لتمرير user_id في الـ API calls لو الباك إند بيطلبه
 import 'package:investa4/core/utils/manage_current_user.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,22 +36,28 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
+  // <--- هام جداً: هذا الرابط يجب أن يكون محدّث وفعّال (من ngrok)
+  // لو حصل SocketException: Failed host lookup، غير الـ URL ده بالـ URL الجديد من ngrok.
   static const String _baseUrl =
-      'https://7226-197-134-76-183.ngrok-free.app/'; // **[MODIFIED]** تأكد أن هذا الـ URL محدّث وفعّال
+      'https://54c2-154-238-249-140.ngrok-free.app/'; // تأكد أن هذا الـ URL محدّث وفعّال
 
-  // **[NEW]** تعريف الـ Futures لتجنب استدعاء API متكرر في FutureBuilder
+  // <--- تعديل هام: تعريف الـ Futures لتجنب استدعاء API متكرر في FutureBuilder
+  // تم تهيئتها بقيم Future.value(null) لتجنب الأخطاء عند البداية
   late Future<void> _userDataFuture;
   late Future<void> _homeDataFuture;
   late Future<void> _savedItemsFuture;
+  late Future<void> _searchFuture = Future.value(
+    null,
+  ); // <--- تعديل: Future خاص بالبحث
+  String _lastSearchQuery = ''; // <--- تعديل: لتتبع آخر Query تم البحث عنه
 
   @override
   void initState() {
     super.initState();
-    // **[MODIFIED]** استدعاء الـ APIs مرة واحدة وتخزين الـ Future
+    // استدعاء الـ APIs مرة واحدة عند تهيئة الشاشة وتخزين الـ Future
     _userDataFuture = _fetchUserData();
     _homeDataFuture = _fetchHomeData();
-    _savedItemsFuture =
-        _fetchSavedItems(); // هتستدعي دي لما تحتاج الـ saved items
+    _savedItemsFuture = _fetchSavedItems();
 
     // إضافة Listener لحقل البحث
     _searchController.addListener(_onSearchChanged);
@@ -65,30 +70,31 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // **[NEW]** دالة للتعامل مع تغييرات حقل البحث
+  // <--- تعديل هام: دالة للتعامل مع تغييرات حقل البحث (تتحكم في _searchFuture)
   void _onSearchChanged() {
-    final query = _searchController.text;
+    final query =
+        _searchController.text
+            .trim(); // <--- تعديل: استخدام .trim() لإزالة المسافات الزائدة
     if (query.isNotEmpty) {
       if (mounted) {
-        // **[FIXED]** فحص mounted
         setState(() {
           _isSearching = true; // Activate search mode
+          // <--- هام جداً: لا تستدعي _searchProjects هنا مباشرة.
+          // قم بتحديث _searchFuture فقط إذا تغير الـ query لتجنب طلبات API متكررة
+          if (query != _lastSearchQuery) {
+            _searchFuture = _searchProjects(query); // قم بتخزين الـ Future هنا
+            _lastSearchQuery = query; // حفظ آخر query تم البحث عنه
+          }
         });
       }
-      // لا تستدعي _searchProjects هنا مباشرة، سيتولى FutureBuilder الأمر
-      // ولكن تأكد من وجود Future خاص بالبحث في حالة _isSearching = true
-      // (الكود الحالي بيستدعيها في FutureBuilder وهي شغالة كده، لكن ممكن يكون Future منفصل أفضل)
-      // ممكن تعمل كده لو عايز تتحكم في الـ Future بتاع البحث:
-      // if (query != _lastSearchQuery) { // لتجنب عمليات بحث متكررة لنفس الـ query
-      //   _searchFuture = _searchProjects(query);
-      //   _lastSearchQuery = query;
-      // }
     } else {
+      // لو الـ query فاضي، اخرج من وضع البحث وامسح النتائج
       if (mounted) {
-        // **[FIXED]** فحص mounted
         setState(() {
-          _isSearching = false; // Exit search mode
+          _isSearching = false;
           searchResults = []; // Clear search results
+          _searchFuture = Future.value(null); // <--- تعديل: Reset Future البحث
+          _lastSearchQuery = ''; // <--- تعديل: reset last query
         });
       }
     }
@@ -96,13 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Function to fetch user data (name and profile image) from API
   Future<void> _fetchUserData() async {
-    // **[NEW]** جلب user_id
-    String? userId =
-        ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
+    // جلب user_id من ManageCurrentUser
+    // <--- تعديل: استخدام `?.` للـ null-safety هنا.
+    // ده بيضمن إن لو ManageCurrentUser.currentUser كان null، الـ `userId` ده هيبقى null ومش هيضرب Error.
+    String? userId = ManageCurrentUser.currentUser?.guid;
+
     if (userId == null || userId.isEmpty) {
-      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot fetch user data.');
-      // ممكن تعرض رسالة للمستخدم أو توجيهه لصفحة تسجيل الدخول لو ده إجباري
       if (mounted) {
         setState(() {
           _userName = 'Login Error';
@@ -114,8 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('${_baseUrl}welcome/$userId/'),
-      ); // **[MODIFIED]** إضافة user_id للـ URL
+        Uri.parse('${_baseUrl}welcome/$userId/'), // إضافة user_id للـ URL
+      );
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (mounted) {
@@ -125,7 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         }
       } else {
-        print("Failed to load user data: ${response.statusCode}");
+        print(
+          "Failed to load user data: ${response.statusCode} - ${response.body}",
+        );
         if (mounted) {
           setState(() {
             _userProfileImage = '';
@@ -176,16 +184,19 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       print("Error fetching home data: $e");
       // Handle error, maybe show a message to the user
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load home data: $e')));
+      }
     }
   }
 
   /// Helper function to fetch a single project section
   Future<List<InvestmentItem>> _fetchProjectSection(String url) async {
-    // **[NEW]** جلب user_id
     String? userId =
         ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
     if (userId == null || userId.isEmpty) {
-      // **[FIXED]** استخدام null check
       print(
         'Error: User ID is null or empty. Cannot fetch project section: $url',
       );
@@ -196,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+          'user_id': userId, // إضافة user_id في الـ headers
           // 'Authorization': 'Bearer YOUR_AUTH_TOKEN'
         },
       );
@@ -222,29 +233,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Function to search projects from API (this remains the same as it searches globally)
   Future<void> _searchProjects(String query) async {
+    // <--- تم نقل منطق _isSearching و searchResults.clear() إلى _onSearchChanged
+    // هنا فقط نقوم بالبحث الفعلي.
     if (query.isEmpty) {
-      if (mounted) {
-        // **[FIXED]** فحص mounted
-        setState(() {
-          _isSearching = false;
-          searchResults = [];
-        });
-      }
-      return;
+      return; // لا تبحث لو الـ query فاضي
     }
 
-    if (mounted) {
-      // **[FIXED]** فحص mounted
-      setState(() {
-        _isSearching = true;
-      });
-    }
-
-    // **[NEW]** جلب user_id
     String? userId =
         ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
     if (userId == null || userId.isEmpty) {
-      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot search projects.');
       if (mounted) {
         setState(() {
@@ -258,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await http.get(
         Uri.parse('${_baseUrl}search/?q=$query'),
         headers: {
-          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+          'user_id': userId, // إضافة user_id في الـ headers
         },
       );
       if (response.statusCode == 200) {
@@ -295,11 +292,9 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Function to fetch saved projects from API
   /// NOTE: Assumes the backend still uses 'user/saved_projects/' endpoint for saved items.
   Future<void> _fetchSavedItems() async {
-    // **[NEW]** جلب user_id
     String? userId =
         ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
     if (userId == null || userId.isEmpty) {
-      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot fetch saved items.');
       if (mounted) {
         setState(() {
@@ -313,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await http.get(
         Uri.parse('${_baseUrl}user/saved_projects/'),
         headers: {
-          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
+          'user_id': userId, // إضافة user_id في الـ headers
         },
       );
       if (response.statusCode == 200) {
@@ -340,14 +335,11 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Function to add/remove a project from saved items via API
   /// NOTE: Assumes the backend still uses 'user/toggle_saved_project/' endpoint.
   Future<void> _toggleBookmark(InvestmentItem item) async {
-    // **[NEW]** جلب user_id
     String? userId =
         ManageCurrentUser.currentUser?.guid; // استخدام ?. للتعامل مع null
     if (userId == null || userId.isEmpty) {
-      // **[FIXED]** استخدام null check
       print('Error: User ID is null or empty. Cannot toggle bookmark.');
       if (mounted) {
-        // **[FIXED]** فحص mounted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Error: User ID not found. Cannot save project."),
@@ -357,9 +349,10 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    // <--- تعديل: استخدام item.id للمقارنة والـ payload
     final bool isCurrentlySaved = _savedItems.any(
-      (savedItem) => savedItem.title == item.title,
-    ); // يفضل استخدام item.id
+      (savedItem) => savedItem.id == item.id, // استخدام item.id للتحقق
+    );
     final String action = isCurrentlySaved ? 'remove' : 'add';
 
     try {
@@ -367,20 +360,22 @@ class _HomeScreenState extends State<HomeScreen> {
         Uri.parse('${_baseUrl}user/toggle_saved_project/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'user_id': userId, // **[MODIFIED]** إضافة user_id في الـ headers
-          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN',
+          'user_id': userId, // إضافة user_id في الـ headers
+          // 'Authorization': 'Bearer YOUR_AUTH_TOKEN', // لو محتاج توكن للاستيثاق
         },
         body: jsonEncode({
           'project_id':
-              item.title, // يفضل إرسال project ID الفعلي بدلاً من title
+              item.id, // <--- تعديل: إرسال project ID الفعلي بدلاً من title
           'action': action,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Bookmark toggled successfully for: ${item.title}");
-        _savedItemsFuture =
-            _fetchSavedItems(); // **[MODIFIED]** إعادة تحميل الـ future للـ saved items
+        print(
+          "Bookmark toggled successfully for: ${item.title} (ID: ${item.id})",
+        );
+        // <--- تعديل: إعادة تحميل الـ saved items بعد كل عملية toggle لضمان التزامن
+        _savedItemsFuture = _fetchSavedItems();
         if (mounted) {
           setState(() {}); // لعمل rebuild للـ UI اللي بيعتمد على _savedItems
         }
@@ -442,13 +437,18 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _selectedIndex,
         onTap: (i) {
           if (mounted) {
-            // **[FIXED]** فحص mounted
             setState(() => _selectedIndex = i);
             // هنا ممكن تعمل refresh لبيانات الـ home لو رجعت لـ tab 0
             if (i == 0) {
+              // <--- تعديل: إعادة تحميل الـ Futures لضمان تحديث البيانات عند الرجوع للـ Home Tab
               _userDataFuture = _fetchUserData();
               _homeDataFuture = _fetchHomeData();
               _savedItemsFuture = _fetchSavedItems();
+              // <--- تعديل: إعادة تعيين Search Future لو رجع للـ Home Tab
+              _searchFuture = Future.value(null);
+              _lastSearchQuery = '';
+              _isSearching = false;
+              _searchController.clear();
             }
           }
         },
@@ -475,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // **[MODIFIED]** استخدام _userDataFuture
+          // استخدام _userDataFuture لعرض بيانات المستخدم
           FutureBuilder<void>(
             future: _userDataFuture, // استخدام الـ Future المخزن
             builder: (context, snapshot) {
@@ -500,11 +500,11 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildSearchBar(),
           const SizedBox(height: 16),
           // Conditional display based on search mode
+          // <--- تعديل هام: استخدام _searchFuture
           _isSearching && _searchController.text.isNotEmpty
               ? FutureBuilder<void>(
-                future: _searchProjects(
-                  _searchController.text,
-                ), // هنا الـ searchProjects بيتم استدعاؤه مباشرة لأنه بيعتمد على query متغير
+                future:
+                    _searchFuture, // <--- تعديل: استخدام الـ Future المخزن للبحث
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       searchResults.isEmpty) {
@@ -534,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )
               : FutureBuilder<void>(
                 future:
-                    _homeDataFuture, // **[MODIFIED]** استخدام الـ Future المخزن
+                    _homeDataFuture, // استخدام الـ Future المخزن لبيانات الـ Home
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       allProjects.isEmpty) {
@@ -594,8 +594,6 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         CircleAvatar(
           radius: 28,
-          // NEW: Always use NetworkImage for profile picture
-          // If _userProfileImage is empty or invalid, display a default placeholder.
           backgroundImage:
               (_userProfileImage.isNotEmpty)
                   ? NetworkImage(_userProfileImage) as ImageProvider
@@ -662,8 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         controller: _searchController,
         onChanged: (query) {
-          // **[MODIFIED]** استدعاء _onSearchChanged ليتولى المنطق
-          _onSearchChanged();
+          _onSearchChanged(); // استدعاء _onSearchChanged ليتولى المنطق
         },
         decoration: const InputDecoration(
           hintText: 'Search for a Business or Founder name',
@@ -677,12 +674,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Helper widget to display a list of investment cards (used for search and main sections)
   Widget _buildInvestmentList(List<InvestmentItem> list) {
-    // **[NEW]** استخدام FutureBuilder لـ _savedItemsFuture هنا لضمان تحديث الـ savedItems
+    // <--- تعديل: استخدام Key لـ ListView.builder
     return FutureBuilder<void>(
-      future: _savedItemsFuture,
+      future:
+          _savedItemsFuture, // <--- هام: بنستخدم _savedItemsFuture هنا للتأكد من تحميل saved items
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // يمكن عرض مؤشر تحميل بسيط هنا لو الـ saved items لسه بتتحمل
           return const SizedBox(
             width: 56,
             height: 56,
@@ -706,17 +703,22 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
           return ListView.builder(
+            key: ValueKey(
+              'investment_list_${list.hashCode}',
+            ), // <--- تعديل: إضافة Key
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: list.length,
             itemBuilder: (context, index) {
               final item = list[index];
-              // **[MODIFIED]** التأكد من أن _savedItems تم تحميلها قبل استخدامها
+              // التأكد من أن _savedItems تم تحميلها قبل استخدامها (وده بيضمنه FutureBuilder)
               final isSaved = _savedItems.any(
-                (s) =>
-                    s.id == item.id, // يفضل استخدام item.id للتحقق من التوفير
+                (s) => s.id == item.id, // استخدام item.id للتحقق من التوفير
               );
               return Padding(
+                key: ValueKey(
+                  item.id,
+                ), // <--- تعديل: إضافة Key لكل InvestmentCard
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: InvestmentCard(
                   assetImage: item.assetImage,
@@ -751,11 +753,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCategorySection() {
     const images = [
-      'assets/Health.png', // **[Image Asset causing error]**
+      'assets/Health.png', // **[Image Asset causing error]** <--- تأكد من وجود هذه الصورة في assets/
       'assets/Food Truck.png',
       'assets/Fashion.png',
-      'assets/Beauty.png',
-      'assets/Food & Beverage.png',
+      'assets/Beaty.png',
+      'assets/Food.png',
     ];
     // Category names (these are hardcoded in Flutter)
     const categoryNames = [
@@ -839,7 +841,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(
+                  14,
+                ), // <--- تعديل: كانت 12، غيرتها لـ 14 عشان تطابق
                 child: Image.asset(images[i], fit: BoxFit.cover),
               ),
             ),
@@ -850,6 +854,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFilterBar() {
+    // هذا الكود لم يستخدم بعد في الـ _buildHomeContent
     return Column(
       children: [
         Row(
@@ -879,7 +884,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _showSortByBottomSheet();
         } else {
           if (mounted) {
-            // **[FIXED]** فحص mounted
             setState(() {
               selectedFilter = isSelected ? null : label;
               // Filter 'allProjects' locally based on this selection.
@@ -916,7 +920,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showSortByBottomSheet() {
     if (mounted) {
-      // **[FIXED]** فحص mounted
       showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -952,14 +955,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (mounted) {
-          // **[FIXED]** فحص mounted
           setState(() {
             selectedSortOption = isSelected ? null : option;
             // Apply sort to 'allProjects' locally.
           });
         }
         if (mounted) {
-          // **[FIXED]** فحص mounted
           Navigator.pop(context);
         }
       },

@@ -26,8 +26,10 @@ class InvestmentItem {
           json['id']?.toString() ??
           json['pk']?.toString() ??
           json['project_id']?.toString() ??
-          'unknown_id', // **[NEW]** جلب الـ ID من الـ JSON. ابحث عن المفتاح الصحيح في backend بتاعك!
-      assetImage: json['image_url'] ?? 'assets/default_project.png',
+          'unknown_id_${DateTime.now().millisecondsSinceEpoch}', // <--- تعديل: لتوليد ID فريد لو مش موجود
+      assetImage:
+          json['image_url'] ??
+          'assets/default_project.png', // <--- تعديل: إضافة default asset
       title: json['title'] ?? 'N/A',
       description: json['description'] ?? 'No description available.',
       investedAmount: json['invested_amount']?.toString() ?? '0 EGP',
@@ -36,8 +38,8 @@ class InvestmentItem {
     );
   }
 
-  // **[NEW]** إضافة operator == و hashCode للمقارنة الصحيحة بين الـ InvestmentItem objects
-  // ده مهم جداً عشان .any() و .contains() يشتغلوا صح
+  // <--- هام جداً: إضافة operator == و hashCode للمقارنة الصحيحة بين الـ InvestmentItem objects
+  // ده مهم جداً عشان .any() و .contains() يشتغلوا صح بناءً على الـ ID
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

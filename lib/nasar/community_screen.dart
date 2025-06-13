@@ -1,8 +1,8 @@
 // community_screen.dart
 import 'package:flutter/material.dart';
 import 'community2_screen.dart'; // تأكد من المسار الصحيح
-import 'package:investa4/nasar/investment_item.dart'; // **[NEW]** استيراد InvestmentItem
-import 'package:investa4/nasar/investment_card.dart'; // **[NEW]** استيراد InvestmentCardB
+import 'package:investa4/nasar/investment_item.dart';
+import 'package:investa4/nasar/investment_card.dart';
 
 // --- Constants (قيم ثابتة قابلة للتعديل بسهولة) ---
 const Color kScreenBackgroundColor = Colors.white;
@@ -29,10 +29,13 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  // **[MODIFIED]** إضافة ID فريد لكل InvestmentItem
+  // <--- هام جداً: هذه البيانات حالياً Hardcoded.
+  // إذا كانت ستأتي من API، ستحتاج إلى:
+  // 1. إضافة Future<List<InvestmentItem>> _fetchCommunityItems()
+  // 2. استخدام FutureBuilder في الـ build method لجلب وعرض البيانات.
   final List<InvestmentItem> allItems = [
     InvestmentItem(
-      id: "invest_001", // **[NEW]**
+      id: "invest_001", // <--- هام: تأكد أن الـ IDs دي فريدة وأنها تتطابق مع الـ IDs اللي ممكن تجيلك من الـ backend لو هتعمل مزامنة.
       assetImage: "assets/image (36).png",
       title: "FAKHR",
       description:
@@ -42,7 +45,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       category: "Fashion",
     ),
     InvestmentItem(
-      id: "invest_002", // **[NEW]**
+      id: "invest_002",
       assetImage: "assets/image (56).png",
       title: "Mother Naked",
       description:
@@ -52,7 +55,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       category: "Beauty",
     ),
     InvestmentItem(
-      id: "invest_003", // **[NEW]**
+      id: "invest_003",
       assetImage: "assets/image (23).png",
       title: "Zero Sugar By Ketonista",
       description:
@@ -62,7 +65,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       category: "Food & Beverage",
     ),
     InvestmentItem(
-      id: "invest_004", // **[NEW]**
+      id: "invest_004",
       assetImage: "assets/image (35).png",
       title: "Seemly",
       description: "Seemly brings simplicity and comfort to your wardrobe.",
@@ -71,16 +74,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
       category: "Fashion",
     ),
     InvestmentItem(
-      id: "invest_005", // **[NEW]**
+      id: "invest_005",
       assetImage: "assets/image (40).png",
       title: "Beyond",
       description: "Empowering individuals through innovative tech solutions.",
       investedAmount: "320,000 LE",
       investors: "30",
-      category: "Technology",
+      category: "Technology", // تأكد لو دي category موجودة في InterestsScreen
     ),
     InvestmentItem(
-      id: "invest_006", // **[NEW]**
+      id: "invest_006",
       assetImage: "assets/image (22).png",
       title: "Infuse",
       description: "Revolutionizing aromatherapy with cutting-edge blends.",
@@ -89,7 +92,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       category: "Health & Fitness",
     ),
     InvestmentItem(
-      id: "invest_007", // **[NEW]**
+      id: "invest_007",
       assetImage: "assets/image (30).png",
       title: "Eros",
       description: "Bringing artisanal coffee experiences to your doorstep.",
@@ -160,25 +163,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
     {'label': 'Investment State', 'value': 'Long term'},
     {'label': 'Minimum investment', 'value': '7,000 L.E'},
     {'label': 'Maximum investment', 'value': '14,000 L.E'},
-    {
-      'label': 'Minimum Short term',
-      'value': '7,000 L.E',
-    }, // Added for consistency with other screens
-    {
-      'label': 'Minimum Long term',
-      'value': '36,000 L.E',
-    }, // Added for consistency
+    {'label': 'Minimum Short term', 'value': '7,000 L.E'},
+    {'label': 'Minimum Long term', 'value': '36,000 L.E'},
     {'label': 'Deadline', 'value': '16 Oct, 2025'},
-    {
-      'label': 'Store Type',
-      'value': 'Warehouse - Physical Store',
-    }, // Added for consistency
+    {'label': 'Store Type', 'value': 'Warehouse - Physical Store'},
     {'label': 'Location', 'value': 'New Cairo - Nasr City'},
-    {
-      'label': 'Website',
-      'value': 'zerosugarbyketonista.com',
-    }, // Added for consistency
-    {'label': 'Social', 'value': 'f'}, // Added for consistency
+    {'label': 'Website', 'value': 'zerosugarbyketonista.com'},
+    {'label': 'Social', 'value': 'f'},
   ];
 
   final List<Map<String, String>> latestDiscussions = [
@@ -230,6 +221,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         titleSpacing: 16,
         title: Row(
           children: [
+            // <--- تأكد من وجود ملف الصورة assets/logo.png
             Image.asset('assets/logo.png', width: 70, height: 70),
             const SizedBox(width: 8),
             const Text(
@@ -271,21 +263,27 @@ class _CommunityScreenState extends State<CommunityScreen> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
+                  if (mounted) {
+                    // <--- تعديل: فحص mounted
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  }
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Search Trending Brands',
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: kSearchBarHintTextColor,
                     fontSize: 14,
                   ),
                   filled: true,
                   fillColor: kSearchBarFillColor,
-                  prefixIcon: Icon(Icons.search, color: kSearchBarIconColor),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: kSearchBarIconColor,
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -295,12 +293,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
             // --- 4 Cards (Filtered by search)
             ListView.builder(
+              key: ValueKey(
+                'community_trending_list_${filteredItems.hashCode}',
+              ), // <--- تعديل: إضافة Key
               itemCount: filteredItems.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (c, i) {
                 final it = filteredItems[i];
                 return Padding(
+                  key: ValueKey(
+                    it.id,
+                  ), // <--- تعديل: إضافة Key لكل InvestmentCard
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -312,7 +316,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     investedAmount: it.investedAmount,
                     investors: it.investors,
                     onTap: () {
-                      // الانتقال إلى Community2Screen فقط إذا كان العنصر "FAKHR"
+                      // <--- هام جداً: هذا المنطق hardcoded للـ 'FAKHR'
+                      // يجب تحديثه للانتقال لصفحة تفاصيل مشروع ديناميكية
                       if (it.title == 'FAKHR') {
                         Navigator.push(
                           context,
@@ -321,15 +326,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           ),
                         );
                       } else {
-                        // Handle tapping on other items, e.g., navigate to a generic details page
                         print('Tapped on ${it.title} in Community List');
+                        // هنا ممكن توجيه لصفحة تفاصيل مشروع عامة
+                        // Navigator.push(context, MaterialPageRoute(builder: (ctx) => ProjectDetailsPage(item: it)));
                       }
                     },
                     onBookmarkPressed: () {
-                      // هنا يمكن إضافة منطق الحفظ لـ CommunityScreen
-                      // أو يمكنك استخدام نفس دالة _toggleBookmark إذا كان لديك قائمة savedItems هنا
+                      // <--- هام: هنا يمكن إضافة منطق الحفظ لـ CommunityScreen
+                      // هذا الجزء لم يتم ربطه بالـ _toggleBookmark function في HomeScreen.
+                      // ستحتاج إلى تمرير _toggleBookmark (أو منطق مشابه) من HomeScreen هنا
+                      // أو استخدام State Management.
+                      print(
+                        'Bookmark pressed for ${it.title} in Community List',
+                      );
                     },
-                    isSaved: false, // تحتاج إلى ربط هذا بحالة الحفظ الفعلية
+                    isSaved:
+                        false, // <--- هام: تحتاج إلى ربط هذا بحالة الحفظ الفعلية
                   ),
                 );
               },
@@ -339,7 +351,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // This button doesn't have a specific function in the current UI
                   print('Invest button pressed on Community List');
                 },
                 style: ElevatedButton.styleFrom(
@@ -356,6 +367,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
             const SizedBox(height: 24),
 
             // --- Investors Posts (باقي الأقسام تظل كما هي حالياً)
+            // <--- هام جداً: هذه البيانات حالياً Hardcoded.
+            // إذا كانت ستأتي من API، ستحتاج إلى:
+            // 1. إضافة Future<List<Map<String, String>>> _fetchInvestorPosts()
+            // 2. استخدام FutureBuilder هنا لجلب وعرض البيانات.
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
               child: Text(
@@ -368,6 +383,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ),
             ListView.separated(
+              key: const ValueKey(
+                'investor_posts_list',
+              ), // <--- تعديل: إضافة Key
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -380,6 +398,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               itemBuilder: (c, i) {
                 final p = investorPosts[i];
                 return Padding(
+                  key: ValueKey(p['name']), // <--- تعديل: إضافة Key لكل عنصر
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
@@ -429,6 +448,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
 
             // --- Latest Discussions
+            // <--- هام جداً: هذه البيانات حالياً Hardcoded.
+            // إذا كانت ستأتي من API، ستحتاج إلى:
+            // 1. إضافة Future<List<Map<String, String>>> _fetchDiscussions()
+            // 2. استخدام FutureBuilder هنا لجلب وعرض البيانات.
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
               child: Text(
@@ -453,6 +476,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
             const SizedBox(height: 12),
             ListView.separated(
+              key: const ValueKey(
+                'discussion_replies_list',
+              ), // <--- تعديل: إضافة Key
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -464,10 +490,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
               itemBuilder: (c, i) {
                 final p = discussionReplies[i];
-                final isOmar = p['name'] == 'Omar Saad';
+                final isOmar =
+                    p['name'] == 'Omar Saad'; // هذا الشرط يبدو خاصاً جداً
+                final leftPad = isOmar ? 32.0 : 16.0; // وهذا التعديل بناءً عليه
                 return Padding(
+                  key: ValueKey(p['name']), // <--- تعديل: إضافة Key لكل عنصر
                   padding: EdgeInsets.symmetric(
-                    horizontal: isOmar ? 32.0 : 16.0,
+                    horizontal: leftPad,
                     vertical: 12,
                   ),
                   child: Column(
@@ -515,6 +544,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
 
             // --- Investment Opportunities + Metrics
+            // <--- هام جداً: هذه البيانات حالياً Hardcoded.
+            // إذا كانت ستأتي من API، ستحتاج إلى:
+            // 1. إضافة Future<InvestmentItem> _fetchOpportunityDetails()
+            // 2. استخدام FutureBuilder هنا لجلب وعرض البيانات.
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
               child: Text(
@@ -537,7 +570,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 investors: '43',
                 onTap: () {},
                 onBookmarkPressed: () {},
-                isSaved: false,
+                isSaved: false, // <--- هام: تحتاج لربط هذا بحالة الحفظ الفعلية
               ),
             ),
             const SizedBox(height: 16),

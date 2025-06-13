@@ -60,7 +60,7 @@ class _PageOne extends StatelessWidget {
   final String? userId;
 
   // 2. عدّل الـ constructor لاستقبال الـ userId
-  const _PageOne({super.key, this.userId});
+  const _PageOne({this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class _PageTwo extends StatelessWidget {
   final String? userId;
 
   // 2. عدّل الـ constructor لاستقبال الـ userId
-  const _PageTwo({super.key, this.userId});
+  const _PageTwo({this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +191,7 @@ class _PageThree extends StatelessWidget {
   final String? userId;
 
   // 2. عدّل الـ constructor لاستقبال الـ userId
-  const _PageThree({super.key, this.userId});
+  const _PageThree({this.userId});
 
   @override
   Widget build(BuildContext context) {

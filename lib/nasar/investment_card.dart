@@ -40,8 +40,9 @@ class InvestmentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
               child: Image.asset(
                 assetImage,
                 width: double.infinity,
@@ -62,9 +63,10 @@ class InvestmentCard extends StatelessWidget {
                           child: Text(
                             title,
                             style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF082347)),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF082347),
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -83,41 +85,60 @@ class InvestmentCard extends StatelessWidget {
                       child: Text(
                         description,
                         style: const TextStyle(
-                            fontSize: 12, color: Colors.black87),
+                          fontSize: 12,
+                          color: Colors.black87,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const Divider(
-                        color: Colors.black26,
-                        thickness: kCardDividerThickness),
+                      color: Colors.black26,
+                      thickness: kCardDividerThickness,
+                    ),
                     SizedBox(
                       height: 32,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(investedAmount,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold)),
-                                const Text('invested',
-                                    style: TextStyle(
-                                        fontSize: 12, color: kMetricTextColor)),
-                              ]),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                investedAmount,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                'invested',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: kMetricTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
                           Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(investors,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold)),
-                                const Text('investors',
-                                    style: TextStyle(
-                                        fontSize: 12, color: kMetricTextColor)),
-                              ]),
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                investors,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                'investors',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: kMetricTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
