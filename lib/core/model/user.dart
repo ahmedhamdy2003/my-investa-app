@@ -81,9 +81,9 @@ class UserMethods {
     }
   }
 
-  static void removeSignedUser(UserModel user) {
+  static Future<void> removeSignedUser(UserModel user) async {
     user.signedUp = false;
-    user.save();
+   await user.save();
   }
 
   static Future<void> saveUser(UserModel user) async {

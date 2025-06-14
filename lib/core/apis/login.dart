@@ -96,8 +96,9 @@ class SignResult {
       refreshToken: map['refreshToken'] as String,
       userId: map['user_id'] as String,
       email: map['email'] as String,
-      dateOffBirth: DateTime.parse(map['date_of_birth'] as String),
-      userNAme: map['username'] as String,
+      dateOffBirth:
+          DateTime.now(), //DateTime.parse(map['date_of_birth'] as String),
+      userNAme: 'Ahmed as TEst', //map['username'] as String,
     );
   }
 

@@ -799,11 +799,15 @@ class Profile extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context); // Close the dialog
-                  UserMethods.removeSignedUser(ManageCurrentUser.currentUser);
+                  await UserMethods.removeSignedUser(
+                    ManageCurrentUser.currentUser,
+                  );
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const StartScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const StartScreen(),
+                    ),
                     (Route<dynamic> route) => false,
                   );
                 },

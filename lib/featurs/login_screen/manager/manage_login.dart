@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/apis/login.dart';
 import 'package:investa4/core/model/user.dart';
 import 'package:investa4/core/utils/manage_current_user.dart' as current_user;
+import 'package:investa4/nasar/founderHome_screen.dart';
+import 'package:investa4/nasar/home_screen.dart';
 import 'package:investa4/nasar/setup_screen.dart';
 // import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 
@@ -27,7 +29,26 @@ class ManageLogin {
       password: passwordController.text,
     );
     if (result != null) {
-      checkAndSaveUser(result);
+      UserModel user = checkAndSaveUser(result);
+      if (user.userIsFounder == true) {
+        current_user.ManageCurrentUser.currentUser = user;
+        // Navigate to Founder Home Screen
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder:
+                (context) => const FounderHomeScreen(projectId: 'wefuwenk'),
+          ),
+          (Route<dynamic> route) => false,
+        );
+        return;
+      } else if (user.userIsFounder == false) {
+        // Navigate to Home Screen
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (Route<dynamic> route) => false,
+        );
+        return;
+      }
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const SetupScreen()),
         // MaterialPageRoute(builder: (context) => MainLayout()),
