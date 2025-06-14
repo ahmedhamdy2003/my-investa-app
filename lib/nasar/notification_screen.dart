@@ -14,7 +14,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
     super.initState();
-    _showNotificationDialog(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showNotificationDialog(context);
+    });
   }
 
   @override

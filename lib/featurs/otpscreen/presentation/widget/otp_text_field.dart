@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:investa4/core/utils/text_field_style.dart';
 
@@ -58,7 +60,8 @@ class _OTPTextFieldState extends State<OTPTextField> {
     }
 
     final otp = _controllers.map((c) => c.text).join();
-    if (otp.length == widget.length && !otp.contains('')) {
+    if (otp.length == widget.length) {
+      log('OTP completed: $otp');
       widget.onCompleted(otp);
     }
   }
@@ -80,8 +83,8 @@ class _OTPTextFieldState extends State<OTPTextField> {
           width: fieldWidth,
           height: fieldWidth + 15,
           child: TextFormField(
-            validator: (value) =>
-                (value == null || value.isEmpty) ? 'Required' : null,
+            validator:
+                (value) => (value == null || value.isEmpty) ? 'Required' : null,
             controller: _controllers[index],
             focusNode: _focusNodes[index],
             textAlign: TextAlign.center,

@@ -22,6 +22,7 @@ class StandardFounderScaffold extends StatelessWidget {
     var topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: const Color(0xFFF5F7FA),
       drawer: FounderSideBar(currentScreen: screenType),
       body: SingleChildScrollView(
         child: Column(

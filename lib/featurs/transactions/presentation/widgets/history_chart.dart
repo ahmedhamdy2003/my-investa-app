@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/utils/app_styles.dart';
 
 class HistoryChart extends StatelessWidget {
-  const HistoryChart({super.key});
+  final List<BarData> bars;
+  const HistoryChart({super.key, required this.bars});
 
   // Your data model
-  static const _bars = <_BarData>[
-    _BarData('2023', 0.5, false),
-    _BarData('2024', 0.7, false),
-    _BarData('2026', 1.0, true),
-    _BarData('2027', 0.9, false),
-  ];
+
 
   // Visual constants
   static const double _barWidth = 40;
@@ -56,8 +52,8 @@ class HistoryChart extends StatelessWidget {
                         alignment:
                             BarChartAlignment.center, // <-- make bars tighter
                         groupsSpace: _groupSpacing, // which is 0
-                        barGroups: List.generate(_bars.length, (i) {
-                          final d = _bars[i];
+                        barGroups: List.generate(bars.length, (i) {
+                          final d = bars[i];
                           return BarChartGroupData(
                             x: i,
                             barRods: [
@@ -95,7 +91,7 @@ class HistoryChart extends StatelessWidget {
                                   meta: meta,
                                   space: 12,
                                   child: Text(
-                                    _bars[value.toInt()].year,
+                                    bars[value.toInt()].year,
                                     style: AppStyles.dashISubtemTitle,
                                   ),
                                 );
@@ -129,9 +125,9 @@ class HistoryChart extends StatelessWidget {
   }
 }
 
-class _BarData {
+class BarData {
   final String year;
   final double value; // 0.0–1.0 fraction
   final bool highlight;
-  const _BarData(this.year, this.value, this.highlight);
+  const BarData(this.year, this.value, this.highlight);
 }

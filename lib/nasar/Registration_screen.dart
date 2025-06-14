@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:investa4/core/utils/global_variables.dart';
 import 'package:investa4/nasar/SecurityCheck_Screen.dart';
@@ -151,8 +152,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         'address_2': address2Controller.text,
       };
 
-      const String apiUrl =
-          '$baseUrl/personal-data/';
+      const String apiUrl = '$baseUrl/personal-data/';
+      log('API URL: $apiUrl'); // Log the API URL for debugging
       try {
         final http.Response response = await http.post(
           Uri.parse(apiUrl),

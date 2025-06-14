@@ -8,16 +8,38 @@ class CommentListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: ListView.builder(
-        itemBuilder:
-            (_, index) => const CommentItem(
-              username: 'martini_rond',
-              comment: 'How neatly I write the date in my book',
-              timeAgo: '22h',
-              repliesCount: 4,
-            ),
-        itemCount: 10,
+      child: ListView(
+        children: const [
+          const CommentItem(
+            username: 'martini_rond',
+            comment: 'How neatly I write the date in my book',
+            timeAgo: '22h',
+            repliesCount: 4,
+          ),
+          const CommentItem(
+            username: 'john_doe',
+            comment: 'This is a great video!',
+            timeAgo: '1d',
+            repliesCount: 2,
+          ),
+          // const CommentItem(
+          //   username: 'jane_smith',
+          //   comment: 'Loved the content, keep it up!',
+          //   timeAgo: '3d',
+          //   repliesCount: 0,
+          // ),
+        ],
       ),
+      // ListView.builder(
+      //   itemBuilder:
+      //       (_, index) => const CommentItem(
+      //         username: 'martini_rond',
+      //         comment: 'How neatly I write the date in my book',
+      //         timeAgo: '22h',
+      //         repliesCount: 4,
+      //       ),
+      //   itemCount: 10,
+      // ),
     );
   }
 }

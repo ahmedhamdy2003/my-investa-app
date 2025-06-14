@@ -20,15 +20,7 @@ class OtpScreen extends StatelessWidget {
                 OtpSection(
                   onTap: onTap,
                   email: email,
-                  //  (notifier, otp) async {
-                  //   if (otp.isEmpty) {
-                  //     return;
-                  //   }
-                  //   notifier.value = true;
-                  //   String? result = await verifyOtp(
-                  //       email: email, otp: notifier.value.toString());
-                  //   notifier.value = false;
-                  // },
+               
                 ),
               ],
             ),

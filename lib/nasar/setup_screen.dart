@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/core/model/user.dart';
-import 'package:investa4/core/utils/manage_current_user.dart';
 import 'package:investa4/nasar/Registration_screen.dart';
 import 'package:investa4/nasar/founderHome_screen.dart';
 // import 'package:investa4/home_screen.dart'; // افترض ان شاشة Home Screen هنا
@@ -49,33 +48,18 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   void initState() {
     super.initState();
-    initMethod();
+    // initMethod();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initMethod();
+    });
   }
 
   initMethod() async {
-    // 1. الحصول على user id
-    String? userId = ManageCurrentUser.currentUser.guid;
-    print("User ID: $userId"); // لطباعة الـ user ID في الـ debug console
-
-    // 2. محاكاة التحقق من الـ backend
-    // في الكود الحقيقي، هتحتاج تعمل هنا HTTP request للـ backend
-    // وتنتظر الاستجابة عشان تعرف userHasData
-    await Future.delayed(
-      const Duration(seconds: 3),
-    ); // محاكاة لتاخير الـ network request
-
-    // 3. هنا المفروض تيجي استجابة الـ backend اللي بتقولك userHasData
-    // لغرض التجربة، هنفترض أن المستخدم ليس لديه بيانات (لم يكمل الـ setup)
-    bool? userisFounder =
-        UserMethods.userIsFounder(); // ***** غيّر القيمة دي لـ `true` عشان تجرب حالة الانتقال للـ Home Screen *****
+    bool? userisFounder = UserMethods.userIsFounder();
     if (userisFounder == null) {
-      setState(() {
-        isInitFinih = true;
-      });
+      isInitFinih = true;
     } else {
       if (userisFounder == true) {
-        // 4. لو المستخدم كمل الـ setup: الانتقال لشاشة Home Screen
-        // استخدم pushReplacement عشان متقدرش ترجع لشاشة الـ Setup بالـ back button
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

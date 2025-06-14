@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:investa4/featurs/reel_screen/presentation/reel_screen.dart';
 import 'package:investa4/presentation/screens/main_layout/tabs/profile/profile.dart';
 import 'package:investa4/presentation/screens/splash/splash.dart';
 
@@ -13,8 +14,6 @@ import 'package:investa4/nasar/community_screen.dart';
 import 'package:investa4/nasar/dashboard_screen.dart';
 import 'package:investa4/nasar/home_screen.dart';
 import 'package:investa4/nasar/interests_screen.dart';
-import 'package:investa4/nasar/profile_screen.dart';
-import 'package:investa4/nasar/reels_screen.dart';
 import 'package:investa4/nasar/save_screen.dart';
 import 'package:investa4/nasar/welcome_screen.dart';
 
@@ -48,9 +47,9 @@ class AppRoutes {
         (ctx) =>
             const SaveScreen(), // Make sure savedItems is handled correctly if it's required
     '/investor_community': (ctx) => const CommunityScreen(),
-    '/investor_reels': (ctx) => const ReelsScreen(),
+    '/investor_reels': (ctx) => const ReelScreen(),
     '/investor_dashboard': (ctx) => const DashboardScreen(),
-    '/investor_profile': (ctx) => const ProfileScreen(),
+    '/investor_profile': (ctx) => const Profile(),
     '/welcome_screen': (ctx) => const WelcomeScreen(),
   };
 }

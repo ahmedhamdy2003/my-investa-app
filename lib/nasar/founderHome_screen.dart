@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:investa4/core/utils/global_variables.dart';
+import 'package:investa4/featurs/founder/founder_dash/presentation/founder_dashboard.dart';
 import 'chat_bot_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,7 +9,6 @@ import 'dart:convert';
 // استيراد الشاشات الفرعية اللي هتفتح من BottomNavigationBar
 import 'package:investa4/nasar/founder_community.dart';
 import 'package:investa4/nasar/founder_reels.dart';
-import 'package:investa4/nasar/founder_dashboard.dart';
 import 'package:investa4/nasar/founder_profile.dart';
 
 class FounderHomeScreen extends StatefulWidget {
@@ -48,8 +48,10 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
   void initState() {
     super.initState();
     // جلب البيانات عند فتح الشاشة الرئيسية
-    _fetchFounderData();
-    _calculatePrediction();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchFounderData();
+      _calculatePrediction();
+    });
   }
 
   @override
@@ -58,15 +60,14 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
   }
 
   Future<void> _fetchFounderData() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = "";
-    });
+    // setState(() {
+    _isLoading = true;
+    _errorMessage = "";
+    // });
 
     // يمكنك استخدام widget.userId هنا إذا كان الـ API يحتاجه
     // مثال: final String apiUrl = 'https://2859-41-44-137-9.ngrok-free.app/founder-home/${widget.projectId}?userId=${widget.userId ?? ''}';
-    final String apiUrl =
-        '$baseUrl/founder-home/${widget.projectId}';
+    final String apiUrl = '$baseUrl/founder-home/${widget.projectId}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -512,10 +513,11 @@ class _FounderHomeScreenState extends State<FounderHomeScreen> {
         break;
       case 3: // Dashboard Tab
         // 2. تمرير الـ userId إلى FounderDashboardScreen
-        currentScreen = FounderDashboardScreen(
-          projectId: widget.projectId,
-          userId: widget.userId,
-        );
+        currentScreen = const FounderDashboard();
+        // FounderDashboardScreen(
+        //   projectId: widget.projectId,
+        //   userId: widget.userId,
+        // );
         break;
       case 4: // Profile Tab
         // 2. تمرير الـ userId إلى FounderProfileScreen

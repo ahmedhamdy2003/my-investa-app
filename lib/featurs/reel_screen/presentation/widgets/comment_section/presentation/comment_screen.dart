@@ -71,7 +71,7 @@ class _CommentScreenState extends State<CommentScreen>
                       padding: const EdgeInsets.only(top: 12),
                       child: Center(
                         child: Text(
-                          '579 comments',
+                          '2 comments',
                           style: AppStyles.commentCountStyle,
                         ),
                       ),

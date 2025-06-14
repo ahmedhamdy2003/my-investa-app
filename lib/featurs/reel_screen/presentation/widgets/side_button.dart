@@ -26,7 +26,7 @@ class SideBottonsBar extends StatelessWidget {
           const SizedBox(height: 16),
           ReelButton(
             iconChild: Image.asset('assets/icon/HeartIcon.png'),
-            desc: '100',
+            desc: '4',
           ),
           const SizedBox(height: 16),
 
@@ -36,7 +36,7 @@ class SideBottonsBar extends StatelessWidget {
               manageCommentAnimation.openDrawer();
             },
             iconChild: Image.asset('assets/icon/MessageIcon.png'),
-            desc: '100',
+            desc: '2',
           ),
           const SizedBox(height: 16),
           ReelButton(

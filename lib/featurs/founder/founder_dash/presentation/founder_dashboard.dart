@@ -60,6 +60,11 @@ class FounderDashboard extends StatelessWidget {
               data2Title: 'Comparison Data',
             ),
             const SizedBox(height: 22),
+            Text(
+              'Portfolio Perfomance ',
+              style: AppStyles.founderAnalysisSectionTitle1,
+            ),
+            const SizedBox(height: 12),
             CustomLineChart(data: mockData),
             const SizedBox(height: 22),
           ],
@@ -79,12 +84,12 @@ final chartData = [
 ];
 
 List<CustomLineChartData> mockData = [
-  CustomLineChartData(label: '2016', value: 10000),
-  CustomLineChartData(label: '2017', value: 20000),
-  CustomLineChartData(label: '2018', value: 10000),
-  CustomLineChartData(label: '2019', value: 40000),
-  CustomLineChartData(label: '2020', value: 30000),
-  CustomLineChartData(label: '2021', value: 35000),
+  CustomLineChartData(label: 2016, value: 10000),
+  CustomLineChartData(label: 2017, value: 20000),
+  CustomLineChartData(label: 2018, value: 10000),
+  CustomLineChartData(label: 2019, value: 40000),
+  CustomLineChartData(label: 2020, value: 30000),
+  CustomLineChartData(label: 2021, value: 35000),
 ];
 
 // In your widget tree

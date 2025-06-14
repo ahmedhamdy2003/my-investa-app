@@ -22,7 +22,7 @@ class Treansactions extends StatelessWidget {
             SizedBox(height: topPadding),
             TransactionTopSection(scaffoldKey: _scaffoldKey),
             const SizedBox(height: 12),
-            const HistoryChart(),
+            const HistoryChart(bars: bars),
             const SizedBox(height: 16),
             const RecentTransactions(),
           ],
@@ -31,3 +31,10 @@ class Treansactions extends StatelessWidget {
     );
   }
 }
+
+   const bars = <BarData>[
+    BarData('2023', 0.5, false),
+    BarData('2024', 0.5, false),
+    BarData('2025', 1.0, true),
+    BarData('2026', 0, false),
+  ];

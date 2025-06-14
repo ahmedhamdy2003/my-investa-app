@@ -33,6 +33,8 @@ Widget barData({
   required List<String> labels,
   double minY = 0,
   double maxY = 500,
+  String? title1,
+  String? title2,
 }) {
   assert(
     investing.length == saving.length && investing.length == labels.length,
@@ -46,14 +48,14 @@ Widget barData({
     crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       // ─── Legend row ──────────────────────────────────────────────────────────
-      const Padding(
+      Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _LegendItem(color: Color(0xFF16DBCC), label: 'Saving'),
+            _LegendItem(color: Color(0xFF16DBCC), label: title1 ?? 'Saving'),
             SizedBox(width: 16),
-            _LegendItem(color: Color(0xFF1814F3), label: 'Investing'),
+            _LegendItem(color: Color(0xFF1814F3), label: title2 ?? 'Investing'),
           ],
         ),
       ),

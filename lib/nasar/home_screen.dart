@@ -1,4 +1,5 @@
 import 'package:investa4/core/utils/global_variables.dart';
+import 'package:investa4/featurs/reel_screen/presentation/reel_screen.dart';
 import 'package:investa4/nasar/categories_pages.dart';
 import 'package:investa4/nasar/community_screen.dart';
 import 'package:investa4/nasar/dashboard_screen.dart';
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:investa4/core/utils/manage_current_user.dart';
+import 'package:investa4/presentation/screens/main_layout/tabs/profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -412,13 +414,15 @@ class _HomeScreenState extends State<HomeScreen> {
         body = const CommunityScreen();
         break;
       case 2:
-        body = const ReelsScreen();
+        body = const ReelScreen();
+        //  const ReelsScreen();
         break;
       case 3:
         body = const DashboardScreen();
         break;
       case 4:
-        body = const ProfileScreen();
+        body = const Profile();
+        //const ProfileScreen();
         break;
       default:
         body = _buildHomeContent();
