@@ -1,8 +1,8 @@
 import 'package:investa4/core/utils/global_variables.dart';
+import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
 import 'package:investa4/featurs/reel_screen/presentation/reel_screen.dart';
 import 'package:investa4/nasar/categories_pages.dart';
 import 'package:investa4/nasar/community_screen.dart';
-import 'package:investa4/nasar/dashboard_screen.dart';
 import 'package:investa4/nasar/investment_card.dart';
 import 'package:investa4/nasar/investment_item.dart';
 import 'package:investa4/nasar/save_screen.dart';
@@ -416,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //  const ReelsScreen();
         break;
       case 3:
-        body = const DashboardScreen();
+        body = const Dashboard();
         break;
       case 4:
         body = const Profile();

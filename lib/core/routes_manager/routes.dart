@@ -11,7 +11,6 @@ import '../../presentation/screens/splash/splash3.dart';
 import '../../presentation/screens/splash/splash4.dart';
 import '../../presentation/screens/splash/splash5.dart';
 import 'package:investa4/nasar/community_screen.dart';
-import 'package:investa4/nasar/dashboard_screen.dart';
 import 'package:investa4/nasar/home_screen.dart';
 import 'package:investa4/nasar/interests_screen.dart';
 import 'package:investa4/nasar/save_screen.dart';
@@ -48,7 +47,7 @@ class AppRoutes {
             const SaveScreen(), // Make sure savedItems is handled correctly if it's required
     '/investor_community': (ctx) => const CommunityScreen(),
     '/investor_reels': (ctx) => const ReelScreen(),
-    '/investor_dashboard': (ctx) => const DashboardScreen(),
+    // '/investor_dashboard': (ctx) => const DashboardScreen(),
     '/investor_profile': (ctx) => const Profile(),
     '/welcome_screen': (ctx) => const WelcomeScreen(),
   };
