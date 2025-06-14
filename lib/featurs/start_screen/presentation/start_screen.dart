@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investa4/core/utils/app_styles.dart';
-import 'package:investa4/featurs/dashboard/presentation/dashboard.dart';
-import 'package:investa4/featurs/founder/founder_dash/presentation/founder_dashboard.dart';
 import 'package:investa4/featurs/login_screen/presentation/login_screen.dart';
-import 'package:investa4/featurs/reel_screen/presentation/reel_screen.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/sign_up_screen.dart';
-import 'package:investa4/featurs/transactions/presentation/transactions.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -14,62 +10,62 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.video_collection_sharp),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ReelScreen()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ReelScreen(),
-                //   ),
-                // );
-                customSnackBar(context, 'This feature is coming soon!');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.personal_injury_outlined),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FounderDashboard()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.dashboard),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Dashboard()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.transcribe),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Treansactions()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.end,
+      //     children: [
+      //       IconButton(
+      //         icon: const Icon(Icons.video_collection_sharp),
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => const ReelScreen()),
+      //           );
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: const Icon(Icons.list),
+      //         onPressed: () {
+      //           // Navigator.push(
+      //           //   context,
+      //           //   MaterialPageRoute(
+      //           //     builder: (context) => ReelScreen(),
+      //           //   ),
+      //           // );
+      //           customSnackBar(context, 'This feature is coming soon!');
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: const Icon(Icons.personal_injury_outlined),
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => const FounderDashboard()),
+      //           );
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: const Icon(Icons.dashboard),
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => const Dashboard()),
+      //           );
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: const Icon(Icons.transcribe),
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => Treansactions()),
+      //           );
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: Stack(
         children: [
           Center(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/apis/request_otp.dart';
 import 'package:investa4/core/apis/verify_otp.dart';
 import 'package:investa4/core/model/user.dart';
+import 'package:investa4/core/routes_manager/routes.dart';
 import 'package:investa4/core/utils/app_styles.dart';
 import 'package:investa4/core/utils/constant.dart';
 import 'package:investa4/core/widgets/custom_buttons.dart';
@@ -13,7 +14,6 @@ import 'package:investa4/featurs/sign_up_screen/manager/manage_signup.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/date_picker_text_field.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/password_valid_item.dart';
 import 'package:investa4/featurs/sign_up_screen/presentation/widgets/terms_section.dart';
-import 'package:investa4/presentation/screens/main_layout/main_layout.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -234,14 +234,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                     birthDate ?? DateTime.now(),
                                               ),
                                             );
-                                            Navigator.of(
+                                            // Navigator.of(
+                                            //   context,
+                                            // ).pushAndRemoveUntil(
+                                            //   MaterialPageRoute(
+                                            //     builder:
+                                            //         (context) => const MainLayout(),
+                                            //   ),
+                                            //   (Route<dynamic> route) => false,
+                                            // );
+                                            Navigator.pushReplacementNamed(
                                               context,
-                                            ).pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) => const MainLayout(),
-                                              ),
-                                              (Route<dynamic> route) => false,
+                                              AppRoutes.onboarding1,
                                             );
 
                                             notifier.value = false;

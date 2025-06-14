@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:investa4/core/model/user.dart';
 import 'package:investa4/nasar/Registration_screen.dart';
 import 'package:investa4/nasar/founderHome_screen.dart';
+import 'package:investa4/nasar/home_screen.dart';
 // import 'package:investa4/home_screen.dart'; // افترض ان شاشة Home Screen هنا
 // import 'package:investa4/user_management.dart'; // افترض ان ManageCurrentUser موجود هنا
 
@@ -20,19 +21,19 @@ class CurrentUser {
   CurrentUser({required this.guid});
 }
 
-// افترض ان شاشة Home Screen موجودة هنا
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+// // افترض ان شاشة Home Screen موجودة هنا
+// class HomeScreen extends StatelessWidget {
+//   const HomeScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home Screen')),
-      body: const Center(child: Text('Welcome to the Home Screen!')),
-    );
-  }
-}
-// نهاية الافتراضات
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Home Screen')),
+//       body: const Center(child: Text('Welcome to the Home Screen!')),
+//     );
+//   }
+// }
+// // نهاية الافتراضات
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key});
@@ -43,7 +44,7 @@ class SetupScreen extends StatefulWidget {
 
 class _SetupScreenState extends State<SetupScreen> {
   // تم تغيير القيمة الأولية إلى false عشان تظهر شاشة التحميل في البداية
-  bool isInitFinih = false;
+  bool isInitFinih = true;
 
   @override
   void initState() {

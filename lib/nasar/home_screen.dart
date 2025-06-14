@@ -5,8 +5,6 @@ import 'package:investa4/nasar/community_screen.dart';
 import 'package:investa4/nasar/dashboard_screen.dart';
 import 'package:investa4/nasar/investment_card.dart';
 import 'package:investa4/nasar/investment_item.dart';
-import 'package:investa4/nasar/profile_screen.dart';
-import 'package:investa4/nasar/reels_screen.dart';
 import 'package:investa4/nasar/save_screen.dart';
 import 'package:flutter/material.dart';
 

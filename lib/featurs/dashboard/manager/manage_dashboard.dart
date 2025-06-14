@@ -8,9 +8,9 @@ class ManageDashboard {
   List<ProjectROI> investedProjects = [];
   DashOverView? dashOverView;
   Future init() async {
-    dashOverView = await getDashOverView();
-    investedProjects = await getInvestedProject() ?? [];
-    await initPieChart();
+    // dashOverView = await getDashOverView();
+    // investedProjects = await getInvestedProject() ?? [];
+    // await initPieChart();
   }
 
   Future<void> initPieChart() async {
